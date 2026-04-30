@@ -19,18 +19,19 @@ export class Turno {
         this.costo = costo
     }
 
-    actualizarEstado(nuevoEstado, quien, motivo){
+    actualizarEstado(nuevoEstado, usuario, motivo){
         this.estado = nuevoEstado 
         
         const cambioEstado = new CambioEstadoTurno(new Date()
         , nuevoEstado
         , this
-        , quien
+        , usuario
         , motivo) 
         
         this.historialEstados.push(cambioEstado)
 
         FactoryNotificacion.crearSegunEstadoTurno(this)
+        //  TODO ¿Dónde guardamos las notificaciones?   
     }
 
     asignarPaciente(paciente){

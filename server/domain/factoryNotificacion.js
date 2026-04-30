@@ -51,6 +51,8 @@ export class FactoryNotificacion {
         return [
             new Notificacion(turno.id,turno.paciente.usuario, "SISTEMA", mensajeBase),
             new Notificacion(turno.id,turno.medico.usuario, "SISTEMA", mensajeBase)
+
+            //TODO emisor Notificacion
         ];
     }
     

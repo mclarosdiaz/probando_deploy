@@ -7,7 +7,7 @@ import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha";
 
 export class Agenda{
 
-    generarTurnosPara(entidad, medico){   
+    generarTurnosPara(especialidad, medico){   
         
         if(!medico.especialidades.includes(especialidad)){
             throw new Error("El médico no realiza esta especialidad");
@@ -49,15 +49,6 @@ export class Agenda{
         return turnos
     }
 
-    
-    generarTurnosPara(practica, medico){
-        //return Turno[]
-        
-    }
 
-    refrescarTurnosSegunDisponibilidadDe(medico){
-        //return Turno[]
-    }
     
-
 }
