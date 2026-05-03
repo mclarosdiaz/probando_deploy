@@ -5,43 +5,46 @@ import { Especialidad } from "./especialidad";
 import { EstadoTurno } from "./estadoTurno";
 import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha";
 
-export class Agenda{
+export class Agenda {
 
-    generarTurnosPara(entidad, medico){   
-        
-        if(!medico.especialidades.includes(especialidad)){
+    generarTurnosPara(servicio, medico, semanas = 4) {
+
+        if (!medico.puedeHacerServicio(servicio)) {
             throw new Error("El médico no realiza esta especialidad");
         }
-        
-        const turnos = [] 
 
-        medico.disponibilidades.forEach(disponibilidad =>{
-            
-            let inicio = horaAMinutos(disponibilidad.horaDesde)
+        const turnos = []
+
+        medico.disponibilidades.forEach(disponibilidad => {
+
+            const inicio = horaAMinutos(disponibilidad.horaDesde)
             const fin = horaAMinutos(disponibilidad.horaHasta)
+            const duracion = servicio.duracionTurnoEnMins
 
-            const duracion = especialidad.duracionTurnoEnMins
+            const cantidadTurnos = Math.floor((fin - inicio) / duracion)
 
-            while(inicio + duracion <= fin){
+            for (let semana = 0; semana < semanas; semana++) {
 
-                const fecha = fechaDesdeDisponibilidad(
-                    disponibilidad.diaSemana,
-                    inicio
-                )
+                for (let i = 0; i < cantidadTurnos; i++) {
 
-                medico.sedes.forEach(sede => {
-                    const turno = new Turno(
-                        medico,
-                        fecha,
-                        sede,
-                        EstadoTurno.DISPONIBLE,
-                        especialidad.costoConsulta
+                    const minutosTurno = inicio + i * duracion
+
+                    const fecha = fechaDesdeDisponibilidad(
+                        disponibilidad.diaSemana,
+                        minutosTurno,
+                        semana
                     )
 
-                    turnos.push(turno)
-                })
-
-                inicio += duracion
+                    medico.sedes.forEach(sede => {
+                        turnos.push(new Turno(
+                            medico,
+                            fecha,
+                            sede,
+                            EstadoTurno.DISPONIBLE,
+                            servicio.costoConsulta
+                        ))
+                    })
+                }
             }
 
         })
@@ -49,15 +52,6 @@ export class Agenda{
         return turnos
     }
 
-    
-    generarTurnosPara(practica, medico){
-        //return Turno[]
-        
-    }
 
-    refrescarTurnosSegunDisponibilidadDe(medico){
-        //return Turno[]
-    }
-    
 
 }

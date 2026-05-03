@@ -19,22 +19,24 @@ export class Turno {
         this.costo = costo
     }
 
-    actualizarEstado(nuevoEstado, quien, motivo){
-        if(nuevoEstado === EstadoTurno.CANCELADO && !this.puedeCancelarse()){
-            throw new Error("No se puede cancelar el turno")
-        }
+    static generarId(){ //método de clase (usa una variable a la que pueden acceder todas las instancias)
+        this.numeroTurno = this.numeroTurno + 1
+        return this.numeroTurno
+    }
 
+    actualizarEstado(nuevoEstado, usuario, motivo){
         this.estado = nuevoEstado 
         
         const cambioEstado = new CambioEstadoTurno(new Date()
         , nuevoEstado
         , this
-        , quien
+        , usuario
         , motivo) 
         
         this.historialEstados.push(cambioEstado)
 
         FactoryNotificacion.crearSegunEstadoTurno(this)
+        //  TODO ¿Dónde guardamos las notificaciones?   
     }
 
     asignarPaciente(paciente){
@@ -48,24 +50,36 @@ export class Turno {
     asignarEspecialidad(especialidad){
         this.especialidad = especialidad
     }
+    
 
-    static generarId(){
-        this.numeroTurno = this.numeroTurno + 1
-        return this.numeroTurno
+    puedeModificar(usuarioId){
+        return this.esPaciente(usuarioId) ||
+            this.esMedico(usuarioId)
     }
+
+    esPaciente(usuarioId){
+        return this.paciente.usuario.id === usuarioId
+    }
+
+    esMedico(usuarioId){
+        return this.medico.usuario.id === usuarioId
+    }
+
     
     remitenteUltimoCambioEstado(){
-        indiceUltimoCambio = this.historialEstados.length - 1
-        ultimoCambioDeEstado = this.historialEstados[indiceUltimoCambio]
-        return ultimoCambioDeEstado.usuario
+        const ultimo = this.historialEstados.at(-1)
+
+        return ultimo.usuario
     }
 
     destinatarioUltimoCambioEstado(){
-        destinatario = this.paciente
-        if (this.remitenteUltimoCambioEstado() === this.paciente){
-            destinatario = this.medico
-        }
-        return destinatario.usuario
+        const id = this.remitenteUltimoCambioEstado().id
+
+        if(this.esPaciente(id)) return this.medico.usuario
+        if(this.esMedico(id)) return this.paciente.usuario
+
+        
+        throw new Error("Usuario inválido para este turno")
     }
 
     puedeCancelarse(){
