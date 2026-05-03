@@ -1,6 +1,6 @@
-import { Practica } from "./practica";
+import { Practica } from "./practica.js";
 
-export class coberturaPractica {
+export class CoberturaPractica {
     constructor(practica,nivel) {
         this.practica = practica;
         this.nivel = nivel;

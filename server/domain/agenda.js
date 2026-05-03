@@ -1,11 +1,11 @@
-import { Medico } from "./medico";
-import { Turno } from "./turno";
-import { Practica } from "./practica";
-import { Especialidad } from "./especialidad";
-import { EstadoTurno } from "./estadoTurno";
-import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha";
+import { Medico } from "./medico.js";
+import { Turno } from "./turno.js";
+import { Practica } from "./practica.js";
+import { Especialidad } from "./especialidad.js";
+import { EstadoTurno } from "./estadoTurno.js";
+import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha.js";
 
-export class Agenda {
+class Agenda {
 
     generarTurnosPara(servicio, medico, semanas = 4) {
 
@@ -41,7 +41,7 @@ export class Agenda {
                             fecha,
                             sede,
                             EstadoTurno.DISPONIBLE,
-                            servicio.costoConsulta
+                            servicio.costo
                         ))
                     })
                 }
@@ -55,3 +55,5 @@ export class Agenda {
 
 
 }
+
+export const agenda = new Agenda()

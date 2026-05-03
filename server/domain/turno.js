@@ -1,10 +1,10 @@
-import { Medico } from "./medico";
-import { Paciente } from "./paciente"
-import { Sede } from "./sede"
-import { Practica } from "./practica"
-import { EstadoTurno } from "./estadoTurno"
-import { CambioEstadoTurno } from "./cambioEstadoTurno";
-import { FactoryNotificacion } from "./factoryNotificacion";
+import { Medico } from "./medico.js";
+import { Paciente } from "./paciente.js"
+import { Sede } from "./sede.js"
+import { Practica } from "./practica.js"
+import { EstadoTurno } from "./estadoTurno.js"
+import { CambioEstadoTurno } from "./cambioEstadoTurno.js";
+import { factoryNotificacion } from "./factoryNotificacion.js";
 
 export class Turno {
     static numeroTurno = 0

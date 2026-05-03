@@ -1,8 +1,8 @@
-import { DisponibilidadHoraria } from "./disponibilidadHoraria";
-import { Especialidad } from "./especialidad";
-import { Sede } from "./sede";
-import { Practica } from "./practica";
-import { Usuario } from "./usuario";
+import { DisponibilidadHoraria } from "./disponibilidadHoraria.js";
+import { Especialidad } from "./especialidad.js";
+import { Sede } from "./sede.js";
+import { Practica } from "./practica.js";
+import { Usuario } from "./usuario.js";
 
 
 
