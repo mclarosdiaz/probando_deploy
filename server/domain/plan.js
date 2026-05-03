@@ -19,6 +19,6 @@ export class Plan{
     }
 
     obtenerCoberturaPractica(practica){
-
+        
     }
 }
