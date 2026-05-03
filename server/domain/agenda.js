@@ -7,9 +7,9 @@ import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha";
 
 export class Agenda {
 
-    generarTurnosPara(especialidad, medico, semanas = 4) {
+    generarTurnosPara(servicio, medico, semanas = 4) {
 
-        if (!medico.especialidades.includes(especialidad)) {
+        if (!medico.puedeHacerServicio(servicio)) {
             throw new Error("El médico no realiza esta especialidad");
         }
 
@@ -19,7 +19,7 @@ export class Agenda {
 
             const inicio = horaAMinutos(disponibilidad.horaDesde)
             const fin = horaAMinutos(disponibilidad.horaHasta)
-            const duracion = especialidad.duracionTurnoEnMins
+            const duracion = servicio.duracionTurnoEnMins
 
             const cantidadTurnos = Math.floor((fin - inicio) / duracion)
 
@@ -35,13 +35,13 @@ export class Agenda {
                         semana
                     )
 
-                    medico.sedes.forEacy(sede => {
+                    medico.sedes.forEach(sede => {
                         turnos.push(new Turno(
                             medico,
                             fecha,
                             sede,
                             EstadoTurno.DISPONIBLE,
-                            especialidad.costoConsulta
+                            servicio.costoConsulta
                         ))
                     })
                 }

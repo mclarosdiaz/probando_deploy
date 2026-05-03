@@ -10,6 +10,7 @@ export class Plan{
         this.coberturasPractica = coberturasPractica;
     }
 
+    
 
     obtenerCoberturaEspecialidad(especialidad){
         const cobertura = this.coberturasEspecialidad
