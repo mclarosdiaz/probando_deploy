@@ -23,7 +23,7 @@ class FactoryNotificacion {
 
         return [
             new Notificacion(turno.id, turno.paciente.usuario, turno.paciente.usuario, mensajeBase),
-            new Notificacion(turno.id,turno.medico.usuario, turno.medico.usuario, mensajeBase)
+            new Notificacion(turno.id, turno.medico.usuario, turno.medico.usuario, mensajeBase)
 
             //TODO emisor Notificacion
         ];

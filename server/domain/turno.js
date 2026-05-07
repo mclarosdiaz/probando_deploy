@@ -35,7 +35,7 @@ export class Turno {
         
         this.historialEstados.push(cambioEstado)
 
-        FactoryNotificacion.crearSegunEstadoTurno(this)
+        factoryNotificacion.crearSegunEstadoTurno(this)
         //  TODO ¿Dónde guardamos las notificaciones?   
     }
 

@@ -1,14 +1,19 @@
+import { ESLint } from "eslint";
+import { EstadoTurno } from "./estadoTurno";
+import { Notificacion } from "./notificacion";
+
 export const estrategiasNotificacion = {
-        // RESERVADO (ID: 2)
-        2: (turno) => new Notificacion(
+
+        RESERVADO: (turno) => 
+            new Notificacion(
             turno.id,
             turno.medico.usuario, 
             turno.paciente.usuario, 
             `El paciente ${turno.paciente.nombre} reservó un turno para ${turno.practica}`
         ),
 
-        // CONFIRMADO (ID: 3)
-        3: (turno) => 
+        
+        CONFIRMADO: (turno) => 
             new Notificacion(
             turno.id,
             turno.paciente.usuario, 
@@ -16,8 +21,7 @@ export const estrategiasNotificacion = {
             `Su turno con el Dr/a.  ${turno.medico.nombre}  ha sido confirmado.`
         ),
 
-        // CANCELADO (ID: 4)
-        4: (turno) => {
+        CANCELADO: (turno) => {
             return new Notificacion(
                 turno.id,
                 turno.destinatarioUltimoCambioEstado(), 

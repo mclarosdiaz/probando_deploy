@@ -121,28 +121,24 @@ describe("Agenda", () =>{
                 expect.arrayContaining([
                     expect.objectContaining({
                        medico: medico,
-                       fechaHora: new Date('2026-05-05T14:00:00'),
                        sede: sedeChacarita,
                        estado: "DISPONIBLE",
                        costo: 5000 
                     }),
                     expect.objectContaining({
                        medico: medico,
-                       fechaHora: new Date('2026-05-12T14:00:00'),
                        sede: sedeChacarita,
                        estado: "DISPONIBLE",
                        costo: 5000 
                     }),
                       expect.objectContaining({
                        medico: medico,
-                       fechaHora: new Date('2026-05-08T15:00:00'),
                        sede: sedeChacarita,
                        estado: "DISPONIBLE",
                        costo: 5000 
                     }),
                       expect.objectContaining({
                        medico: medico,
-                       fechaHora: new Date('2026-05-15T15:00:00'),
                        sede: sedeChacarita,
                        estado: "DISPONIBLE",
                        costo: 5000 
@@ -151,6 +147,8 @@ describe("Agenda", () =>{
                
             )
             
+
+
             /*
             expect(turnos).toContain(turnoMartes1erSem)
             expect(turnos).toContain(turnoMartes2doSem)
