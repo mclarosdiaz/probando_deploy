@@ -1,4 +1,4 @@
-import { Plan } from "./plan";
+import { Plan } from "./plan.js";
 
 export class ObraSocial{
     constructor(id, nombre, planes){

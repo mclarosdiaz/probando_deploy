@@ -1,6 +1,6 @@
-import { Notificacion } from "./notificacion";
-import { Turno } from "./turno";
-import { estrategiasNotificacion } from "./estrategiasNotificacion";
+import { Notificacion } from "./notificacion.js";
+import { Turno } from "./turno.js";
+import { estrategiasNotificacion } from "./estrategiasNotificacion.js";
 
 class FactoryNotificacion {
     
@@ -23,7 +23,7 @@ class FactoryNotificacion {
 
         return [
             new Notificacion(turno.id, turno.paciente.usuario, turno.paciente.usuario, mensajeBase),
-            new Notificacion(turno.id,turno.medico.usuario, turno.medico.usuario, mensajeBase)
+            new Notificacion(turno.id, turno.medico.usuario, turno.medico.usuario, mensajeBase)
 
             //TODO emisor Notificacion
         ];

@@ -1,4 +1,4 @@
-import { Especialidad } from "./especialidad";
+import { Especialidad } from "./especialidad.js";
 
 export class CoberturaEspecialidad {
     constructor(especialidad,nivel) {

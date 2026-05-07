@@ -1,4 +1,4 @@
-import { DiaSemana } from "./diaSemana";
+import { DiaSemana } from "./diaSemana.js";
 
 export class DisponibilidadHoraria{
     constructor(diaSemana, horaDesde, horaHasta){
