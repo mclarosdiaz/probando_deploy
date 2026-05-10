@@ -44,13 +44,16 @@ export class Turno {
     }
 
     asignarPractica(practica){
-        this.practica = practica
+        this.servicio = practica
     }
 
     asignarEspecialidad(especialidad){
-        this.especialidad = especialidad
+        this.servicio = especialidad
     }
     
+    modificarFecha(fecha){
+        this.fechaHora = fecha
+    }
 
     puedeModificar(usuarioId){
         return this.esPaciente(usuarioId) ||
@@ -113,4 +116,39 @@ export class Turno {
     obtenerUsuarioMedico(){
         return this.medico.usuario
     }
+
+    solicitarCambioFecha(fecha, usuario, motivo){
+        this.fechaHoraPropuesta = fecha
+        this.actualizarEstado(
+            this.estado.RESERVADO,
+            usuario, 
+            motivo
+        )
+    }
+
+    confirmarCambioFecha(usuario){
+        this.fechaHora = this.fechaHoraPropuesta
+        this.fechaHoraPropuesta = null
+
+        this.actualizarEstado(
+            EstadoTurno.CONFIRMADO, 
+            usuario,
+            "Cambio de fecha confirmado"
+        )
+    }
+
+    rechazarCambioFecha(usuario){
+        this.fechaHoraPropuesta = null
+
+        this.actualizarEstado(
+            EstadoTurno.CONFIRMADO,
+            usuario,
+            "Cambio de fecha rechazado"
+        )
+    }
+
+    sePuedeCancelar(fecha){
+        return (this.fechaHora - fecha) >= 3600000 //una hora en milisegundos
+    }
+    
 }

@@ -79,7 +79,41 @@ export class TurnoController {
         }
     }
 
+    marcarComoConfirmado = async(req,res,next) =>{
+        try{
+            const { id } = req.params
+            const { idUsuario } = req.query
+
+            await this.turnoService.marcarComoConfirmado({id, idUsuario})
+        } catch(error) {
+            next(error)
+        }
+    }
+
+    generarTurnosDisponibles = async(req, res, next) =>{
+        try{
+        
+            await this.turnoService.generarTurnosDisponibles()
+
+        }catch(error)
+            {
+                next(error)
+            }
+    }
     
+    modificarFechaTurno = async(req, res, next) =>{
+        try{
+            const { id } = req.params
+            const { idUsuario , nuevaFecha } = req.body
+            
+            await this.turnoService.modificarFechaTurno({ 
+                id, 
+                idUsuario, 
+                fecha: nuevaFecha })
+        }catch(error){
+            next(error)
+        }
+    }
 
     extraerPaginacion(query){
         const numPag = query?.page === undefined ? 1 : Number(query.page)
@@ -96,4 +130,6 @@ export class TurnoController {
             throw new BadRequestError(`El parámetro ${parametro} debe ser un entero positivo`)
         }
     }
+
+
 }

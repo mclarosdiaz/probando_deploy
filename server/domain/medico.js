@@ -26,5 +26,6 @@ export class Medico{
         return this.especialidades.includes(servicio)
             || this.practicas.includes(servicio)
     }
+    
 
 }

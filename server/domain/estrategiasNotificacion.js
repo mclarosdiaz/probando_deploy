@@ -2,18 +2,18 @@ export const estrategiasNotificacion = {
         // RESERVADO (ID: 2)
         2: (turno) => new Notificacion(
             turno.id,
-            turno.medico.usuario, 
-            turno.paciente.usuario, 
-            `El paciente ${turno.paciente.nombre} reservó un turno para ${turno.practica}`
+            turno.destinatarioUltimoCambioEstado(), 
+            turno.remitenteUltimoCambioEstado(), 
+            `Se reservó un turno para ${turno.servicio}`
         ),
 
         // CONFIRMADO (ID: 3)
         3: (turno) => 
             new Notificacion(
             turno.id,
-            turno.paciente.usuario, 
-            turno.medico.usuario, 
-            `Su turno con el Dr/a.  ${turno.medico.nombre}  ha sido confirmado.`
+            turno.destinatarioUltimoCambioEstado(), 
+            turno.remitenteUltimoCambioEstado(), 
+            "Su turno ha sido confirmado."
         ),
 
         // CANCELADO (ID: 4)

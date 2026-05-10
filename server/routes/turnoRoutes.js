@@ -33,11 +33,28 @@ router.post(
 )
 
 router.patch(
+    "/:id/confirmado",
+    validate(marcarComoConfirmadoSchema),
+    controller.marcarComoConfirmado
+)
+
+router.patch(
     "/:id/realizado",
     validate(marcarComoRealizadoSchema),
     controller.marcarComoRealizado
 )
 
+router.post(
+    "/generarTurnosDisponibles",
+    validate(generarTurnosDisponiblesSchema),
+    controller.generarTurnosDisponibles
+)
+
+router.patch(
+    "/:id/modificarFecha",
+    validate(modificarFechaTurnoSchema),
+    controller.modificarFechaTurno
+)
 
 
 export default router

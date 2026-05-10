@@ -15,13 +15,13 @@ export class MedicoService{
         this.medicoRepository = medicoRepository
     }
 
-    consultarDisponibilidades({idMedico, servicio, idServicio}){
+    async consultarDisponibilidades({idMedico, servicio, idServicio}){
         
         
         const medico = await this.findById(idMedico)
-        const servicios = this.especialidades.concat(this.practicas)
         
-        if(!medico.puedePracticar(servicio)){
+
+        if(!medico.puedeHacerServicio(servicio)){
             throw new BadRequestError("El médico no realiza esta práctica o especialidad")
         }
         
@@ -33,12 +33,14 @@ export class MedicoService{
         return disponibilidades
     }
 
-    findById(idMedico){
+    async findById(idMedico){
         
         const medico = await this.medicoRepository.findById(idMedico)
 
         if(!medico){
             throw new MedicoNotFoundError("No se encontró el médico")
         }
+
+        return medico
     }
 }

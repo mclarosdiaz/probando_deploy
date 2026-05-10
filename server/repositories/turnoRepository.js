@@ -18,6 +18,10 @@ export class TurnoRepository{
     async findall({ filtros, paginacion } = {}){
         throw new Error("Not implemented")
     }
+
+    async saveAll(turnos){
+        throw new Error("Not implemented")
+    }
 }
 
 export class TurnoRepositoryMock extends TurnoRepository{
@@ -37,6 +41,10 @@ export class TurnoRepositoryMock extends TurnoRepository{
         }
 
         return turno
+    }
+
+    async saveAll(turnos){
+        turnos.forEach(turno => this.save(turno))
     }
 
     async findById(id){
@@ -61,7 +69,7 @@ export class TurnoRepositoryMock extends TurnoRepository{
         if(filtros.fechaHasta){
             resultado = resultado.filter(t => t.fecha <= filtros.fechaHasta)
         }
-       
+        
         const total = resultado.length
 
         const { page, limit } = paginacion

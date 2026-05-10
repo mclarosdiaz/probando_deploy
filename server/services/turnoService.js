@@ -5,6 +5,7 @@ import { EstadoTurno } from "../domain/estadoTurno.js";
 import { TurnoRepository } from "../repositories/turnoRepository.js";
 import { PacienteRepository } from "../repositories/pacienteRepocitory.js"
 import { MedicoRepository } from "../repositories/medicoRepository.js"
+import { agenda } from "../domain/agenda.js"
 import { 
     BadRequestError, 
     PacienteNotFoundError,
@@ -37,11 +38,15 @@ export class TurnoService{
     async cancelar({id, motivo, idUsuario}){
         const turno = await this.findById(id)
         let usuario = null
+        const ahora= new Date()
 
         usuario = turno.obtenerUsuario(idUsuario)
 
         if(!usuario){
             throw new NotAllowedError("El usuario no puede cancelar este turno")
+        }
+        if(!turno.puedeCancelar(ahora)){
+            throw new NotAllowedError("No se puede cancelar turnos con menos de 1 hora de anticipacion")
         }
 
         const turnoModificado = turno.actualizarEstado(
@@ -49,6 +54,25 @@ export class TurnoService{
             usuario, 
             motivo)
 
+        return this.turnoRepository.save(turnoModificado)
+    }
+
+    async confirmar({id,idUsuario})
+    {
+        const turno = await this.findById(id)
+        let usuario = null
+        const motivo="El turno fue confirmado"
+
+        usuario=turno.obtenerUsuario(idUsuario)
+        
+        if(!usuario && !(turno.remitenteUltimoCambioEstado().id === idUsuario)){
+            throw new NotAllowedError("El usuario no puede confirmar este turno")
+        }
+        const turnoModificado= turno.actualizarEstado(
+            EstadoTurno.CONFIRMADO,
+            usuario,
+            motivo
+        )
         return this.turnoRepository.save(turnoModificado)
     }
 
@@ -89,12 +113,57 @@ export class TurnoService{
         return this.turnoRepository.save(turnoModificado)
     }
 
+    async generarTurnosDisponibles(){
+        const medicos = await this.turnoRepository.obtenerMedicos()
+        const disponiblesTotales
+
+        medicos.forEach(medico => {
+
+            const servicios = medico.especialidades.concat(medico.practicas)
+
+            const disponibles = servicios.forEach(servicio => {
+                agenda.generarTurnosPara(servicio, medico, 1)
+
+                disponiblesTotales.concat(disponibles)
+            })
+        })
+
+        return this.turnoRepository.saveAll(disponiblesTotales)
+    }
+
+    async modificarFechaTurno({ id, idUsuario , fecha }){
+        const turno = await this.turnoRepository.findById(id)
+
+
+        this.validarTurno(turno)
+
+        if(!turno.puedeModificar(idUsuario)){
+            throw new NotAllowedError("El usuario no puede solicitar cambio de fecha de este turno")
+        }
+
+        await this.validarDisponibilidad(turno, fecha)
+
+        const usuario = turno.obtenerUsuario(idUsuario) 
+
+        turno.actualizarEstado(EstadoTurno.RESERVADO, usuario, "El usuario solicitó el cambio de fecha")    
+        
+        turno.solicitarCambioFecha(
+            fecha, 
+            usuario, 
+            "Solicitud de cambio de fecha"
+        )
+
+        return this.turnoRepository.save(turno)
+    }
+
+    async validarDisponibilidad(){
+        //TODO
+    }
+
     async findById(id){
         const turno = await this.turnoRepository.findById(id)
 
-        if(!turno){
-            throw new TurnoNotFoundError("Turno no encontrado")
-        }
+        this.validarTurno(turno)
 
         return turno
     }
@@ -102,9 +171,7 @@ export class TurnoService{
     async obtenerPacientePorId(id){
         const paciente = await this.pacienteRepository.findById(id)
 
-        if(!paciente){
-            throw new PacienteNotFoundError("Paciente no encontrado")
-        }
+        this.validarPaciente(paciente)
 
         return paciente
     }
@@ -112,10 +179,36 @@ export class TurnoService{
     async obtenerMedicoPorId(id){
         const medico = await this.medicoRepository.findById(id)
 
-        if(!medico){
-            throw new MedicoNotFoundError("Medico no encontrado")
-        }
+        this.validarMedico(medico)
 
         return medico
+    }
+
+    async obtenerMedicos(){
+        const medicos = await this.medicoRepository.findAll()
+
+        if(medicos.length === 0){
+            throw new MedicoNotFoundError("No hay médicos disponibles")
+        }
+
+        return medicos
+    }
+
+    validarTurno(turno){
+        if (!turno) {
+            throw new TurnoNotFoundError("Turno no encontrado")
+        }
+    }
+
+    validarMedico(medico){
+        if (!medico) {
+            throw new MedicoNotFoundError("Médico no encontrado")
+        }
+    }
+
+    validarPaciente(paciente){
+        if(!paciente){
+            throw new PacienteNotFoundError("Paciente no encontrado")
+        }
     }
 }
