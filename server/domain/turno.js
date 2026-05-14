@@ -10,18 +10,13 @@ export class Turno {
     static numeroTurno = 0
 
     constructor(medico, fechaHora, sede, estado, costo) {
-        this.id = Turno.generarId()
+        
         this.medico = medico, 
         this.fechaHora = fechaHora,
         this.sede = sede, 
         this.estado = estado,
         this.historialEstados = [],
         this.costo = costo
-    }
-
-    static generarId(){ //método de clase (usa una variable a la que pueden acceder todas las instancias)
-        this.numeroTurno = this.numeroTurno + 1
-        return this.numeroTurno
     }
 
     actualizarEstado(nuevoEstado, usuario, motivo){

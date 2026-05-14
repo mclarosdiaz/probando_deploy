@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { MedicoController } from '../controllers/turnoController.js'
 import { MedicoService } from "../services/turnoService.js"
 import { validate, validateQuery } from '../middlewares/validate.js'
-import { consultarDisponibilidadSchema } from '../schemas/medicoSchema.js'
+import { consultarDisponibilidadSchema } from '../schemas/requestsSchemas/medicoRequestSchema.js'
 
 const router = Router()
 const service = new MedicoService()
@@ -12,4 +12,10 @@ router.get(
     "/disponibilidades",
     validate(consultarDisponibilidadSchema),
     controller.consultarDisponibilidades()
+)
+
+router.path(
+    "/:id/modificar",
+    validate(modificarDisponibilidadSchema),
+    controller.modificarDisponibilidades()
 )

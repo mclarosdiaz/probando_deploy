@@ -7,7 +7,7 @@ import {
 
 
 export class PacienteRepository{
-     save(paciente) {
+    save(paciente) {
         throw new Error("Not implemented");
     }
 

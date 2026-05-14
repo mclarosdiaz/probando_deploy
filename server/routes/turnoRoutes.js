@@ -7,7 +7,7 @@ import {
     cancelarTurnoRequestSchema,
     obtenerHistorialTurnosSchema,
     marcarComoRealizadoSchema
- } from '../schemas/turnoSchemas.js'
+ } from '../schemas/requestsSchemas/turnoRequestSchemas.js'
 
 
  const router = Router()

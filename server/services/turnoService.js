@@ -112,10 +112,10 @@ export class TurnoService{
 
         return this.turnoRepository.save(turnoModificado)
     }
-
+/* metodo que teniamos antes (si funciona el otro hay que borrarlo)
     async generarTurnosDisponibles(){
         const medicos = await this.turnoRepository.obtenerMedicos()
-        const disponiblesTotales
+        const disponiblesTotales = []
 
         medicos.forEach(medico => {
 
@@ -129,6 +129,40 @@ export class TurnoService{
         })
 
         return this.turnoRepository.saveAll(disponiblesTotales)
+    }
+*/
+
+    async generarTurnosDisponibles(){
+        const medicos = await this.medicoRepository.findAll()
+        let todosLosNuevosTurnos = []
+
+        for (const medico of medicos) {
+            const turnosDelMedico = this.generarTurnosParaMedico(medico);
+            todosLosNuevosTurnos = todosLosNuevosTurnos.concat(turnosDelMedico);
+        }
+
+        return await this.turnoRepository.saveAll(todosLosNuevosTurnos)
+    }
+
+    async generarTurnosParaMedico(medico) {
+        const servicios = [...medico.especialidades, ...medico.practicas]
+        let turnosDelMedico = []
+
+        servicios.forEach(servicio => {
+            const nuevosTurnos = agenda.generarTurnosPara(servicio, medico, 1)
+            turnosDelMedico = turnosDelMedico.concat(nuevosTurnos)
+        })
+        return turnosDelMedico
+    }
+
+    async sincronizarTurnosDisponibles(idMedico, nuevaDisponibilidades){
+        const ahora = new Date()
+        const medico = await this.obtenerMedicoPorId(idMedico)
+
+        await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) //TODO falta el metodo en el repositorio
+        const nuevosTurnos = this.generarTurnosParaMedico(medico)
+
+        return await this.turnoRepository.saveAll(nuevosTurnos)
     }
 
     async modificarFechaTurno({ id, idUsuario , fecha }){

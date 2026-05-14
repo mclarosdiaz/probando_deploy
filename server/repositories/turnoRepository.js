@@ -24,6 +24,10 @@ export class TurnoRepository{
     }
 }
 
+export class MongoTurnoRepository extends TurnoRepository{
+    
+}
+
 export class TurnoRepositoryMock extends TurnoRepository{
     constructor(){
         super()

@@ -18,8 +18,8 @@ export class Medico{
         this.disponibilidades = disponibilidades;
     }
 
-    definirDisponibilidad(disponibilidad){
-        this.disponibilidades.push(disponibilidad);
+    definirDisponibilidad(nuevasDisponibilidades){
+        this.disponibilidades = nuevasDisponibilidades;
     }
 
     puedeHacerServicio(servicio){
