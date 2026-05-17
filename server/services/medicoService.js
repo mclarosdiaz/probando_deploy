@@ -55,5 +55,28 @@ export class MedicoService {
         return medico
     }
 
+    async agregarServicio(idMedico, nuevoServicio){
+        const medico = await this.findById(idMedico)
+
+        medico.agregarServicio(nuevoServicio)
+
+        return await this.medicoRepository.save(medico)
+    }
+
+    async eliminarServicio(idMedico, idServicio){
+        const medico = await this.findById(idMedico)
+
+        medico.eliminarServicio(idServicio)
+
+        return await this.medicoRepository.save(medico)
+    }
+
+    async modificarServicio(idMedico, idServicio, nuevoServicio){
+        const medico = await this.findById(idMedico)
+
+        medico.modificarServicio(idServicio, datosModificados)
+
+        return await this.medicoRepository.save(medico)
+    }
 
 }

@@ -19,3 +19,21 @@ router.path(
     validate(modificarDisponibilidadSchema),
     controller.modificarDisponibilidades()
 )
+
+router.post(
+    "/:id/agregarServicio",
+    validate(agregarServicioSchema),
+    controller.agregarServicio()
+)
+
+router.delete(
+    "/:id/eliminarServicio",
+    validate(eliminarServicioSchema),
+    controller.eliminarServicio()
+)
+
+router.patch(
+    "/:id/modificarServicio",
+    validate(modificarServicioSchema),
+    controller.modificarServicio()
+)

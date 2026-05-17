@@ -33,8 +33,38 @@ export class MedicoController{
             next(error)
         }
 
-
     }
     
+    agregarServicio = async(req,res,next)=>{
+        const { idMedico } = req.params
+        const { nuevoServicio } = req.body
+
+        try{
+            this.medicoService.agregarServicio(idMedico, nuevoServicio)
+        } catch(error){
+            next(error)
+        }
+    }
+
+    eliminarServicio = async(req,res,next)=>{
+        const { idMedico, idServicio } = req.params
+
+        try{
+            this.medicoService.eliminarServicio(idMedico, idServicio)
+        } catch(error){
+            next(error)
+        }
+    }
+
+    modificarServicio = async(req,res,next)=>{
+        const { idMedico, idServicio } = req.params
+        const { datosModificados } = req.body
+
+        try{
+            this.medicoService.modificarServicio(idMedico, idServicio, datosModificados)
+        } catch(error){
+            next(error)
+        }
+    }
     
 }
