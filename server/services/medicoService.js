@@ -1,4 +1,4 @@
-import { MedicoRepository } from "../repositories/medicoRepository.js";
+import { MongoMedicoRepository } from "../repositories/medicoRepository.js";
 import { Medico } from "../domain/medico.js";
 import { DisponibilidadHoraria } from "../domain/disponibilidadHoraria.js";
 import {
@@ -55,5 +55,6 @@ export class MedicoService {
         return medico
     }
 
+    
 
 }

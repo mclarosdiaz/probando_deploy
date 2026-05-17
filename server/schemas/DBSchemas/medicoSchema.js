@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Medico } from "../../domain/medico.js"
 import { especialidadEmbeddedSchema } from "./especialidadEmbeddedSchema.js";
 import { practicaEmbeddedSchema } from "./practicaEmbeddedSchema.js";
+import { Usuario } from "../../domain/usuario.js";
 
 const medicoSchema = new mongoose.Schema({
     id: {
@@ -11,7 +12,7 @@ const medicoSchema = new mongoose.Schema({
     },
     usuario:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: "Medico",
+        ref: "Usuario",
         required:true
     },
     matricula:{
@@ -41,6 +42,10 @@ const medicoSchema = new mongoose.Schema({
         type:[mongoose.Schema.Types.ObjectId],
         ref:"DisponibilidadHoraria",
         required:true
+    },
+    eliminado: {
+        type: Boolean,
+        default: false
     }
 
 })

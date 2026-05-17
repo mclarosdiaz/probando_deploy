@@ -2,9 +2,9 @@ import{ Turno } from "../domain/turno.js"
 import { Paciente } from "../domain/paciente.js";
 import { Medico } from "../domain/medico.js";
 import { EstadoTurno } from "../domain/estadoTurno.js";
-import { TurnoRepository } from "../repositories/turnoRepository.js";
-import { PacienteRepository } from "../repositories/pacienteRepocitory.js"
-import { MedicoRepository } from "../repositories/medicoRepository.js"
+import { MongoTurnoRepository } from "../repositories/turnoRepository.js";
+import { MongoPacienteRepository } from "../repositories/pacienteRepository.js"
+import { MongoMedicoRepository } from "../repositories/medicoRepository.js"
 import { agenda } from "../domain/agenda.js"
 import { 
     BadRequestError, 
@@ -17,9 +17,7 @@ import {
 } from "../errors/appError.js";
 
 export class TurnoService{
-    constructor({ turnoRepository = new TurnoRepository(), 
-        pacienteRepository = new pacienteRepository(), 
-        medicoRepository = new MedicoRepository() } = {}){
+    constructor(turnoRepository, pacienteRepository, medicoRepository){
         this.turnoRepository = turnoRepository
         this.pacienteRepository = pacienteRepository
         this.medicoRepository = medicoRepository

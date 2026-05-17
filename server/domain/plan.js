@@ -1,6 +1,6 @@
-import { CoberturaEspecialidad } from "./coberturaEspecialidad";
-import { CoberturaPractica } from "./coberturaPractica";
-import { NivelCobertura } from "./nivelCobertura"
+import { CoberturaEspecialidad } from "./coberturaEspecialidad.js";
+import { CoberturaPractica } from "./coberturaPractica.js";
+import { NivelCobertura } from "./nivelCobertura.js"
 
 export class Plan{
     constructor(id, nombre, coberturasEspecialidad, coberturasPractica){

@@ -1,5 +1,0 @@
-import express from "express"
-import { ProductoController } from "../../../server/controllers/ProductoController.js"
-import { ProductoService } from "../../../server/services/ProductoService.js"
-import { notFoundHandler } from "../../../server/middlewares/notFoundHandler.js"
-import { errorHandler } from "../../../server/middlewares/errorHandler.js"

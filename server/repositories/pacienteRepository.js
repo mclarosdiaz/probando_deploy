@@ -4,18 +4,19 @@ import {
     PacienteNotFoundError,
     UnprocessableEntityError
 } from "../errors/appError.js"
+import { PacienteModel } from "../schemas/DBSchemas/pacienteSchema.js";
 
-
-export class PacienteRepository{
-    save(paciente) {
-        throw new Error("Not implemented");
+export class MongoPacienteRepository{
+    constructor(){
+        this.model= PacienteModel
     }
 
-    findById(id) {
-        throw new Error("Not implemented");
+    async save(paciente){
+        const nuevoPaciente= new this.model(paciente)
+        return await nuevoPaciente.save
     }
 
-    findAll() {
-        throw new Error("Not implemented");
+    async findById(id){
+        return await this.model.findById(id)
     }
 }

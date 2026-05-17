@@ -14,7 +14,7 @@ import {
  const turnoService = new TurnoService()
  const controller = new TurnoController({turnoService})
 
-router.post(
+router.patch(
     "/:id/reservar",
     validate(reservarTurnoSchema),
     controller.reservar
@@ -26,7 +26,7 @@ router.get(
     controller.obtenerHistorialTurnos
 )
 
-router.post(
+router.patch(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
     controller.cancelar

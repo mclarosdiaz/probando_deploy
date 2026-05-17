@@ -4,6 +4,7 @@ import { EstadoTurno } from "../../domain/estadoTurno.js";
 import { practicaEmbeddedSchema } from "./practicaEmbeddedSchema.js";
 import { especialidadEmbeddedSchema } from "./especialidadEmbeddedSchema.js";
 import { reservarTurnoSchema } from "../requestsSchemas/turnoRequestSchemas.js";
+import { cambioEstadoTurnoEmbeddedSchema } from "./cambioEstadoTurnoSchema.js";
 
 const turnoSchema = new mongoose.Schema({
     id: {
@@ -44,10 +45,8 @@ const turnoSchema = new mongoose.Schema({
         required: true, 
         default: EstadoTurno.DISPONIBLE
     },
-    historialEstado:{
-        type: [cambioEstadoTurnoSchema],
-        default: []
-    },
+    historialEstado:[cambioEstadoTurnoEmbeddedSchema],
+    
     costo:{
         type: Number,
         required: true

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Paciente } from "../../domain/paciente.js";
+import { UsuarioModel } from "./usuarioSchema.js";
 
 const pacienteSchema = new mongoose.Schema({
     id: {
@@ -9,7 +10,7 @@ const pacienteSchema = new mongoose.Schema({
     },
     usuario: {
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Paciente",
+        ref:"Usuario",
         required: true
     },
     dni:{
@@ -29,6 +30,10 @@ const pacienteSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Plan",
         required:true
+    },
+    eliminado:{
+        type: Boolean,
+        default: false
     }
 })
 

@@ -2,25 +2,25 @@ import { z } from "zod";
 
 export const reservarTurnoSchema = z.object({
     params: z.object({
-        id: z.string().uuid()
+        id: z.string()
     }),
     body: z.object({
-        pacienteId: z.string().uuid()
+        pacienteId: z.string()
     })
 })
 
 export const cancelarTurnoRequestSchema = z.object({
     params: z.object({
-        id: z.string().uuid()
+        id: z.string()
     }), 
     body: z.object({
-        motivo: z.string.min(5),
-        idUsuario: z.string().uuid()
+        motivo: z.string,
+        idUsuario: z.string()
     })
 })
 
 export const obtenerHistorialTurnosSchema = z.object({
-    pacienteId: z.string().uuid(),
+    pacienteId: z.string(),
 
     estado: z.enum(["RESERVADO", "CONFIRMADO", "CANCELADO", "REALIZADO"]).optional(),
     
@@ -38,19 +38,19 @@ export const obtenerHistorialTurnosSchema = z.object({
 
 export const maracarComoConfirmadoSchema = z.object({
     params: z.object({
-        id: z.string().uuid()
+        id: z.string()
     }),
     body: z.object({
-        idUsuario: z.string().uuid()
+        idUsuario: z.string()
     })
 })
 
 export const marcarComoRealizadoSchema = z.object({
     params: z.object({
-        id: z.string().uuid()
+        id: z.string()
     }),
     body: z.object({
-        idUsuario: z.string().uuid()
+        idUsuario: z.string()
     })
 })
 
@@ -58,10 +58,10 @@ export const generarTurnosDisponiblesSchema = z.object({})
 
 export const modificarFechaTurnoSchema = z.object({
     params: z.object({
-        id: z.string().uuid()
+        id: z.string()
     }),
     body: z.object({
-        idUsuario: z.string().uuid(),
+        idUsuario: z.string(),
         nuevaFecha: z.iso.datetime().optional()
             .transform((val) => val ? new Date(val) : undefined)
 

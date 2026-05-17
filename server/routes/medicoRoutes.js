@@ -15,7 +15,10 @@ router.get(
 )
 
 router.path(
-    "/:id/modificar",
+    "/:id/modificarDisponibilidad",
     validate(modificarDisponibilidadSchema),
     controller.modificarDisponibilidades()
 )
+
+
+
