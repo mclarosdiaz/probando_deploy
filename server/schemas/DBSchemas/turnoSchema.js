@@ -51,6 +51,10 @@ const turnoSchema = new mongoose.Schema({
     costo:{
         type: Number,
         required: true
+    },
+    eliminado: {
+        type: Boolean,
+        default: false
     }
 
 }, {
@@ -59,4 +63,4 @@ const turnoSchema = new mongoose.Schema({
 
 turnoSchema.loadClass(Turno)
 
-export const turnoModel = mongoose.model('Turno', turnoSchema)
+export const TurnoModel = mongoose.model('Turno', turnoSchema)
