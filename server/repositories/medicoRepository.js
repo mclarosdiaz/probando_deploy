@@ -4,22 +4,28 @@ import {
     TurnoNotFoundError,
     UnprocessableEntityError
 } from "../errors/appError.js"
+import { MedicoModel } from "../schemas/DBSchemas/medicoSchema.js";
 
 
-export class MedicoRepository{
-    save(medico) {
-        throw new Error("Not implemented");
+export class MongoMedicoRepository{
+    constructor(){
+        this.model = MedicoModel
     }
 
-    findById(id) {
-        throw new Error("Not implemented");
+    async save(medico){
+        const nuevoMedico = new this.model(medico)
+        return await nuevoMedico.save
+        
+    }
+    
+    async findById(id){
+        return await this.model.findById(id)
     }
 
-    findAll() {
-        throw new Error("Not implemented");
+    async findAll(){
+        return await this.model.find({eliminado: false}) 
     }
 }
-
 
 
 

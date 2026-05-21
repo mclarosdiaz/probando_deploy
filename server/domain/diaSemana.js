@@ -1,9 +1,9 @@
 export const DiaSemana = {
-    "DOMINGO": DOMINGO,
-    "LUNES": LUNES,
-    "MARTES": MARTES,
-    "MIERCOLES": MIERCOLES,
-    "JUEVES": JUEVES,
-    "VIERNES": VIERNES,
-    "SABADO": SABADO
+    DOMINGO: 0,
+    LUNES: 1,
+    MARTES: 2,
+    MIERCOLES: 3,
+    JUEVES: 4,
+    VIERNES: 5,
+    SABADO: 6
 }

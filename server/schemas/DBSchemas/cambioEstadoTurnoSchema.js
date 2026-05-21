@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "zod/v3";
-import { EstadoTurno } from "../../domain/estadoTurno";
-import { usuarioEmbeddedSchema } from "./usuarioEmbeddedSchema";
-import { CambioEstadoTurno } from "../../domain/cambioEstadoTurno";
+import { EstadoTurno } from "../../domain/estadoTurno.js";
+import { UsuarioModel } from "./usuarioSchema.js";
+import { CambioEstadoTurno } from "../../domain/cambioEstadoTurno.js";
 
-export const cambioEstadoTurnoEmbeddedSchema = new Schema({
+
+export const cambioEstadoTurnoEmbeddedSchema = new mongoose.Schema({
     fechaHoraIngreso: {
         type: Date,
         required: true
@@ -15,7 +16,8 @@ export const cambioEstadoTurnoEmbeddedSchema = new Schema({
         required: true, 
     }, 
     usuario:{
-        type: usuarioEmbeddedSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Usuario",
         required: true
     },
     motivo:{

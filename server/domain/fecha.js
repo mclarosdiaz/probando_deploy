@@ -1,4 +1,4 @@
-import { DisponibilidadHoraria } from "./disponibilidadHoraria"
+import { DisponibilidadHoraria } from "./disponibilidadHoraria.js"
 
 export function horaAMinutos(horaStr){
         const [horas, minutos] = horaStri.split(":").map(Number)
