@@ -13,7 +13,7 @@ import { ObraSocial } from "../../server/domain/obraSocial.js"
 
 describe("Medico API- Integracion",()=>{
     let app
-    let turnoRepository
+    let medicoRepository
     let fechaHora
     let medico
     let paciente
@@ -26,17 +26,18 @@ describe("Medico API- Integracion",()=>{
     let sedes
     let disponibilidades
     let sedeItaliano
+    let oftalmologia
     
 
     beforeEach(()=>{
-        turnoRepository={
+        medicoRepository={
             findall: jest.fn(),
             findById: jest.fn(),
             save: jest.fn(),
             saveAll: jest.fn(),
         }
 
-        app=buildTestApp(TurnoRepository)
+        app=buildTestApp(medicoRepository)
         
         fechaHora = new Date()
 
@@ -56,13 +57,14 @@ describe("Medico API- Integracion",()=>{
                 "Traumatología",
                 60,
                 10000
-            ),
-            new Especialidad("4568",
+            )
+        ]
+        
+        oftalmologia=new Especialidad("4568",
                 "Oftalmología",
                 45,
                 75000
             )
-        ]
 
         practicas = [
             revision,
@@ -112,5 +114,30 @@ describe("Medico API- Integracion",()=>{
 
         )
 
+})
+describe("POST /medicos/:id/agregarServicio",()=>{
+    test("Deberia retornar 200 agregando un servicio al medico",async()=>{
+        const response = await request(app)
+        .post("medicos/:id/agregarServicio")
+
+        expect(response.status).toBe(200)
+        expect(response.save).toHaveBeenCalled()
+    })
+})
+describe("DELETE /medicos/:id/eliminarServicio",()=>{
+    test("Deberia retornar 200 eliminando un servicio del medico",async()=>{
+        const response = await request(app)
+
+        expect(response.status).toBe(200)
+        expect(response.save).toHaveBeenCalled()
+    })
+})
+describe("PATCH /medicos/:id/modificarServicio",()=>{
+    test("Deberia retornar 200 modificando un servicio de un medico",async()=>{
+        const response= await request(app)
+
+        expect(response.status).toBe(200)
+        expect(response.save).toHaveBeenCalled()
+    })
 })
 })

@@ -5,6 +5,7 @@ import { TurnoController } from "../../server/controllers/turnoController.js"
 import { MedicoController } from "../../server/controllers/medicoController.js"
 import { MedicoService } from "../../server/services/medicoService.js"
 import { generarTurnosDisponiblesSchema,  } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { agregarServicioSchema } from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
 
 
 export function buildTestApp(turnoRepository, medicoRepository){
@@ -71,6 +72,22 @@ export function buildTestApp(turnoRepository, medicoRepository){
         "medicos/:id/modificarDisponibilidad",
         validate(modificarDisponibilidadSchema),
         controller.modificarDisponibilidades()
+    )
+    medicoRouter.post(
+        "medicos/:id/agregarServicio",
+        validate(agregarServicioSchema),
+        controller.agregarServicio()
+    )
+    medicoRouter.delete(
+        "medicos/:id/eliminarServicio",
+        validate(eliminarServicioSchema),
+        controller.eliminarServicio()
+    )
+    
+    medicoRouter.patch(
+        "medicos/:id/modificarServicio",
+        validate(modificarServicioSchema),
+        controller.modificarServicio()
     )
 }
 
