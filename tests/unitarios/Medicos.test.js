@@ -111,6 +111,6 @@ describe("Médico", () => {
         expect(medico.puedeHacerServicio(oftalmologia)).toBeFalsy()
     })
     test("Un medico puede modificar un servicio",()=>{
-        //todo hay que replantear el metodo de modificar servicio, cremos que lo mejor seria pasarle un objeto entero
+        //todo hay que replantear el metodo de modificar servicio, creemos que lo mejor seria pasarle un objeto entero
     })
 })

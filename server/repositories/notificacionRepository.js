@@ -13,10 +13,14 @@ export class MongoNotifiacionRepository{
 
     async save(notificacion){
         const nuevaNotifiacion = new this.model(notificacion)
-        return await nuevaNotifiacion.save
+        return await nuevaNotifiacion.save()
     }
 
     async findById(id){
         return await this.model.findById(id)
+    }
+
+    async obtenerTodasLasNotificaciones(id){
+        return await this.model.find({destinatario : id})
     }
 }
