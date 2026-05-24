@@ -60,11 +60,7 @@ export const eliminarServicioSchema = z.object({
 
 export const modificarServicioSchema = z.object({
     params: z.object({
-        id: z.string(),
-        servicioId: z.string()
+        id: z.string()
     }),
-    body: z.object({
-        duracionTurnoEnMins: z.number().int().positive().optional(),
-        costo: z.number().positive().optional()
-    })
+    body: z.union([especialidadBaseSchema, practicaBaseSchema])
 })

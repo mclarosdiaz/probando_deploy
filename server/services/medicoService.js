@@ -1,6 +1,8 @@
 import { MongoMedicoRepository } from "../repositories/medicoRepository.js";
 import { Medico } from "../domain/medico.js";
 import { DisponibilidadHoraria } from "../domain/disponibilidadHoraria.js";
+import { Practica } from "../domain/practica.js";
+import { Especialidad } from "../domain/especialidad.js";
 import {
     BadRequestError,
     PacienteNotFoundError,
@@ -71,10 +73,10 @@ export class MedicoService {
         return await this.medicoRepository.save(medico)
     }
 
-    async modificarServicio(idMedico, idServicio, nuevoServicio){
+    async modificarServicio(idMedico, servicioModificado){
         const medico = await this.findById(idMedico)
 
-        medico.modificarServicio(idServicio, datosModificados)
+        medico.modificarServicio(servicioModificado)
 
         return await this.medicoRepository.save(medico)
     }
