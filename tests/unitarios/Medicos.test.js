@@ -39,7 +39,8 @@ describe("Médico", () => {
         )
 
         practicas = [
-            revision
+            revision,
+            ecografia
         ]
 
         traumatologia = new Especialidad("5645",
@@ -98,7 +99,7 @@ describe("Médico", () => {
 
 
     test("Un medico puede agregar una disponibilidad",()=>{
-        medico.definirDisponibilidad(disponibilidad2)
+        medico.definirDisponibilidad([disponibilidad1, disponibilidad2])
         expect(medico.disponibilidades).toEqual([disponibilidad1, disponibilidad2])
         //to([disponibilidad1,disponibilidad2])
     })
@@ -107,7 +108,7 @@ describe("Médico", () => {
         expect(medico.puedeHacerServicio(ecografia)).toBeTruthy()
     })
     test("Un medico puede eliminar un servicio",()=>{
-        medico.eliminarServicio(4568)
+        medico.eliminarServicio("4568")
         expect(medico.puedeHacerServicio(oftalmologia)).toBeFalsy()
     })
     test("Un medico puede modificar un servicio",()=>{

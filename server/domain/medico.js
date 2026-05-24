@@ -40,9 +40,9 @@ export class Medico{
     }
 
     eliminarServicio(idServicio) {
-        if (!this.puedeHacerServicio(idServicio)) {
-            throw new UnprocessableEntityError("El servicio no pertenece a este médico")
-        }
+      /*   if (!this.puedeHacerServicio(idServicio)) {
+            throw new Error("El servicio no pertenece a este médico")
+        } */
 
         this.especialidades = this.especialidades.filter(especialidad => especialidad.id !== idServicio)
         this.practicas = this.practicas.filter(practica => practica.id !== idServicio)

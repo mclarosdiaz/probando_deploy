@@ -20,21 +20,21 @@ export class NotificacionService{
         this.notificacionRepository = notificacionRepository
     }
     async mostrarNoLeidas({idUsuario}){
-        const notificaciones = await this.obtenerTodasLasNotificaciones(idUsuario)
+        const notificaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
         let notificacionesNoLeidas= []
 
         notificacionesNoLeidas = notificaciones.filter(notificacion=> !notificacion.leida)
         return notificacionesNoLeidas
     }
     async mostrarLeidas({idUsuario}){
-        const notificaciones = await this.obtenerTodasLasNotificaciones(idUsuario)
+        const notificaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
         let notificacionesLeidas= []
 
-        notificacionesLeidas = notificaciones.filter(notificacion=> notificacion.leida)
+        notificacionesLeidas = notificaciones.filter(notificacion=> notificacion.leida) 
         return notificacionesLeidas
     }
-    async marcarComoLeida({id}){
-        const notificacion = await this.findById(id)
+    async marcarComoLeida({idNotificacion}){
+        const notificacion = await this.notificacionRepository.findById(idNotificacion)
         const notificacionModificada=notificacion.marcarComoLeida()
         
         return this.notificacionRepository.save(notificacionModificada)
