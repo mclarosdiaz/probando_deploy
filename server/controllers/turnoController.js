@@ -5,7 +5,7 @@ import { validateQuery } from "../middlewares/validate.js"
 
 
 export class TurnoController {
-    constructor({ turnoService  =  new TurnoService() } = {}){
+    constructor(turnoService  =  new TurnoService()){
         this.turnoService = turnoService
     }
 
@@ -26,8 +26,8 @@ export class TurnoController {
     cancelarTurno = async(req, res, next) =>{
         try {
             const { id } = req.params
-            const { motivo } = req.body
-            const { idUsuario } = req.query
+            const { motivo, idUsuario } = req.body
+            
 
             await this.turnoService.cancelar({
                 id, 
@@ -71,9 +71,10 @@ export class TurnoController {
     marcarComoRealizado = async(req, res, next) =>{
         try {
             const { id } = req.params
-            const { idUsuario } = req.query
+            const { idUsuario } = req.body
 
             await this.turnoService.marcarComoRealizado({id, idUsuario})
+            res.sendStatus(200)
         } catch (error) {
             next(error)
         }
@@ -82,23 +83,24 @@ export class TurnoController {
     marcarComoConfirmado = async(req,res,next) =>{
         try{
             const { id } = req.params
-            const { idUsuario } = req.query
+            const { idUsuario } = req.body
 
             await this.turnoService.marcarComoConfirmado({id, idUsuario})
+            res.sendStatus(200)
         } catch(error) {
             next(error)
         }
     }
 
     generarTurnosDisponibles = async(req, res, next) =>{
-        try{
-        
-            await this.turnoService.generarTurnosDisponibles()
+        try {
 
-        }catch(error)
-            {
-                next(error)
-            }
+            const turnos = await this.turnoService.generarTurnosDisponibles()
+            
+            res.status(200).json(turnos)
+        } catch (error) {
+            next(error)
+        }
     }
     
     modificarFechaTurno = async(req, res, next) =>{
@@ -110,6 +112,8 @@ export class TurnoController {
                 id, 
                 idUsuario, 
                 fecha: nuevaFecha })
+
+            res.sendStatus(200)
         }catch(error){
             next(error)
         }

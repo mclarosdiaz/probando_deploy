@@ -1,6 +1,9 @@
+import { Turno } from "./turno";
+import { Notificacion } from "./notificacion";
+
 export const estrategiasNotificacion = {
         // RESERVADO (ID: 2)
-        2: (turno) => new Notificacion(
+        RESERVADO: (turno) => new Notificacion(
             turno.id,
             turno.destinatarioUltimoCambioEstado(), 
             turno.remitenteUltimoCambioEstado(), 
@@ -8,7 +11,7 @@ export const estrategiasNotificacion = {
         ),
 
         // CONFIRMADO (ID: 3)
-        3: (turno) => 
+        CONFIRMADO: (turno) => 
             new Notificacion(
             turno.id,
             turno.destinatarioUltimoCambioEstado(), 
@@ -17,7 +20,7 @@ export const estrategiasNotificacion = {
         ),
 
         // CANCELADO (ID: 4)
-        4: (turno) => {
+        CANCELADO: (turno) => {
             return new Notificacion(
                 turno.id,
                 turno.destinatarioUltimoCambioEstado(), 

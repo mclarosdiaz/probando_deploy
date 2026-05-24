@@ -11,7 +11,7 @@ class FactoryNotificacion {
     crearSegunEstadoTurno(turno) {   
         const estrategia = estrategiasNotificacion[turno.estado];
         if(!estrategia){
-            throw new Error("No hay cambios en el turno para notificar");
+            return null
         }
 
         return estrategia(turno)

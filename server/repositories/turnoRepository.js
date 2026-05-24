@@ -29,7 +29,7 @@ export class MongoTurnoRepository {
         return await this.model.findById(id)
     }
 
-    async findall({ filtros, paginacion } = {}){
+    async findAll({ filtros, paginacion } = {}){
         const query = {}
 
         if(filtros.pacienteId){

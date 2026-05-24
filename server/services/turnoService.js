@@ -43,7 +43,7 @@ export class TurnoService{
         if(!usuario){
             throw new NotAllowedError("El usuario no puede cancelar este turno")
         }
-        if(!turno.puedeCancelar(ahora)){
+        if(!turno.sePuedeCancelar(ahora)){
             throw new NotAllowedError("No se puede cancelar turnos con menos de 1 hora de anticipacion")
         }
 
@@ -76,7 +76,7 @@ export class TurnoService{
 
     async obtenerHistorial({ filtros, paginacion}){
         
-        const { data, total } = await this.turnoRepository.findall({
+        const { data, total } = await this.turnoRepository.findAll({
             filtros, 
             paginacion
         })
@@ -86,10 +86,12 @@ export class TurnoService{
         const totalPages = Math.ceil(total / limit)
 
         return {
-            data, 
-            page,
-            totalPages, 
-            total
+            data,
+            paginacion:{
+                page,
+                totalPages, 
+                total
+            }
         }
 
     }
@@ -99,7 +101,7 @@ export class TurnoService{
         let usuario = turno.obtenerUsuarioMedico()
 
 
-        if(!usuario.id === idUsuario){
+        if(usuario.id !== idUsuario){
             throw new NotAllowedError("El usuario no puede marcar como realizado este turno")
         }
 

@@ -12,7 +12,7 @@ import {
 import { TurnoService } from "./turnoService.js";
 
 export class MedicoService {
-    constructor({ medicoRepository, turnoService}) {
+    constructor(medicoRepository, turnoService) {
         this.medicoRepository = medicoRepository
         this.turnoService = TurnoService 
     }

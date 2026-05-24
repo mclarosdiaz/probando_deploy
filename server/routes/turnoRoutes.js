@@ -6,13 +6,16 @@ import {
     reservarTurnoSchema,
     cancelarTurnoRequestSchema,
     obtenerHistorialTurnosSchema,
-    marcarComoRealizadoSchema
+    marcarComoRealizadoSchema,
+    modificarEstadoTurnoSchema,
+    generarTurnosDisponiblesSchema,
+    modificarFechaTurnoSchema
  } from '../schemas/requestsSchemas/turnoRequestSchemas.js'
 
 
  const router = Router()
  const turnoService = new TurnoService()
- const controller = new TurnoController({turnoService})
+ const controller = new TurnoController(turnoService)
 
 router.patch(
     "/:id/reservar",
@@ -29,18 +32,18 @@ router.get(
 router.patch(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
-    controller.cancelar
+    controller.cancelarTurno
 )
 
 router.patch(
     "/:id/confirmado",
-    validate(marcarComoConfirmadoSchema),
+    validate(modificarEstadoTurnoSchema),
     controller.marcarComoConfirmado
 )
 
 router.patch(
     "/:id/realizado",
-    validate(marcarComoRealizadoSchema),
+    validate(modificarEstadoTurnoSchema),
     controller.marcarComoRealizado
 )
 

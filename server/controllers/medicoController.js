@@ -1,4 +1,4 @@
-import { response } from "express"
+import { response, request } from "express"
 import { MedicoService } from "../services/medicoService.js"
 
 export class MedicoController{
