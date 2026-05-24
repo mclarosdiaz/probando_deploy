@@ -94,6 +94,55 @@ export class TurnoService{
 
     }
 
+    async buscarTurnosDisponibles({idPaciente, filtros, paginacion}) {
+        const paciente = await this.pacienteRepository.findById(idPaciente)
+
+        const plan = paciente.plan
+
+        const coberturasPractica = plan.coberturasPractica
+        const coberturasEspecialidad = plan.coberturasEspecialidad
+
+        const {turnos, total} = await this.turnoRepository.findAll({filtros, paginacion})
+
+        const turnosConCobertura = turnos.map(
+            (turno) => {
+                const cobertura = 
+                    plan.obtenerCoberturaPractica(turno.servicio)
+                    || plan.obtenerCoberturaEspecialidad(turno.servicio) 
+
+                return{
+                    turno: turno,
+                    cobertura: cobertura.nivel,
+                    costo: cobertura.costoAplicandoCobertura  
+                }
+            }
+        )
+
+        turnosConCobertura.sort((turnoA, turnoB) => {
+            if(turnoA.costo <= turnoB.costo){
+                return -1
+            }else if(turnoA.costo == turnoB.costo){
+                if(turnoA.turno.fechaHora >= turnoB.turno.fechaHora){
+                    return -1
+                }else{
+                    return 1
+                }
+            }else{
+                return 1
+            }  
+        })
+
+        const {page, limit} = paginacion
+        const totalPages = Math.ceil(total / limit)
+
+        return{
+            turnosConCobertura,
+            page,
+            totalPages,
+            total
+        }
+    }
+
     async marcarComoRealizado({id, idUsuario}){
         const turno = await this.turnoRepository.findById(id)
         let usuario = turno.obtenerUsuarioMedico()
@@ -226,6 +275,7 @@ export class TurnoService{
         return medicos
     }
 
+
     validarTurno(turno){
         if (!turno) {
             throw new TurnoNotFoundError("Turno no encontrado")
@@ -243,4 +293,5 @@ export class TurnoService{
             throw new PacienteNotFoundError("Paciente no encontrado")
         }
     }
+
 }

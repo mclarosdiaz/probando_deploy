@@ -29,7 +29,34 @@ export class MongoTurnoRepository {
         return await this.model.findById(id)
     }
 
-    async findall({ filtros, paginacion } = {}){
+    async findallPaginado({ filtros, paginacion } = {}){
+        const query = this.obtenerFiltros(filtros)
+
+        const { page, limit } = paginacion
+
+        const [data, total] = await Promise.all([
+            TurnoModel
+                .find(query)
+                .skip(offset)
+                .limit(limit),
+                TurnoModel.countDocuments(query)
+        ])
+
+        return {
+            data, 
+            total
+        }
+    }
+
+    async findAll({ filtros, paginacion } = {}){
+        const query = this.obtenerFiltros(filtros)
+        const data = await Promise.all([TurnoModel.find(query)])
+
+
+    }
+
+
+    obtenerFiltros(filtros){
         const query = {}
 
         if(filtros.pacienteId){
@@ -50,22 +77,15 @@ export class MongoTurnoRepository {
             }
         }
 
-        const { page, limit } = paginacion
-
-        const [data, total] = await Promise.all([
-            TurnoModel
-                .find(query)
-                .skip(offset)
-                .limit(limit),
-
-                TurnoModel.countDocuments(query)
-        ])
-
-        return {
-            data, 
-            total
+        if(filtros.profesional){
+            query.profesional = filtros.profesional
         }
 
+        if(filtros.especialidad){
+            query.especialidad = filtros.especialidad
+        }
+    
+        return query
     }
 
 }

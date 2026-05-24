@@ -68,6 +68,39 @@ export class TurnoController {
         }
     }
 
+    buscarTurnosDisponibles = async(req, res, next) =>{
+        try{
+            const{ idPaciente } = req.params
+            const{ 
+                profesional,
+                especialidad,
+                practica,
+                sede,
+                fechaDesde,
+                fechaHasta } = req.body
+
+            const turnos = await this.turnoService.buscarTurnosDisponibles({
+                idPaciente: idPaciente,
+                filtros:{
+                    profesional,
+                    especialidad,
+                    practica,
+                    sede,
+                    fechaDesde,
+                    fechaHasta
+                },
+                paginacion:{
+                    page,
+                    limit
+                }
+            })
+
+            res.json(turnos)
+        }catch(error){
+            next(error)
+        }
+    }
+
     marcarComoRealizado = async(req, res, next) =>{
         try {
             const { id } = req.params
@@ -114,6 +147,7 @@ export class TurnoController {
             next(error)
         }
     }
+
 
     extraerPaginacion(query){
         const numPag = query?.page === undefined ? 1 : Number(query.page)

@@ -56,5 +56,11 @@ router.patch(
     controller.modificarFechaTurno
 )
 
+router.get(
+    "/:idPaciente/turnosDisponibles", //TEMPORAL
+    validate(busquedaDeTurnosDisponibles),
+    controller.buscarTurnosDisponibles
+)
+
 
 export default router
