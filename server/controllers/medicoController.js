@@ -58,10 +58,10 @@ export class MedicoController{
 
     modificarServicio = async(req,res,next)=>{
         const { idMedico, idServicio } = req.params
-        const { datosModificados } = req.body
+        const { servicioModificado } = req.body
 
         try{
-            this.medicoService.modificarServicio(idMedico, idServicio, datosModificados)
+            this.medicoService.modificarServicio(idMedico, idServicio, servicioModificado)
         } catch(error){
             next(error)
         }

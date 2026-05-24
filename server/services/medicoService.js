@@ -71,10 +71,10 @@ export class MedicoService {
         return await this.medicoRepository.save(medico)
     }
 
-    async modificarServicio(idMedico, idServicio, nuevoServicio){
+    async modificarServicio(idMedico, idServicio, servicioModificado){
         const medico = await this.findById(idMedico)
 
-        medico.modificarServicio(idServicio, datosModificados)
+        medico.modificarServicio(idServicio, servicioModificado)
 
         return await this.medicoRepository.save(medico)
     }

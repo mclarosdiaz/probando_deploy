@@ -48,25 +48,13 @@ export class Medico{
         this.practicas = this.practicas.filter(practica => practica.id !== idServicio)
     }
 
-    modificarServicio(idServicio, datosModificados) {
+    modificarServicio(idServicio, servicioModificado) {
         if (!this.puedeHacerServicio(idServicio)) {
             throw new UnprocessableEntityError("El servicio no pertenece a este médico")
         }
 
-        for (let especialidad of this.especialidades) {
-            if (especialidad.id === idServicio) {
-                if (datosModificados.costo) especialidad.costo = datosModificados.costo
-                if (datosModificados.duracionTurnoEnMins) especialidad.duracionTurnoEnMins = datosModificados.duracionTurnoEnMins
-                return
-            }
-        }
-        for (let practica of this.practicas) {
-            if (practica.id === idServicio) {
-                if (datosModificados.costo) practica.costo = datosModificados.costo
-                if (datosModificados.duracionTurnoEnMins) practica.duracionTurnoEnMins = datosModificados.duracionTurnoEnMins
-                return
-            }
-        }
+        this.eliminarServicio(idServicio)
+        this.agregarServicio(servicioModificado)
     }
 
 }
