@@ -257,8 +257,6 @@ describe ("PATCH /turnos/:id/modificarFecha",()=>{
             nuevaFecha: "2026-06-01T10:00:00.000Z"
         })
 
-        console.log(response.body)
-
         expect(response.status).toBe(200)
     })
 })
@@ -271,7 +269,6 @@ describe("PATCH /turnos/:id/realizado",()=>{
             idUsuario: "1234"
         })
 
-        console.log(response.body)
 
         expect(response.status).toBe(200)
     })
