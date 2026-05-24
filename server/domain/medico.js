@@ -48,12 +48,12 @@ export class Medico{
         this.practicas = this.practicas.filter(practica => practica.id !== idServicio)
     }
 
-    modificarServicio(idServicio, servicioModificado) {
-        if (!this.puedeHacerServicio(idServicio)) {
+    modificarServicio(servicioModificado) {
+        if (!this.puedeHacerServicio(servicioModificado.id)) {
             throw new UnprocessableEntityError("El servicio no pertenece a este médico")
         }
 
-        this.eliminarServicio(idServicio)
+        this.eliminarServicio(servicioModificado.id)
         this.agregarServicio(servicioModificado)
     }
 
