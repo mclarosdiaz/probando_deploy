@@ -23,3 +23,38 @@ export const modificarDisponibilidadSchema = z.object({
     ).nonempty("La lista no puede estar vacía")
 })
 
+export const especialidadSchema = z.object({
+    id: z.string(),
+    nombre: z.string().min(1),
+    duracionTurnoEnMins: z.number().int().positive(),
+    costo: z.number().positive()
+})
+
+export const practicaSchema = z.object({
+    id: z.string(),
+    codigo: z.string().min(1),
+    nombre: z.string().min(1),
+    duracionTurnoEnMins: z.number().int().positive(),
+    costo: z.number().positive()
+})
+
+export const agregarServicioSchema = z.object({
+    params: z.object({
+        id: z.string()
+    }),
+    body: z.union([especialidadSchema, practicaSchema])
+ 
+})
+export const eliminarServicioSchema = z.object({
+    params: z.object({
+        id: z.string(),
+        servicioId: z.string()
+    })
+})
+
+export const modificarServicioSchema = z.object({
+    params: z.object({
+        id: z.string()
+    }),
+    body: z.union([especialidadSchema, practicaSchema])
+})

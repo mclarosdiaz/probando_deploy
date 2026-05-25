@@ -1,7 +1,7 @@
 import request from "supertest"
 import { describe, expect, jest, test, beforeEach } from "@jest/globals"
-import { buildTestApp } from "./utils/buildApp.js"
-import{ Turno } from "../server/domain/turno.js"
+import { buildTestApp } from "../utils/buildApp.js"
+//import{ Turno } from "../server/domain/turno.js"
 import { Paciente } from "../../server/domain/paciente.js"
 import { Medico } from "../../server/domain/medico.js"
 import { Sede } from "../../server/domain/sede.js"
@@ -10,10 +10,14 @@ import { EstadoTurno } from "../../server/domain/estadoTurno.js"
 import { Usuario } from "../../server/domain/usuario.js"
 import { Practica } from "../../server/domain/practica.js"
 import { ObraSocial } from "../../server/domain/obraSocial.js"
+import { Especialidad } from "../../server/domain/especialidad.js"
+import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria.js"
+import { DiaSemana } from "../../server/domain/diaSemana.js"
+import { MongoMedicoRepository } from "../../server/repositories/medicoRepository.js"
 
 describe("Medico API- Integracion",()=>{
     let app
-    let turnoRepository
+    let medicoRepository
     let fechaHora
     let medico
     let paciente
@@ -26,17 +30,12 @@ describe("Medico API- Integracion",()=>{
     let sedes
     let disponibilidades
     let sedeItaliano
+    let oftalmologia
     
 
     beforeEach(()=>{
-        turnoRepository={
-            findall: jest.fn(),
-            findById: jest.fn(),
-            save: jest.fn(),
-            saveAll: jest.fn(),
-        }
-
-        app=buildTestApp(TurnoRepository)
+       
+        
         
         fechaHora = new Date()
 
@@ -56,13 +55,14 @@ describe("Medico API- Integracion",()=>{
                 "Traumatología",
                 60,
                 10000
-            ),
-            new Especialidad("4568",
+            )
+        ]
+        
+        oftalmologia=new Especialidad("4568",
                 "Oftalmología",
                 45,
                 75000
             )
-        ]
 
         practicas = [
             revision,
@@ -111,6 +111,55 @@ describe("Medico API- Integracion",()=>{
             "Pedro Gimenez",
 
         )
+        medicoRepository = {
+            save: jest.fn().mockImplementation(async(entidad) => entidad),
+            findById: jest.fn().mockResolvedValue(medico),
+            findAll: jest.fn().mockResolvedValue([medico])
+        }
 
+        app=buildTestApp(medicoRepository)
+        
+
+})
+
+       
+describe("POST /medicos/:id/agregarServicio", () => {
+    test("Debería retornar 200 agregando un servicio al medico", async () => {
+        const response = await request(app)
+            .post("/medicos/1234/agregarServicio")
+            .send({
+                id : "4568",
+                nombre : "Oftalmología",
+                duracionTurnoEnMins : 45,
+                costo : 75000
+                })
+        console.log(response.status, response.body, response.error)
+        expect(response.status).toBe(200)
+    })
+})
+
+describe("DELETE /medicos/:id/eliminarServicio", () => {
+    test("Debería retornar 200 eliminando un servicio", async () => {
+        const response = await request(app)
+            .delete("/medicos/1234/eliminarServicio")
+            .query({ idUsuario: "1234" })
+            .send({ idServicio: "6598" })
+
+        expect(response.status).toBe(200)
+    })
+})
+
+describe("PATCH /medicos/:id/modificarServicio", () => {
+    test("Debería retornar 200 modificando un servicio", async () => {
+        const response = await request(app)
+            .patch("/medicos/123/modificarServicio")
+            .query({ idUsuario: "456" })
+            .send({
+                idServicio: "5645",
+                nombre: "Nuevo nombre"
+            })
+
+        expect(response.status).toBe(200)
+    })
 })
 })

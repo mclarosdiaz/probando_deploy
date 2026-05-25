@@ -1,6 +1,8 @@
 import { MongoMedicoRepository } from "../repositories/medicoRepository.js";
 import { Medico } from "../domain/medico.js";
 import { DisponibilidadHoraria } from "../domain/disponibilidadHoraria.js";
+import { Practica } from "../domain/practica.js";
+import { Especialidad } from "../domain/especialidad.js";
 import {
     BadRequestError,
     PacienteNotFoundError,
@@ -14,7 +16,7 @@ import { TurnoService } from "./turnoService.js";
 export class MedicoService {
     constructor(medicoRepository, turnoService) {
         this.medicoRepository = medicoRepository
-        this.turnoService = TurnoService 
+        this.turnoService = turnoService 
     }
 
     async consultarDisponibilidades({ idMedico, servicio, idServicio }) {
@@ -55,6 +57,28 @@ export class MedicoService {
         return medico
     }
 
-    
+    async agregarServicio(idMedico, nuevoServicio){
+        const medico = await this.findById(idMedico)
+
+        medico.agregarServicio(nuevoServicio)
+
+        return await this.medicoRepository.save(medico)
+    }
+
+    async eliminarServicio(idMedico, idServicio){
+        const medico = await this.findById(idMedico)
+
+        medico.eliminarServicio(idServicio)
+
+        return await this.medicoRepository.save(medico)
+    }
+
+    async modificarServicio(idMedico, servicioModificado){
+        const medico = await this.findById(idMedico)
+
+        medico.modificarServicio(servicioModificado)
+
+        return await this.medicoRepository.save(medico)
+    }
 
 }
