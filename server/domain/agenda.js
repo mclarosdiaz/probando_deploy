@@ -9,7 +9,7 @@ class Agenda {
 
     generarTurnosPara(servicio, medico, semanas = 4) {
 
-        if (!medico.puedeHacerServicio(servicio)) {
+        if (!medico.puedeHacerServicio(servicio.id)) {
             throw new Error("El médico no realiza esta especialidad");
         }
 

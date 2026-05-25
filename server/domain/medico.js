@@ -22,15 +22,15 @@ export class Medico{
         this.disponibilidades = nuevasDisponibilidades;
     }
 
-    puedeHacerServicio(servicio){
-        return this.especialidades.includes(servicio)
-            || this.practicas.includes(servicio)
+    puedeHacerServicio(idServicio){
+         return this.especialidades.some(s => s.id === idServicio)
+        || this.practicas.some(s => s.id === idServicio)
     }
     
     agregarServicio(nuevoServicio) {
-        if (this.puedeHacerServicio(nuevoServicio.id)) {
+       /*  if (this.puedeHacerServicio(nuevoServicio.id)) {
             throw new ConflictError("El médico ya tiene asignado este servicio")
-        }
+        } */
 
         if (nuevoServicio.codigo) {
             this.practicas.push(nuevoServicio)
@@ -40,9 +40,10 @@ export class Medico{
     }
 
     eliminarServicio(idServicio) {
-      /*   if (!this.puedeHacerServicio(idServicio)) {
-            throw new Error("El servicio no pertenece a este médico")
-        } */
+        if (!this.puedeHacerServicio(idServicio)) {
+            console.log("HOLA")
+            throw new UnprocessableEntityError("El servicio no pertenece a este médico")
+        } 
 
         this.especialidades = this.especialidades.filter(especialidad => especialidad.id !== idServicio)
         this.practicas = this.practicas.filter(practica => practica.id !== idServicio)

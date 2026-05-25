@@ -14,7 +14,10 @@ import { cancelarTurnoRequestSchema,
   } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
 import {
     consultarDisponibilidadSchema,
-    modificarDisponibilidadSchema
+    modificarDisponibilidadSchema,
+    agregarServicioSchema,
+    eliminarServicioSchema,
+    modificarServicioSchema
 }from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
 
 
@@ -76,15 +79,31 @@ export function buildTestApp(turnoRepository, pacienteRepository, medicoReposito
 
 
     medicoRouter.get(
-        "medicos/disponibilidades",
+        "/medicos/disponibilidades",
         validate(consultarDisponibilidadSchema),
         medicoController.consultarDisponibilidades
     )
     
     medicoRouter.patch(
-        "medicos/:id/modificarDisponibilidad",
+        "/medicos/:id/modificarDisponibilidad",
         validate(modificarDisponibilidadSchema),
         medicoController.modificarDisponibilidades
+    )
+     medicoRouter.post(
+        "/medicos/:id/agregarServicio",
+        validate(agregarServicioSchema),
+        medicoController.agregarServicio
+    )
+    medicoRouter.delete(
+        "/medicos/:idMedico/eliminarServicio/:idServicio",
+        validate(eliminarServicioSchema),
+        medicoController.eliminarServicio
+    )
+    
+    medicoRouter.patch(
+        "/medicos/:idMedico/modificarServicio",
+        validate(modificarServicioSchema),
+        medicoController.modificarServicio
     )
 
     app.use(turnoRouter)

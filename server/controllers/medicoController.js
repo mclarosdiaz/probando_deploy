@@ -40,7 +40,8 @@ export class MedicoController{
         const  nuevoServicio  = req.body
 
         try{
-            this.medicoService.agregarServicio(idMedico, nuevoServicio)
+            await this.medicoService.agregarServicio(idMedico, nuevoServicio)
+            res.sendStatus(200)
         } catch(error){
             next(error)
         }
@@ -50,7 +51,8 @@ export class MedicoController{
         const { idMedico, idServicio } = req.params
 
         try{
-            this.medicoService.eliminarServicio(idMedico, idServicio)
+            await this.medicoService.eliminarServicio(idMedico, idServicio)
+            res.sendStatus(200)
         } catch(error){
             next(error)
         }
@@ -58,10 +60,11 @@ export class MedicoController{
 
     modificarServicio = async(req,res,next)=>{
         const { idMedico } = req.params
-        const { servicioModificado } = req.body
+        const  servicioModificado  = req.body
 
         try{
-            this.medicoService.modificarServicio(idMedico, servicioModificado)
+            await this.medicoService.modificarServicio(idMedico, servicioModificado)
+            res.sendStatus(200)
         } catch(error){
             next(error)
         }

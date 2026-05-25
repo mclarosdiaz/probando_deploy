@@ -47,14 +47,14 @@ export const agregarServicioSchema = z.object({
 })
 export const eliminarServicioSchema = z.object({
     params: z.object({
-        id: z.string(),
-        servicioId: z.string()
+        idMedico: z.string(),
+        idServicio: z.string()
     })
 })
 
 export const modificarServicioSchema = z.object({
     params: z.object({
-        id: z.string()
+        idMedico: z.string()
     }),
     body: z.union([especialidadSchema, practicaSchema])
 })

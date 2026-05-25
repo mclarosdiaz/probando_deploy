@@ -1,7 +1,7 @@
 import request from "supertest"
 import { describe, expect, jest, test, beforeEach } from "@jest/globals"
 import { buildTestApp } from "../utils/buildApp.js"
-//import{ Turno } from "../server/domain/turno.js"
+import { Turno } from "../../server/domain/turno.js"
 import { Paciente } from "../../server/domain/paciente.js"
 import { Medico } from "../../server/domain/medico.js"
 import { Sede } from "../../server/domain/sede.js"
@@ -18,6 +18,9 @@ import { MongoMedicoRepository } from "../../server/repositories/medicoRepositor
 describe("Medico API- Integracion",()=>{
     let app
     let medicoRepository
+    let pacienteRepository
+    let turnoRepository
+    let turnoService
     let fechaHora
     let medico
     let paciente
@@ -111,13 +114,41 @@ describe("Medico API- Integracion",()=>{
             "Pedro Gimenez",
 
         )
-        medicoRepository = {
-            save: jest.fn().mockImplementation(async(entidad) => entidad),
-            findById: jest.fn().mockResolvedValue(medico),
-            findAll: jest.fn().mockResolvedValue([medico])
-        }
-
-        app=buildTestApp(medicoRepository)
+             const turno = new Turno(medico, 
+                      new Date(Date.now() + 1000 * 60 * 60 * 24), 
+                      sedeChacarita, 
+                      EstadoTurno.RESERVADO, 
+                      revision.costo)
+              
+              turno.asignarPaciente(paciente)
+              turno.actualizarEstado(EstadoTurno.CONFIRMADO, usuarioPaciente, "Turno confirmado")
+      
+              turnosMock = [turno]
+              
+              turnoRepository = {
+                  findAll: jest.fn().mockResolvedValue({
+                      data: turnosMock,
+                      total: 1
+                  }),
+                  findById: 
+                      jest.fn().mockImplementation(async(id) => {
+                          return id === "123"? turno: null
+                      }),
+                  save: jest.fn().mockImplementation(async (entidad) => entidad),
+                  saveAll: jest.fn().mockImplementation(async (entidades) => entidades)
+              }
+      
+              medicoRepository = {
+                  save: jest.fn().mockImplementation(async(entidad) => entidad),
+                  findById: jest.fn().mockResolvedValue(medico),
+                  findAll: jest.fn().mockResolvedValue([medico])
+              }
+      
+              pacienteRepository = {
+                  findById: jest.fn().mockResolvedValue(paciente)
+              }
+      
+              app = buildTestApp(turnoRepository, pacienteRepository, medicoRepository)
         
 
 })
@@ -141,9 +172,8 @@ describe("POST /medicos/:id/agregarServicio", () => {
 describe("DELETE /medicos/:id/eliminarServicio", () => {
     test("Debería retornar 200 eliminando un servicio", async () => {
         const response = await request(app)
-            .delete("/medicos/1234/eliminarServicio")
-            .query({ idUsuario: "1234" })
-            .send({ idServicio: "6598" })
+            .delete("/medicos/1234/eliminarServicio/6598")
+
 
         expect(response.status).toBe(200)
     })
@@ -152,13 +182,13 @@ describe("DELETE /medicos/:id/eliminarServicio", () => {
 describe("PATCH /medicos/:id/modificarServicio", () => {
     test("Debería retornar 200 modificando un servicio", async () => {
         const response = await request(app)
-            .patch("/medicos/123/modificarServicio")
-            .query({ idUsuario: "456" })
+            .patch("/medicos/1234/modificarServicio")
             .send({
-                idServicio: "5645",
-                nombre: "Nuevo nombre"
+                id : "5645",
+                nombre: "Nuevo nombre",
+                duracionTurnoEnMins : 60,
+                costo : 50
             })
-
         expect(response.status).toBe(200)
     })
 })
