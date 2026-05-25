@@ -11,7 +11,7 @@ import { Practica } from "../../server/domain/practica.js"
 import { Especialidad } from "../../server/domain/especialidad.js"
 import { DiaSemana } from "../../server/domain/diaSemana.js"
 import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria.js"
-
+import { Notificacion } from "../../server/domain/notificacion.js"
 
 //import { ObraSocial } from "../../server/domain/obraSocial.js"
 
@@ -20,6 +20,7 @@ describe("Turno API- Integracion",()=>{
     let turnoRepository
     let medicoRepository
     let pacienteRepository
+    let notificacionRepository
     let fechaHora
     let medico
     let paciente
@@ -33,6 +34,7 @@ describe("Turno API- Integracion",()=>{
     let disponibilidades
     let sedeItaliano
     let turnosMock
+    let notificacion
 
     beforeEach(()=>{
         
@@ -121,6 +123,8 @@ describe("Turno API- Integracion",()=>{
 
         turnosMock = [turno]
         
+        notificacion = new Notificacion("123",usuarioMedico,usuarioPaciente,"HOLA")
+
         turnoRepository = {
             findAll: jest.fn().mockResolvedValue({
                 data: turnosMock,
@@ -143,135 +147,38 @@ describe("Turno API- Integracion",()=>{
         pacienteRepository = {
             findById: jest.fn().mockResolvedValue(paciente)
         }
+        notificacionRepository =  {
+            save: jest.fn().mockImplementation(async(entidad) => entidad),
+            findById: jest.fn().mockResolvedValue(notificacion),
+            obtenerTodasLasNotificaciones : jest.fn().mockResolvedValue([notificacion])
+        }
 
-        app = buildTestApp({turnoRepository, pacienteRepository, medicoRepository})
+        app = buildTestApp({notificacionRepository})
     })
-
-    describe("GET /turnos/", () => {
-
-         test("debería aceptar una query válida", async () =>{
+    describe("GET /usuarios/:idUsuario/mostrarNoLeidas",()=>{
+        test("Deberia retornar 200 mostrando las no leidas",async()=>{
             const response = await request(app)
-                .get("/turnos")
-                .query({
-                    pacienteId: "213456",
-                    estado: EstadoTurno.CONFIRMADO, 
-                    fechaDesde: "2026-05-01T00:00:00.000Z",
-                    page: 1, 
-                    limit: 10
-                })
-
-
-            expect(response.status).toBe(200)
-         })
-
-        test("debería fallar si estado no pertenece al enum", async() =>{
-            const response = await request(app)
-                .get("/turnos")
-                .query({
-                    pacienteId: "032616",
-                    estado: "PENDIENTE"
-                })
-
-                expect(response.status).toBe(400)
-        })
-
-
-        test("debe retornar el historial de turnos", async() => {
+            .get("/usuarios/1234/mostrarNoLeidas")
             
+            expect(response.status).toBe(200)
+            expect(response.body.every(n => n.leida === false)).toBe(true)
+        })
+    })
+    describe("GET /usuarios/:idUsuario/mostrarLeidas",()=>{
+        test("Deberia retornar 200 mostrando las leidas",async()=>{
             const response = await request(app)
-                .get("/turnos")
-                .query({
-                    pacienteId: "1234",
-                    estado: EstadoTurno.CONFIRMADO,
-                    fechaDesde: fechaHora.toISOString(),
-                    fechaHasta: "2026-05-19T00:00:00.000Z",
-                    page: 1,
-                    limit: 10
-            })
-
-
+            .get("/usuarios/1234/mostrarLeidas")
 
             expect(response.status).toBe(200)
-            expect(response.body.data).toHaveLength(1)
-            expect(response.body.paginacion.page).toBe("1")
-            expect(response.body.paginacion.totalPages).toBe(1)
-            expect(response.body.paginacion.total).toBe(1)
+            expect(response.body.every(n => n.leida === true)).toBe(true)
         })
-        
     })
-
-
-describe("PATCH /turnos/123/reservar", () =>{
-    test("debería reservar un turno correctamente", async () =>{
-        const response = await request(app)
-            .patch("/turnos/123/reservar")
-            .send({
-                pacienteId: "1234"
-            })
-
-
-        expect(response.status).toBe(200)
-    })  
-
-    test("debería fallar si falta el id", async() =>{
-        const response = await request(app)
-        .patch("/turnos/123/reservar")
-        .send({})
-
-
-        expect(response.status).toBe(400)
-    })
-
-})
-
-describe("PATCH /turnos/123/cancelar",()=>{
-    test("deberia cancelar un turno correctamente",async()=>{
-        const response = await request(app)
-            .patch("/turnos/123/cancelar")
-            .send({
-                motivo: "No puedo asistir",
-                idUsuario: "1234"        
+    describe("PATCH /usuarios/:idUsuario/:idNotificacion/mostrarNoLeidas",()=>{
+        test("Deberia retornar 200 modificando un servicio",async()=>{
+            const response = await request(app)
+            .patch("/usuarios/1234/123/marcarComoLeida")
+            expect(response.status).toBe(200)
         })
-
-
-        expect(response.status).toBe(204)
     })
+
 })
-
-describe ("POST /turnos/generarTurnosDisponibles",()=>{
-    test("deberia retornar 200 con los turnos generados",async()=>{
-        const response = await request(app)
-        .post("/turnos/generarTurnosDisponibles")
-        
-        expect(response.status).toBe(200)
-    })
-})
-
-
-describe ("PATCH /turnos/:id/modificarFecha",()=>{
-    test("deberia modificar la fecha de un query valida",async()=>{
-        const response = await request(app)
-        .patch("/turnos/123/modificarFecha")
-        .send({
-            idUsuario: "1234",
-            nuevaFecha: "2026-06-01T10:00:00.000Z"
-        })
-
-        expect(response.status).toBe(200)
-    })
-})
-
-describe("PATCH /turnos/:id/realizado",()=>{
-    test("deberia marcar como realizada una query valida",async()=>{
-        const response = await request(app)
-        .patch("/turnos/123/realizado")
-        .send({
-            idUsuario: "1234"
-        })
-
-
-        expect(response.status).toBe(200)
-    })
-})
-
-}) 

@@ -7,9 +7,10 @@ export class NotificacionController{
     }
     
     mostrarNoLeidas = async (req,res,next)=>{
-        const { id } = req.params
+       
+        const { idUsuario } = req.params
         try{
-            const notificacionesNoLeidas = await this.notificacionService.mostrarLeidas({id})
+            const notificacionesNoLeidas = await this.notificacionService.mostrarNoLeidas({idUsuario})
             res.json(notificacionesNoLeidas)
         }
         catch(error){
@@ -17,9 +18,10 @@ export class NotificacionController{
         }
     }
     mostrarLeidas = async (req,res,next)=>{
-        const { id } = req.params
+        
+        const { idUsuario } = req.params
         try{
-            const notificacionesLeidas = await this.notificacionService.mostrarLeidas({id})
+            const notificacionesLeidas = await this.notificacionService.mostrarLeidas({idUsuario})
             res.json(notificacionesLeidas)
         }
         catch(error){
@@ -27,9 +29,10 @@ export class NotificacionController{
         }
     }
     marcarComoLeida = async(req,res,next)=>{
-        const { id } = req.params
+        const { idUsuario , idNotificacion } = req.params
         try{
-            this.notificacionService.marcarComoLeida(id)
+            this.notificacionService.marcarComoLeida(idNotificacion)
+            res.sendStatus(200)
         }
         catch(error)
         {

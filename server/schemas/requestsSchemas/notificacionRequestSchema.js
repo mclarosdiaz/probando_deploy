@@ -2,16 +2,17 @@ import { z } from "zod";
 
 export const mostrarNoLeidasSchema = z.object({
     params: z.object({
-        id: z.string()
+        idUsuario: z.string()
     })
 })
 export const mostrarLeidasSchema = z.object({
     params: z.object({
-        id: z.string()
+        idUsuario: z.string()
     })
 })
-export const marcarComoLeida = z.object({
+export const marcarComoLeidaSchema = z.object({
     params: z.object({
-        id: z.string()
+        idUsuario: z.string(),
+        idNotificacion: z.string()
     })
 })

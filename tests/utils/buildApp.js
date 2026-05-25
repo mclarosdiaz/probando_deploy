@@ -4,6 +4,8 @@ import { TurnoService } from "../../server/services//turnoService.js"
 import { TurnoController } from "../../server/controllers/turnoController.js"
 import { MedicoController } from "../../server/controllers/medicoController.js"
 import { MedicoService } from "../../server/services/medicoService.js"
+import { NotificacionService } from "../../server/services/notificacionService.js"
+import { NotificacionController} from "../../server/controllers/notificacionController.js"
 import { cancelarTurnoRequestSchema,
          reservarTurnoSchema,
          generarTurnosDisponiblesSchema,
@@ -19,14 +21,21 @@ import {
     eliminarServicioSchema,
     modificarServicioSchema
 }from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
+import {
+    mostrarNoLeidasSchema,
+    mostrarLeidasSchema,
+    marcarComoLeidaSchema
+} from "../../server/schemas/requestsSchemas/notificacionRequestSchema.js"
 
-
-export function buildTestApp(turnoRepository, pacienteRepository, medicoRepository){
+export function buildTestApp({turnoRepository, pacienteRepository, medicoRepository, notificacionRepository}){
     const turnoService = new TurnoService(turnoRepository, pacienteRepository, medicoRepository)
     const turnoController = new TurnoController(turnoService)
 
     const medicoService = new MedicoService(medicoRepository)
     const medicoController = new MedicoController(medicoService)
+
+    const notificacionService = new NotificacionService(notificacionRepository)
+    const notificacionController = new NotificacionController(notificacionService)
 
     const app = express()
     app.use(express.json())
@@ -106,8 +115,27 @@ export function buildTestApp(turnoRepository, pacienteRepository, medicoReposito
         medicoController.modificarServicio
     )
 
+    const notificacionRouter = express.Router()
+
+    notificacionRouter.get(
+        "/usuarios/:idUsuario/mostrarNoLeidas",
+        validate(mostrarNoLeidasSchema),
+        notificacionController.mostrarNoLeidas
+    )
+    notificacionRouter.get(
+        "/usuarios/:idUsuario/mostrarLeidas",
+        validate(mostrarLeidasSchema),
+        notificacionController.mostrarLeidas
+    )
+    notificacionRouter.patch(
+        "/usuarios/:idUsuario/:idNotificacion/marcarComoLeida",
+        validate(marcarComoLeidaSchema),
+        notificacionController.marcarComoLeida
+    )
+
     app.use(turnoRouter)
     app.use(medicoRouter)
+    app.use(notificacionRouter)
 
     return app
 }

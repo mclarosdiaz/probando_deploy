@@ -13,17 +13,17 @@ const notificacionService = new NotificacionService()
 const controller = new NotificacionController({notificacionService})
 
 router.get(
-    "/:id/mostrarNoLeidas",
+    "/usuarios/:idUsuario/mostrarNoLeidas",
     validate(mostrarNoLeidasSchema),
-    controller.mostrarNoLeidas()
+    controller.mostrarNoLeidas
 )
 router.get(
-    "/:id/mostrarLeidas",
+    "/usuarios/:idUsuario/mostrarLeidas",
     validate(mostrarLeidasSchema),
-    controller.mostrarLeidas()
+    controller.mostrarLeidas
 )
 router.patch(
-    "/:id/marcarComoLeida",
+    "/usuarios/:idUsuario/:idNotifiacion/marcarComoLeida",
     validate(marcarComoLeidaSchema),
-    controller.marcarComoLeida()
+    controller.marcarComoLeida
 )

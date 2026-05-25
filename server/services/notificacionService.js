@@ -15,23 +15,19 @@ import {
 } from "../errors/appError.js";
 
 export class NotificacionService{
-    constructor(usuarioRepository, notificacionRepository){
-        this.usuarioRepository = usuarioRepository
+    constructor( notificacionRepository){
         this.notificacionRepository = notificacionRepository
     }
     async mostrarNoLeidas({idUsuario}){
+           
         const notificaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
-        let notificacionesNoLeidas= []
-
-        notificacionesNoLeidas = notificaciones.filter(notificacion=> !notificacion.leida)
-        return notificacionesNoLeidas
+       
+        return notificaciones.filter(notificacion=> !notificacion.leida)
     }
     async mostrarLeidas({idUsuario}){
         const notificaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
-        let notificacionesLeidas= []
-
-        notificacionesLeidas = notificaciones.filter(notificacion=> notificacion.leida) 
-        return notificacionesLeidas
+        
+        return notificaciones.filter(notificacion=> notificacion.leida)
     }
     async marcarComoLeida({idNotificacion}){
         const notificacion = await this.notificacionRepository.findById(idNotificacion)
