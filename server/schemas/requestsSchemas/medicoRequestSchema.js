@@ -42,14 +42,8 @@ export const agregarServicioSchema = z.object({
     params: z.object({
         id: z.string()
     }),
-    body: z.discriminatedUnion("tipo", [
-        especialidadSchema.extend({
-            tipo: z.literal("especialidad")
-        }),
-        practicaSchema.extend({
-            tipo: z.literal("practica")
-        })
-    ])
+    body: z.union([especialidadSchema, practicaSchema])
+ 
 })
 export const eliminarServicioSchema = z.object({
     params: z.object({
@@ -62,5 +56,5 @@ export const modificarServicioSchema = z.object({
     params: z.object({
         id: z.string()
     }),
-    body: z.union([especialidadBaseSchema, practicaBaseSchema])
+    body: z.union([especialidadSchema, practicaSchema])
 })

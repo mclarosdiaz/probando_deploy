@@ -16,7 +16,7 @@ import { TurnoService } from "./turnoService.js";
 export class MedicoService {
     constructor({ medicoRepository, turnoService}) {
         this.medicoRepository = medicoRepository
-        this.turnoService = TurnoService 
+        this.turnoService = turnoService 
     }
 
     async consultarDisponibilidades({ idMedico, servicio, idServicio }) {

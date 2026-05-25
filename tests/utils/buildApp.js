@@ -6,7 +6,16 @@ import { MedicoController } from "../../server/controllers/medicoController.js"
 import { MedicoService } from "../../server/services/medicoService.js"
 import { generarTurnosDisponiblesSchema,  } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
 import { agregarServicioSchema } from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
-
+import { reservarTurnoSchema } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { obtenerHistorialTurnosSchema } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { cancelarTurnoRequestSchema } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { maracarComoConfirmadoSchema } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { marcarComoRealizadoSchema } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { modificarFechaTurnoSchema } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { consultarDisponibilidadSchema } from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
+import { modificarDisponibilidadSchema } from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
+import { eliminarServicioSchema } from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
+import { modificarServicioSchema } from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
 
 export function buildTestApp(turnoRepository, medicoRepository){
     const turnoService = new TurnoService({ turnoRepository })
@@ -22,72 +31,77 @@ export function buildTestApp(turnoRepository, medicoRepository){
     turnoRouter.patch(
         "turnos/:id/reservar",
         validate(reservarTurnoSchema),
-        controller.reservar
+        turnoController.reservar
     )
     
     turnoRouter.patch(
         "turnos/",
-        validateQuery(obtenerHistorialTurnosSchema),
-        controller.obtenerHistorialTurnos
+        validate(obtenerHistorialTurnosSchema),
+        turnoController.obtenerHistorialTurnos
     )
     
     turnoRouter.post(
         "turnos/:id/cancelar",
         validate(cancelarTurnoRequestSchema),
-        controller.cancelar
+        turnoController.cancelarTurno
     )
     
     turnoRouter.patch(
         "turnos/:id/confirmado",
-        validate(marcarComoConfirmadoSchema),
-        controller.marcarComoConfirmado
+        validate(maracarComoConfirmadoSchema),
+        turnoController.marcarComoConfirmado
     )
     
     turnoRouter.patch(
         "turnos/:id/realizado",
         validate(marcarComoRealizadoSchema),
-        controller.marcarComoRealizado
+        turnoController.marcarComoRealizado
     )
     
     turnoRouter.post(
         "turnos/generarTurnosDisponibles",
         validate(generarTurnosDisponiblesSchema),
-        controller.generarTurnosDisponibles
+        turnoController.generarTurnosDisponibles
     )
     
     turnoRouter.patch(
         "turnos/:id/modificarFecha",
         validate(modificarFechaTurnoSchema),
-        controller.modificarFechaTurno
+        turnoController.modificarFechaTurno
     )
 
     const medicoRouter = express.Router()
     medicoRouter.get(
         "medicos/disponibilidades",
         validate(consultarDisponibilidadSchema),
-        controller.consultarDisponibilidades()
+        medicoController.consultarDisponibilidades
     )
     
     medicoRouter.patch(
         "medicos/:id/modificarDisponibilidad",
         validate(modificarDisponibilidadSchema),
-        controller.modificarDisponibilidades()
+        medicoController.modificarDisponibilidades
     )
     medicoRouter.post(
-        "medicos/:id/agregarServicio",
+        "/:id/agregarServicio",
         validate(agregarServicioSchema),
-        controller.agregarServicio()
+        medicoController.agregarServicio
     )
     medicoRouter.delete(
         "medicos/:id/eliminarServicio",
         validate(eliminarServicioSchema),
-        controller.eliminarServicio()
+        medicoController.eliminarServicio
     )
     
     medicoRouter.patch(
         "medicos/:id/modificarServicio",
         validate(modificarServicioSchema),
-        controller.modificarServicio()
+        medicoController.modificarServicio
     )
+
+    app.use(turnoRouter)
+    app.use("/medicos",medicoRouter)
+
+    return app
 }
 

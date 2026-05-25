@@ -28,7 +28,7 @@ export class MedicoController{
         const { nuevasDisponibilidades }= req.body
 
         try{
-            this.medicoService.modificarDisponibilidades(idMedico, nuevasDisponibilidades)
+            await this.medicoService.modificarDisponibilidades(idMedico, nuevasDisponibilidades)
         } catch (error) {
             next(error)
         }
@@ -37,7 +37,7 @@ export class MedicoController{
     
     agregarServicio = async(req,res,next)=>{
         const { idMedico } = req.params
-        const { nuevoServicio } = req.body
+        const  nuevoServicio  = req.body
 
         try{
             this.medicoService.agregarServicio(idMedico, nuevoServicio)

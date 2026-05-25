@@ -14,7 +14,7 @@ router.get(
     controller.consultarDisponibilidades()
 )
 
-router.path(
+router.patch(
     "/:id/modificarDisponibilidad",
     validate(modificarDisponibilidadSchema),
     controller.modificarDisponibilidades()
