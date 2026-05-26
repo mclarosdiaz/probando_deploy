@@ -1,76 +1,124 @@
 import express from "express"
-import { validate } from "../../server/middlewares/validate.js"
+import { validate, validateQuery } from "../../server/middlewares/validate.js"
 import { TurnoService } from "../../server/services/turnoService.js"
 import { TurnoController } from "../../server/controllers/turnoController.js"
 import { MedicoController } from "../../server/controllers/medicoController.js"
 import { MedicoService } from "../../server/services/medicoService.js"
-import { generarTurnosDisponiblesSchema,  } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import { cancelarTurnoRequestSchema,
+         reservarTurnoSchema,
+         generarTurnosDisponiblesSchema,
+         obtenerHistorialTurnosSchema,
+         marcarComoConfirmadoSchema,
+         marcarComoRealizadoSchema,
+         busquedaDeTurnosDisponibles,
+         modificarFechaTurnoSchema,
+         
+  } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
+import {
+    consultarDisponibilidadSchema,
+    modificarDisponibilidadSchema
+}from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
 
 
-export function buildTestApp(turnoRepository, medicoRepository){
-    const turnoService = new TurnoService({ turnoRepository })
-    const turnoController = new TurnoController({ turnoService })
+export function buildTestApp({turnoRepository, pacienteRepository, medicoRepository}){
+    const turnoService = new TurnoService({turnoRepository, pacienteRepository, medicoRepository})
+    const turnoController = new TurnoController({turnoService})
 
-    const medicoService = new MedicoService({ medicoRepository })
-    const medicoController = new MedicoController({ medicoService })
+    const medicoService = new MedicoService({medicoRepository})
+    const medicoController = new MedicoController({medicoService})
 
     const app = express()
     app.use(express.json())
 
     const turnoRouter = express.Router()
+
     turnoRouter.patch(
-        "turnos/:id/reservar",
+        "/turnos/:id/reservar",
         validate(reservarTurnoSchema),
-        controller.reservar
+        turnoController.reservar
     )
     
-    turnoRouter.patch(
-        "turnos/",
+    turnoRouter.get(
+        "/turnos",
         validateQuery(obtenerHistorialTurnosSchema),
-        controller.obtenerHistorialTurnos
+        turnoController.obtenerHistorialTurnos
+    )
+
+    turnoRouter.get(
+        "/turnos/:idPaciente/turnosDisponibles", 
+        validate(busquedaDeTurnosDisponibles),
+        turnoController.buscarTurnosDisponibles
     )
     
-    turnoRouter.post(
-        "turnos/:id/cancelar",
+    turnoRouter.patch(
+        "/turnos/:id/cancelar",
         validate(cancelarTurnoRequestSchema),
-        controller.cancelar
+        turnoController.cancelarTurno
     )
     
     turnoRouter.patch(
-        "turnos/:id/confirmado",
+        "/turnos/:id/confirmado",
         validate(marcarComoConfirmadoSchema),
-        controller.marcarComoConfirmado
+        turnoController.marcarComoConfirmado
     )
     
     turnoRouter.patch(
-        "turnos/:id/realizado",
+        "/turnos/:id/realizado",
         validate(marcarComoRealizadoSchema),
-        controller.marcarComoRealizado
+        turnoController.marcarComoRealizado
     )
     
     turnoRouter.post(
-        "turnos/generarTurnosDisponibles",
+        "/turnos/generarTurnosDisponibles",
         validate(generarTurnosDisponiblesSchema),
-        controller.generarTurnosDisponibles
+        turnoController.generarTurnosDisponibles
     )
     
     turnoRouter.patch(
-        "turnos/:id/modificarFecha",
+        "/turnos/:id/modificarFecha",
         validate(modificarFechaTurnoSchema),
-        controller.modificarFechaTurno
+        turnoController.modificarFechaTurno
     )
 
     const medicoRouter = express.Router()
+
+
     medicoRouter.get(
-        "medicos/disponibilidades",
+        "/medicos/disponibilidades",
         validate(consultarDisponibilidadSchema),
-        controller.consultarDisponibilidades()
+        medicoController.consultarDisponibilidades
     )
     
     medicoRouter.patch(
-        "medicos/:id/modificarDisponibilidad",
+        "/medicos/:id/modificarDisponibilidad",
         validate(modificarDisponibilidadSchema),
-        controller.modificarDisponibilidades()
+        medicoController.modificarDisponibilidades
     )
+
+    app.use(turnoRouter)
+    app.use(medicoRouter)
+
+    // 🕵️ RADAR 1: Log de Entrada Global
+    app.use((req, res, next) => {
+        console.log(`\n➡️ [Express] Petición entrante: ${req.method} ${req.url}`);
+        next();
+    });
+
+    /*
+    app.use((err, req, res, next) => {
+        console.error(`💥 [Express Catch] Error: ${err.message}`);
+        console.error(`💥 [Stack Trace]:`, err.stack); // Esto nos dice el archivo y la línea exacta
+        const status = err.statusCode || 500;
+        res.status(status).json({ error: err.message });
+    });
+    /*
+    //micrófono de errores
+    app.use((err, req, res, next) => {
+        console.error("💥 ERROR ATRAPADO POR EXPRESS:", err.message);
+        res.status(500).json({ error: err.message });
+    });
+    */
+   
+    return app
 }
 

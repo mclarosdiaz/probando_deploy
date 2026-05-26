@@ -17,7 +17,7 @@ import {
 } from "../errors/appError.js";
 
 export class TurnoService{
-    constructor(turnoRepository, pacienteRepository, medicoRepository){
+    constructor({turnoRepository, pacienteRepository, medicoRepository}){
         this.turnoRepository = turnoRepository
         this.pacienteRepository = pacienteRepository
         this.medicoRepository = medicoRepository
@@ -75,8 +75,8 @@ export class TurnoService{
     }
 
     async obtenerHistorial({ filtros, paginacion}){
-        
-        const { data, total } = await this.turnoRepository.findall({
+
+        const { data, total } = await this.turnoRepository.findAll({
             filtros, 
             paginacion
         })
@@ -102,7 +102,7 @@ export class TurnoService{
         const coberturasPractica = plan.coberturasPractica
         const coberturasEspecialidad = plan.coberturasEspecialidad
 
-        const {turnos, total} = await this.turnoRepository.findAll({filtros, paginacion})
+        const {data: turnos, total} = await this.turnoRepository.findAll({filtros, paginacion})
 
         const turnosConCobertura = turnos.map(
             (turno) => {

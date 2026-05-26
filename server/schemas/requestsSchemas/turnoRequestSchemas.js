@@ -36,7 +36,7 @@ export const obtenerHistorialTurnosSchema = z.object({
 
 })
 
-export const maracarComoConfirmadoSchema = z.object({
+export const marcarComoConfirmadoSchema = z.object({
     params: z.object({
         id: z.string()
     }),
@@ -81,5 +81,9 @@ export const busquedaDeTurnosDisponibles = z.object({
             .transform((val) => val ? new Date(val): undefined),
         fechaHasta: z.string().datetime().optional()
             .transform((val) => val ? new Date(val): undefined)
-    })
+    }),
+    query: z.object({
+        page: z.coerce.number().optional(),
+        limit: z.coerce.number().optional()
+    }).optional()
 })

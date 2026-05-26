@@ -49,7 +49,7 @@ export class TurnoController {
                 page,
                 limit } = req.query
 
-            const turnos = await this.turnoService.obtenerHistorial({ 
+            const {turnos, total} = await this.turnoService.obtenerHistorial({ 
             filtros:{
                 pacienteId, 
                 estado,
@@ -61,8 +61,18 @@ export class TurnoController {
                 limit
             }
         })
+                page = Number(page) || 1;
+                limit = Number(limit) || 10;
+                const totalPages = Math.ceil(total / limit);
 
-            res.json(turnos)
+            res.status(200).json({
+                data: turnos,
+                paginacion:{
+                page: page,
+                totalPages: totalPages,
+                total: total}
+            })
+
         } catch (error) {
             next(error)
         }
@@ -70,22 +80,32 @@ export class TurnoController {
 
     buscarTurnosDisponibles = async(req, res, next) =>{
         try{
+
+            // 🕵️ RADAR 3: Controlador
+            console.log(`⚙️ [Controller] Entrando a buscarTurnosDisponibles`);
+            console.log(`⚙️ [Controller] req.params:`, req.params);
+            console.log(`⚙️ [Controller] req.query:`, req.query);
+            console.log(`⚙️ [Controller] req.body:`, req.body);
+
             const{ idPaciente } = req.params
+
+            const{ page, limit } = req.query;
+
             const{ 
-                profesional,
-                especialidad,
-                practica,
-                sede,
+                idMedico,
+                idEspecialidad,
+                idPractica,
+                idSede,
                 fechaDesde,
                 fechaHasta } = req.body
 
             const turnos = await this.turnoService.buscarTurnosDisponibles({
                 idPaciente: idPaciente,
                 filtros:{
-                    profesional,
-                    especialidad,
-                    practica,
-                    sede,
+                    idMedico,
+                    idEspecialidad,
+                    idPractica,
+                    idSede,
                     fechaDesde,
                     fechaHasta
                 },
@@ -95,9 +115,9 @@ export class TurnoController {
                 }
             })
 
-            res.json(turnos)
+            res.status(200).json(turnos)
         }catch(error){
-            next(error)
+            next(error);
         }
     }
 
@@ -105,8 +125,9 @@ export class TurnoController {
         try {
             const { id } = req.params
             const { idUsuario } = req.query
-
             await this.turnoService.marcarComoRealizado({id, idUsuario})
+            
+            res.sendStatus(200)
         } catch (error) {
             next(error)
         }
@@ -118,6 +139,8 @@ export class TurnoController {
             const { idUsuario } = req.query
 
             await this.turnoService.marcarComoConfirmado({id, idUsuario})
+
+            res.sendStatus(200)
         } catch(error) {
             next(error)
         }
@@ -128,6 +151,7 @@ export class TurnoController {
         
             await this.turnoService.generarTurnosDisponibles()
 
+            res.sendStatus(200)
         }catch(error)
             {
                 next(error)
@@ -143,6 +167,8 @@ export class TurnoController {
                 id, 
                 idUsuario, 
                 fecha: nuevaFecha })
+            
+            res.sendStatus(200)
         }catch(error){
             next(error)
         }

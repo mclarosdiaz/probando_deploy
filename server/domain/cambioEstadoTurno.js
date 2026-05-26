@@ -3,7 +3,7 @@ import { Usuario } from "./usuario.js";
 import { EstadoTurno } from "./estadoTurno.js";
 
 export class CambioEstadoTurno{
-    constructor(fechaHoraIngreso, estado, turno, usuario, motivo){
+    constructor(fechaHoraIngreso, estadoTurno, turno, usuario, motivo){
         this.fechaHoraIngreso = fechaHoraIngreso;
         this.estado = estadoTurno;
         this.turno = turno;
