@@ -14,38 +14,30 @@ export const cancelarTurnoRequestSchema = z.object({
         id: z.string()
     }), 
     body: z.object({
-        motivo: z.string,
+        motivo: z.string(),
         idUsuario: z.string()
     })
 })
 
 export const obtenerHistorialTurnosSchema = z.object({
-    pacienteId: z.string(),
+    query: z.object({
+        pacienteId: z.string(),
 
-    estado: z.enum(["RESERVADO", "CONFIRMADO", "CANCELADO", "REALIZADO"]).optional(),
-    
-    fechaDesde: z.iso.datetime().optional()
-        .transform((val) => val ? new Date(val): undefined),
-    
-    fechaHasta: z.string().datetime().optional()
-        .transform((val) => val ? new Date(val): undefined),
+        estado: z.enum(["RESERVADO", "CONFIRMADO", "CANCELADO", "REALIZADO"]).optional(),
 
-    page: z.coerce.number().int().min(1).default(1),
+        fechaDesde: z.string().datetime().optional()
+            .transform((val) => val ? new Date(val) : undefined),
 
-    limit: z.coerce.number().int().min(1).max(100).default(10)
+        fechaHasta: z.string().datetime().optional()
+            .transform((val) => val ? new Date(val) : undefined),
 
-})
+        page: z.coerce.number().int().min(1).default(1),
 
-export const marcarComoConfirmadoSchema = z.object({
-    params: z.object({
-        id: z.string()
-    }),
-    body: z.object({
-        idUsuario: z.string()
+        limit: z.coerce.number().int().min(1).max(100).default(10)
     })
 })
 
-export const marcarComoRealizadoSchema = z.object({
+export const modificarEstadoTurnoSchema = z.object({
     params: z.object({
         id: z.string()
     }),

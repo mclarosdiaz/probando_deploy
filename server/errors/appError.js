@@ -1,11 +1,10 @@
-export class AppError extends Error {
-    
-    constructor(message, statusCode) {
-        super(message); 
-        this.name = this.constructor.name;
-        this.statusCode = statusCode; 
-        this.status = statusCode >= 500 ? "error" : "fail";
-        this.timestamp = new Date().toISOString();
+export class AppError extends Error{
+    constructor(message, statusCode){
+        super(message)
+        this.name = this.constructor.name
+        this.statusCode = statusCode,
+        this.status = this.statusCode >= 500? "error": "fail",
+        this.timestamp = new Date().toISOString()
     }
 }
 
@@ -17,17 +16,16 @@ export class NotFoundError extends AppError {
     constructor(message) { super(message, 404); }
 }
 
-// Estos ya heredan de NotFoundError, así que el 404 se pone solo
-export class TurnoNotFoundError extends NotFoundError {
-    constructor(message) { super(message); } 
+export class TurnoNotFoundError extends AppError{
+    constructor(message){super(message, 404)}
 }
 
-export class PacienteNotFoundError extends NotFoundError {
-    constructor(message) { super(message); }
+export class PacienteNotFoundError extends AppError{
+    constructor(message){super(message, 404)}
 }
 
-export class MedicoNotFoundError extends NotFoundError {
-    constructor(message) { super(message); }
+export class MedicoNotFoundError extends AppError{
+    constructor(message){super(message, 404)}
 }
 
 export class ConflictError extends AppError {

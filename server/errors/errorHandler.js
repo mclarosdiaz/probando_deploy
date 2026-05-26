@@ -1,4 +1,4 @@
-import { AppError, NotAllowedError, NotFoundError, PacienteNotFoundError, TurnoNotFoundError } from "./appError"
+import { AppError} from "./appError"
 
 export const errorHandler = (err, req, res, next) =>{
     console.error({
@@ -18,12 +18,16 @@ export const errorHandler = (err, req, res, next) =>{
         .json( {
             status: err.status,
             message: err.message,
-            timeStamp: err.timeStamp
+            timeStamp: err.timestamp
         })
 
     }
     
-    return res.status(500)
+    return res.status(500).json({
+        status: "error",
+        message: "Error interno del servidor",
+        timeStamp: new Date().toISOString()
+    })
 
     
 }

@@ -8,9 +8,8 @@ import { cancelarTurnoRequestSchema,
          reservarTurnoSchema,
          generarTurnosDisponiblesSchema,
          obtenerHistorialTurnosSchema,
-         marcarComoConfirmadoSchema,
-         marcarComoRealizadoSchema,
          busquedaDeTurnosDisponibles,
+         modificarEstadoTurnoSchema,
          modificarFechaTurnoSchema,
          
   } from "../../server/schemas/requestsSchemas/turnoRequestSchemas.js"
@@ -20,12 +19,12 @@ import {
 }from "../../server/schemas/requestsSchemas/medicoRequestSchema.js"
 
 
-export function buildTestApp({turnoRepository, pacienteRepository, medicoRepository}){
-    const turnoService = new TurnoService({turnoRepository, pacienteRepository, medicoRepository})
-    const turnoController = new TurnoController({turnoService})
+export function buildTestApp(turnoRepository, pacienteRepository, medicoRepository){
+    const turnoService = new TurnoService(turnoRepository, pacienteRepository, medicoRepository)
+    const turnoController = new TurnoController(turnoService)
 
-    const medicoService = new MedicoService({medicoRepository})
-    const medicoController = new MedicoController({medicoService})
+    const medicoService = new MedicoService(medicoRepository)
+    const medicoController = new MedicoController(medicoService)
 
     const app = express()
     app.use(express.json())
@@ -40,7 +39,7 @@ export function buildTestApp({turnoRepository, pacienteRepository, medicoReposit
     
     turnoRouter.get(
         "/turnos",
-        validateQuery(obtenerHistorialTurnosSchema),
+        validate(obtenerHistorialTurnosSchema),
         turnoController.obtenerHistorialTurnos
     )
 
@@ -58,13 +57,13 @@ export function buildTestApp({turnoRepository, pacienteRepository, medicoReposit
     
     turnoRouter.patch(
         "/turnos/:id/confirmado",
-        validate(marcarComoConfirmadoSchema),
+        validate(modificarEstadoTurnoSchema),
         turnoController.marcarComoConfirmado
     )
     
     turnoRouter.patch(
         "/turnos/:id/realizado",
-        validate(marcarComoRealizadoSchema),
+        validate(modificarEstadoTurnoSchema),
         turnoController.marcarComoRealizado
     )
     

@@ -1,8 +1,10 @@
 import { Router } from 'express'
-import { MedicoController } from '../controllers/turnoController.js'
+import { MedicoController } from '../controllers/medicoController.js'
 import { MedicoService } from "../services/turnoService.js"
 import { validate, validateQuery } from '../middlewares/validate.js'
-import { consultarDisponibilidadSchema } from '../schemas/requestsSchemas/medicoRequestSchema.js'
+import { consultarDisponibilidadSchema, 
+        modificarDisponibilidadSchema
+ } from '../schemas/requestsSchemas/medicoRequestSchema.js'
 
 const router = Router()
 const service = new MedicoService()
@@ -11,13 +13,13 @@ const controller = new MedicoController()
 router.get(
     "/disponibilidades",
     validate(consultarDisponibilidadSchema),
-    controller.consultarDisponibilidades()
+    controller.consultarDisponibilidades
 )
 
 router.path(
     "/:id/modificarDisponibilidad",
     validate(modificarDisponibilidadSchema),
-    controller.modificarDisponibilidades()
+    controller.modificarDisponibilidades
 )
 
 

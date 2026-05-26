@@ -1,7 +1,7 @@
 import { DisponibilidadHoraria } from "./disponibilidadHoraria.js"
 
 export function horaAMinutos(horaStr){
-        const [horas, minutos] = horaStri.split(":").map(Number)
+        const [horas, minutos] = horaStr.split(":").map(Number)
         return horas * 60 + minutos
 }
 
