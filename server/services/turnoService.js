@@ -27,16 +27,22 @@ export class TurnoService{
         const turno = await this.findById(id)
         const paciente = await this.obtenerPacientePorId(pacienteId)
         
+        const turnoModificado = new Turno(
+            turno.medico,
+            turno.fechaHora,
+            turno.sede,
+            turno.estado,
+            turno.costo)
         
-        const turnoModificado = turno.asignarPaciente(paciente)
+            turnoModificado.asignarPaciente(paciente)
 
-        return this.turnoRepository.save(turnoModificado)
+        return await this.turnoRepository.save(turnoModificado)
     }
 
     async cancelar({id, motivo, idUsuario}){
         const turno = await this.findById(id)
         let usuario = null
-        const ahora= new Date()
+        const ahora = new Date()
 
         usuario = turno.obtenerUsuario(idUsuario)
 
@@ -52,7 +58,7 @@ export class TurnoService{
             usuario, 
             motivo)
 
-        return this.turnoRepository.save(turnoModificado)
+        return await this.turnoRepository.save(turnoModificado)
     }
 
     async confirmar({id,idUsuario})
@@ -71,7 +77,7 @@ export class TurnoService{
             usuario,
             motivo
         )
-        return this.turnoRepository.save(turnoModificado)
+        return await this.turnoRepository.save(turnoModificado)
     }
 
     async obtenerHistorial({ filtros, paginacion}){
@@ -110,7 +116,7 @@ export class TurnoService{
             usuario, 
             "Turno realizado")
 
-        return this.turnoRepository.save(turnoModificado)
+        return await this.turnoRepository.save(turnoModificado)
     }
 /* metodo que teniamos antes (si funciona el otro hay que borrarlo)
     async generarTurnosDisponibles(){
@@ -177,14 +183,12 @@ export class TurnoService{
 
         await this.validarDisponibilidad(turno, fecha)
 
-        const usuario = turno.obtenerUsuario(idUsuario) 
-
-        turno.actualizarEstado(EstadoTurno.RESERVADO, usuario, "El usuario solicitó el cambio de fecha")    
+        const usuario = turno.obtenerUsuario(idUsuario)  
         
         turno.solicitarCambioFecha(
             fecha, 
             usuario, 
-            "Solicitud de cambio de fecha"
+            "El usuario solicitó el cambio de fecha"
         )
 
         return this.turnoRepository.save(turno)

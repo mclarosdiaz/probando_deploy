@@ -34,6 +34,7 @@ export class TurnoController {
                 motivo, 
                 idUsuario})
 
+            
             res.sendStatus(204)
         } catch (error) {
             next(error)
@@ -62,7 +63,7 @@ export class TurnoController {
             }
         })
 
-            res.json(turnos)
+            res.status(200).json(turnos)
         } catch (error) {
             next(error)
         }
@@ -74,7 +75,7 @@ export class TurnoController {
             const { idUsuario } = req.body
 
             await this.turnoService.marcarComoRealizado({id, idUsuario})
-            res.sendStatus(200)
+            res.sendStatus(200).json()
         } catch (error) {
             next(error)
         }

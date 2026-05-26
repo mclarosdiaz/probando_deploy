@@ -12,6 +12,26 @@ export class MongoTurnoRepository {
         this.model = TurnoModel 
     }
 
+    toDomain(mongoTurno){
+        const data = mongoTurno.toObject()
+
+        const turno = new Turno(
+            data.medico,
+            data.fechaHora,
+            data.sede,
+            data.estado,
+            data.costo
+        )
+
+        turno.historialEstados = data.historialEstados
+
+        if(data.paciente){
+            turno.paciente = data.paciente
+        }
+
+        return turno
+    }
+
     async save(turno){
         const nuevoTurno = new this.model(turno)
         return await nuevoTurno.save
@@ -26,7 +46,13 @@ export class MongoTurnoRepository {
     }
 
     async findById(id){
-        return await this.model.findById(id)
+        const mongoTurno = await this.model.findById(id)
+
+        if(!mongoTurno){
+            throw new TurnoNotFoundError()
+        }
+
+        return this.toDomain(mongoTurno)
     }
 
     async findAll({ filtros, paginacion } = {}){
@@ -50,16 +76,21 @@ export class MongoTurnoRepository {
             }
         }
 
-        const { page, limit } = paginacion
+        const page = paginacion.page || 1
+        const limit = paginacion.limit || 10
 
-        const [data, total] = await Promise.all([
-            TurnoModel
+        const offset = (page - 1) * limit
+
+        const [documents, total] = await Promise.all([
+            this.model
                 .find(query)
                 .skip(offset)
                 .limit(limit),
 
-                TurnoModel.countDocuments(query)
+                this.model.countDocuments(query)
         ])
+
+        const data = documents.map(doc => this.toDomain(doc))
 
         return {
             data, 

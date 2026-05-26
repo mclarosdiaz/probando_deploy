@@ -27,15 +27,16 @@ export class Turno {
         , this
         , usuario
         , motivo) 
-        
-        this.historialEstados.push(cambioEstado)
-
-        factoryNotificacion.crearSegunEstadoTurno(this)
-        //  TODO ¿Dónde guardamos las notificaciones?   
+           
     }
 
     asignarPaciente(paciente){
         this.paciente = paciente
+        this.actualizarEstado(
+            EstadoTurno.RESERVADO,
+            paciente.usuario,
+            `El paciente ${paciente.id} reservó el turno`
+        )
     }
 
     asignarPractica(practica){
@@ -48,6 +49,7 @@ export class Turno {
     
     modificarFecha(fecha){
         this.fechaHora = fecha
+        //TODO ¿Esto debería modificar el estado? 
     }
 
     puedeModificar(usuarioId){
