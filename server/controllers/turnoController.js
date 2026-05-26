@@ -49,7 +49,7 @@ export class TurnoController {
                 page,
                 limit } = req.query
 
-            const {turnos, total} = await this.turnoService.obtenerHistorial({ 
+            const data = await this.turnoService.obtenerHistorial({ 
             filtros:{
                 pacienteId, 
                 estado,
@@ -61,17 +61,8 @@ export class TurnoController {
                 limit
             }
         })
-                page = Number(page) || 1;
-                limit = Number(limit) || 10;
-                const totalPages = Math.ceil(total / limit);
-
-            res.status(200).json({
-                data: turnos,
-                paginacion:{
-                page: page,
-                totalPages: totalPages,
-                total: total}
-            })
+            
+            res.status(200).json(data)
 
         } catch (error) {
             next(error)

@@ -25,7 +25,7 @@ router.patch(
 
 router.get(
     "/",
-    validateQuery(obtenerHistorialTurnosSchema),
+    validate(obtenerHistorialTurnosSchema),
     controller.obtenerHistorialTurnos
 )
 

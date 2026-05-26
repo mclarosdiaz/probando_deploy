@@ -9,11 +9,8 @@ import { EstadoTurno } from "../../server/domain/estadoTurno.js"
 import { Usuario } from "../../server/domain/usuario.js"
 import { Especialidad } from "../../server/domain/especialidad.js"
 import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria.js"
-import { DiaSemana } from "../../server/domain/diaSemana.js"
 import { Practica } from "../../server/domain/practica.js"
-import { Especialidad } from "../../server/domain/especialidad.js"
 import { DiaSemana } from "../../server/domain/diaSemana.js"
-import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria.js"
 
 
 //import { ObraSocial } from "../../server/domain/obraSocial.js"
@@ -299,17 +296,12 @@ describe("GET /turnos/:idPaciente/turnosDisponibles", () => {
                 idPractica: "4679"
             })
 
-            // 🕵️ RADAR FINAL: Respuesta del test
-        console.log(`🧪 [Test] Status devuelto:`, response.status);
-        console.log(`🧪 [Test] Body devuelto:`, response.body);
-
-
-        //expect(response.status).toBe(200)
+        expect(response.status).toBe(200)
         
         expect(response.body.turnosConCobertura).toBeDefined();
         expect(response.body.turnosConCobertura[0].cobertura).toBe("TOTAL");
         expect(response.body.turnosConCobertura[0].costo).toBe(0);
     })
 })
-    
+    //fallas
 }) 

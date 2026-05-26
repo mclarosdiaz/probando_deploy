@@ -96,27 +96,6 @@ export function buildTestApp(turnoRepository, pacienteRepository, medicoReposito
 
     app.use(turnoRouter)
     app.use(medicoRouter)
-
-    // 🕵️ RADAR 1: Log de Entrada Global
-    app.use((req, res, next) => {
-        console.log(`\n➡️ [Express] Petición entrante: ${req.method} ${req.url}`);
-        next();
-    });
-
-    /*
-    app.use((err, req, res, next) => {
-        console.error(`💥 [Express Catch] Error: ${err.message}`);
-        console.error(`💥 [Stack Trace]:`, err.stack); // Esto nos dice el archivo y la línea exacta
-        const status = err.statusCode || 500;
-        res.status(status).json({ error: err.message });
-    });
-    /*
-    //micrófono de errores
-    app.use((err, req, res, next) => {
-        console.error("💥 ERROR ATRAPADO POR EXPRESS:", err.message);
-        res.status(500).json({ error: err.message });
-    });
-    */
    
     return app
 }
