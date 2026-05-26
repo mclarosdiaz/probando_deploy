@@ -36,6 +36,11 @@ export class Turno {
 
     asignarPaciente(paciente){
         this.paciente = paciente
+        this.actualizarEstado(
+            EstadoTurno.RESERVADO,
+            paciente.usuario,
+            `El paciente ${paciente.id} reservó el turno`
+        )
     }
 
     asignarPractica(practica){
