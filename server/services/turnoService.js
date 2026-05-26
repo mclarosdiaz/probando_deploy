@@ -1,11 +1,13 @@
 import{ Turno } from "../domain/turno.js"
 import { Paciente } from "../domain/paciente.js";
 import { Medico } from "../domain/medico.js";
+import { factoryNotificacion } from "../domain/factoryNotificacion.js";
+import { agenda } from "../domain/agenda.js";
 import { EstadoTurno } from "../domain/estadoTurno.js";
 import { MongoTurnoRepository } from "../repositories/turnoRepository.js";
 import { MongoPacienteRepository } from "../repositories/pacienteRepository.js"
 import { MongoMedicoRepository } from "../repositories/medicoRepository.js"
-import { agenda } from "../domain/agenda.js"
+import { MongoNotificacionRepository } from "../repositories/notificacionRepository.js";
 import { 
     BadRequestError, 
     PacienteNotFoundError,
@@ -17,26 +19,25 @@ import {
 } from "../errors/appError.js";
 
 export class TurnoService{
-    constructor(turnoRepository, pacienteRepository, medicoRepository){
+    constructor(turnoRepository, pacienteRepository, medicoRepository, notificacionRepository){
         this.turnoRepository = turnoRepository
         this.pacienteRepository = pacienteRepository
         this.medicoRepository = medicoRepository
+        this.notificacionRepository = notificacionRepository
     }
 
     async reservar({id, pacienteId}){
         const turno = await this.findById(id)
         const paciente = await this.obtenerPacientePorId(pacienteId)
         
-        const turnoModificado = new Turno(
-            turno.medico,
-            turno.fechaHora,
-            turno.sede,
-            turno.estado,
-            turno.costo)
-        
-            turnoModificado.asignarPaciente(paciente)
+        const turnoModificado = turno.asignarPaciente(paciente)
 
-        return await this.turnoRepository.save(turnoModificado)
+        const notificacion = factoryNotificacion.crearSegunEstadoTurno(turnoModificado)
+
+        return await Promise.all(
+            this.turnoRepository.save(turnoModificado),
+            this.notificacionRepository.save(notificacion)
+        ) 
     }
 
     async cancelar({id, motivo, idUsuario}){

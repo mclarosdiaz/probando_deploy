@@ -7,8 +7,16 @@ import { CambioEstadoTurno } from "./cambioEstadoTurno.js";
 import { factoryNotificacion } from "./factoryNotificacion.js";
 
 export class Turno {
-    static numeroTurno = 0
-
+    id
+    medico
+    paciente
+    fechaHora
+    sede
+    servicio
+    estado
+    historialEstados
+    costo
+    
     constructor(medico, fechaHora, sede, estado, costo) {
         
         this.medico = medico, 

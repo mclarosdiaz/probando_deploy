@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { coberturaEspecialidadEmbeddedSchema } from "./coberturaEspecialidadEmbeddedSchema.js";
+import { coberturaPracticaEmbeddedSchema } from "./coberturaPracticaEmbeddedSchema.js";
 import { Plan } from "../../domain/plan.js";
 
 const planSchema = new mongoose.Schema({
@@ -20,7 +21,11 @@ const planSchema = new mongoose.Schema({
         type: [coberturaPracticaEmbeddedSchema],
         required: true
     }
-});
+},
+{
+    collection: 'planes'
+}
+);
 
 planSchema.loadClass(Plan);
 export const planModel = mongoose.model("Plan", planSchema);

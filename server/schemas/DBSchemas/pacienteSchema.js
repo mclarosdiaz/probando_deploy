@@ -10,7 +10,7 @@ const pacienteSchema = new mongoose.Schema({
     },
     usuario: {
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Usuario",
+        ref:"usuarios",
         required: true
     },
     dni:{
@@ -23,18 +23,21 @@ const pacienteSchema = new mongoose.Schema({
     },
     obraSocial:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"ObraSocial",
+        ref:"obras_sociales",
         required:true
     },
     plan:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Plan",
+        ref:"planes",
         required:true
     },
     eliminado:{
         type: Boolean,
         default: false
     }
+},
+{
+    collection: "pacientes"
 })
 
 pacienteSchema.loadClass(Paciente)

@@ -35,6 +35,10 @@ const notificacionSchema = new mongoose.Schema({
         default: false
     }
 
+},
+{
+    timestamps: true,
+    collection: 'notificaciones'
 })
 
 notificacionSchema.loadClass(Notificacion)

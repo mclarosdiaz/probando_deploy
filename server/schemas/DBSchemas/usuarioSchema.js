@@ -15,6 +15,9 @@ const usuarioSchema = new mongoose.Schema({
         type: String,
         required: true
     }
+},
+{
+    collection: 'usuarios'
 });
 
 usuarioSchema.loadClass(Usuario);

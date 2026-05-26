@@ -57,7 +57,8 @@ const turnoSchema = new mongoose.Schema({
     }
 
 }, {
-    timestamps: true
+    timestamps: true,
+    collection: 'turnos'
 })  
 
 turnoSchema.loadClass(Turno)

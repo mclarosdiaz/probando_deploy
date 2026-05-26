@@ -5,6 +5,7 @@ import {
     UnprocessableEntityError
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
+import { reservarTurnoSchema } from "../schemas/requestsSchemas/turnoRequestSchemas.js";
 
 
 export class MongoTurnoRepository {
@@ -33,23 +34,34 @@ export class MongoTurnoRepository {
     }
 
     async save(turno){
-        const nuevoTurno = new this.model(turno)
-        return await nuevoTurno.save
+        const query = turno.id ? { _id: turno.id } : { _id: new this.model()._id } 
+        
+        if(turno.id){
+            return await this.model.findOneAndUpdate(
+                query,
+                turno,
+                {
+                    new: true
+                }
+            )
+        }
+        
+        return await this.model.create(turno)
     }
 
     async saveAll(turnos){
-        const nuevosTurnos = turnos.map(turno => {
-            const nuevoTurno = new this.model(turno)
-            return nuevoTurno.save()
-        })
-        return await Promise.all(nuevosTurnos)
+        return await Promise.all(
+            turnos.map(turno =>
+                this.save(turno)
+            )
+        )
     }
 
     async findById(id){
         const mongoTurno = await this.model.findById(id)
 
         if(!mongoTurno){
-            throw new TurnoNotFoundError()
+            throw new TurnoNotFoundError(`El turno ${id} no fue encontrado`)
         }
 
         return this.toDomain(mongoTurno)
