@@ -11,7 +11,8 @@ import {
     TurnoNotFoundError, 
     MedicoNotFoundError, 
     ConflictError, 
-    UnprocessableEntityError
+    UnprocessableEntityError,
+    ValidationError
 } from "../errors/appError.js";
 import { Sede } from "../domain/sede.js";
 import { Usuario } from "../domain/usuario.js";
@@ -170,7 +171,7 @@ export class TurnoService{
     }
 
     async marcarComoRealizado({id, idUsuario}){
-        const mongoTurno = await this.turnoRepository.findById(id)
+        const mongoTurno = await this.findById(id)
         const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
 
         const usuario = turno.obtenerUsuarioMedico()
@@ -243,7 +244,10 @@ export class TurnoService{
         const mongoMedico = await this.obtenerMedicoPorId(idMedico) 
         const medico = domainMapper.mongoMedicoToDomain(mongoMedico) 
 
+        medico.disponibilidades = nuevaDisponibilidades
+
         await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) 
+        
         const nuevosTurnos = this.generarTurnosParaMedico(medico)
 
         const turnosGuardados = await this.turnoRepository.saveAll(nuevosTurnos) 
@@ -253,10 +257,8 @@ export class TurnoService{
     }
 
     async modificarFechaTurno({ id, idUsuario , fecha }){
-        const turno = await this.turnoRepository.findById(id)
-
-
-        this.validarTurno(turno)
+        const mongoTurno = await this.turnoRepository.findById(id)
+        const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
 
         if(!turno.puedeModificar(idUsuario)){
             throw new NotAllowedError("El usuario no puede solicitar cambio de fecha de este turno")
@@ -272,11 +274,37 @@ export class TurnoService{
             "El usuario solicitó el cambio de fecha"
         )
 
-        return this.turnoRepository.save(turno)
+        const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
+
+        const [mongoTurnoGuardado, mongoNotificacionGuardada] =
+            await Promise.all([
+                this.turnoRepository.save(turno),
+                this.notificacionRepository.save(notificacion)
+            ])
+
+        return {
+            turno: dtoMapper.turnoToDTO(
+                domainMapper.mongoTurnoToDomain(mongoTurnoGuardado)
+            ),
+            notificacion: dtoMapper.notificacionToDTO(
+                domainMapper.mongoNotificacionToDomain(
+                    mongoNotificacionGuardada
+                )
+            )
+        }
     }
 
-    async validarDisponibilidad(){
-        //TODO
+    async validarDisponibilidad(turno, fecha){
+        const existeConflicto = 
+            await this.turnoRepository.existeTurnoEnFecha({
+                idMedico: turno.medico.id,
+                fecha,
+                excluirTurnoId: turno.id
+            })
+
+        if(existeConflicto){
+            throw new ValidationError("El médico no tiene disponibilidad en este horario")
+        }
     }
 
     
@@ -284,23 +312,17 @@ export class TurnoService{
     async findById(id){
         const turno = await this.turnoRepository.findById(id)
 
-        this.validarTurno(turno)
-
         return turno
     }
 
     async obtenerPacientePorId(id){
         const paciente = await this.pacienteRepository.findById(id)
 
-        this.validarPaciente(paciente)
-
         return paciente
     }
 
     async obtenerMedicoPorId(id){
         const medico = await this.medicoRepository.findById(id)
-
-        this.validarMedico(medico)
 
         return medico
     }
@@ -315,21 +337,5 @@ export class TurnoService{
         return medicos
     }
 
-    validarTurno(turno){
-        if (!turno) {
-            throw new TurnoNotFoundError("Turno no encontrado")
-        }
-    }
-
-    validarMedico(medico){
-        if (!medico) {
-            throw new MedicoNotFoundError("Médico no encontrado")
-        }
-    }
-
-    validarPaciente(paciente){
-        if(!paciente){
-            throw new PacienteNotFoundError("Paciente no encontrado")
-        }
-    }
+    
 }

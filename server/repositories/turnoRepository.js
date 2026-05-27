@@ -1,4 +1,5 @@
 import { Turno } from "../domain/turno.js";
+import { EstadoTurno } from "../domain/estadoTurno.js"
 import {
     BadRequestError,
     TurnoNotFoundError,
@@ -108,16 +109,36 @@ export class MongoTurnoRepository {
 
     async eliminarDisponiblesFuturos(idMedico, fechaHora){
         const query = {
-            medico: idMedico
-            fechaHora.$gte = fechaHora}
+            medico: idMedico,
+            estado: EstadoTurno.DISPONIBLE
+            fechaHora:{
+                $gte: fechaHora
+            }}
 
         
-        return await Promise.all(
-            this.model.
-            .deleteMany(query)
-            
-        )
+        return await this.model.deleteMany(query)
+    }
 
+    async existeTurnoEnFecha({
+        idMedico,
+        fecha,,
+        excluirTurnoId
+    }){
+       const query = {
+            medico: idMedico,
+            fechaHora: fecha,
+            estado:{
+                $in: ["CONFIRMADO", "RESERVADO"]
+            }
+       }
+
+        if(excluirTurnoId){
+            query._id = { $ne: excluirTurnoId}
+        }
+
+        const existe = await this.model.exists(query)
+
+        return Boolean(existe)
 
     }
 

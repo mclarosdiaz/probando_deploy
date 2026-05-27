@@ -39,3 +39,7 @@ export class NotAllowedError extends AppError{
 export class UnprocessableEntityError extends AppError{
     constructor(message){super(message, 422)}
 }
+
+export class ValidationError extends AppError{
+    constructor(message){super(message, 403)}
+}

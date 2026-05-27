@@ -42,11 +42,11 @@ export class MongoMedicoRepository{
         .populate("usuarios")
         .populate("sedes")
 
-        if (!mongomedico) {
+        if (!mongoMedico) {
             throw new MedicoNotFoundError(`El médico ${id} no fue encontrado`)
         }
 
-        return this.toDomain(mongoMedico)
+        return mongoMedico
     }
 
     async findAll(){
