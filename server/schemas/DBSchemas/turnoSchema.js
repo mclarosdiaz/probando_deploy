@@ -7,11 +7,6 @@ import { reservarTurnoSchema } from "../requestsSchemas/turnoRequestSchemas.js";
 import { cambioEstadoTurnoEmbeddedSchema } from "./cambioEstadoTurnoSchema.js";
 
 const turnoSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: true,
-        trim: true
-    },
     medico:{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Medico', 
@@ -51,13 +46,10 @@ const turnoSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    eliminado: {
-        type: Boolean,
-        default: false
-    }
 
 }, {
-    timestamps: true
+    timestamps: true,
+    collection: 'turnos'
 })  
 
 turnoSchema.loadClass(Turno)

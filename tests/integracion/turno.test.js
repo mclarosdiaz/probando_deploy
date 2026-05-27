@@ -16,6 +16,8 @@ import { DiaSemana } from "../../server/domain/diaSemana.js"
 //import { ObraSocial } from "../../server/domain/obraSocial.js"
 
 describe("Turno API- Integracion",()=>{
+    
+
     let app
     let turnoRepository
     let medicoRepository
@@ -125,11 +127,17 @@ describe("Turno API- Integracion",()=>{
         turno.servicio = revision 
 
         turnosMock = [turno]
+        
+            //TODO mockear nuevas funciones
 
-        turnoRepository={
-            findAll: jest.fn().mockResolvedValue({ data: turnosMock, total: 1 }),
-            findById: jest.fn().mockImplementation(async(id) => {
-                return id === "123"? turno: null
+        turnoRepository = {
+            findAll: jest.fn().mockResolvedValue({
+                data: turnosMock,
+                total: 1
+            }),
+            findById: 
+                jest.fn().mockImplementation(async(id) => {
+                    return id === "123"? turno: null
                 }),
             save: jest.fn().mockImplementation(async (entidad) => entidad),
             saveAll: jest.fn().mockImplementation(async (entidades) => entidades),
@@ -172,7 +180,7 @@ describe("Turno API- Integracion",()=>{
                     limit: 10
                 })
 
-
+             console.log(response.body)
             expect(response.status).toBe(200)
          })
 
@@ -183,6 +191,8 @@ describe("Turno API- Integracion",()=>{
                     pacienteId: "032616",
                     estado: "PENDIENTE"
                 })
+
+                console.log(response.body)
 
                 expect(response.status).toBe(400)
         })
@@ -201,7 +211,7 @@ describe("Turno API- Integracion",()=>{
                     limit: 10
             })
 
-
+            console.log(response.body)
 
             expect(response.status).toBe(200)
             expect(response.body.data).toHaveLength(1)
@@ -220,7 +230,7 @@ describe("PATCH /turnos/123/reservar", () =>{
             .send({
                 pacienteId: "1234"
             })
-
+        console.log(response.body)
 
         expect(response.status).toBe(200)
     })  
@@ -244,7 +254,7 @@ describe("PATCH /turnos/123/cancelar",()=>{
                 motivo: "No puedo asistir",
                 idUsuario: "1234"        
         })
-
+        console.log(response.body)
 
         expect(response.status).toBe(204)
     })
@@ -254,7 +264,8 @@ describe ("POST /turnos/generarTurnosDisponibles",()=>{
     test("deberia retornar 200 con los turnos generados",async()=>{
         const response = await request(app)
         .post("/turnos/generarTurnosDisponibles")
-        
+       
+        console.log(response.body)
         expect(response.status).toBe(200)
     })
 })

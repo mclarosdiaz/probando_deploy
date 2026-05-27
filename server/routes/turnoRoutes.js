@@ -6,16 +6,35 @@ import {
     reservarTurnoSchema,
     cancelarTurnoRequestSchema,
     obtenerHistorialTurnosSchema,
-    marcarComoRealizadoSchema,
     modificarEstadoTurnoSchema,
     generarTurnosDisponiblesSchema,
     modificarFechaTurnoSchema
  } from '../schemas/requestsSchemas/turnoRequestSchemas.js'
+import { MongoTurnoRepository } from '../repositories/turnoRepository.js'
+import { MongoMedicoRepository } from '../repositories/medicoRepository.js'
+import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'
+import { MongoSedeRepository } from '../repositories/sedeRepository.js'
+import { MongoUsuarioRepository } from '../repositories/usuarioRepository.js'
+import { MongoPacienteRepository } from '../repositories/pacienteRepository.js'
 
 
- const router = Router()
- const turnoService = new TurnoService()
- const controller = new TurnoController(turnoService)
+const router = Router()
+
+const turnoRepository = new MongoTurnoRepository()
+const pacienteRepository = new MongoPacienteRepository()
+const medicoRepository = new MongoMedicoRepository()
+const notificacionRepository = new MongoNotificacionRepository()
+const sedeRepository = new MongoSedeRepository()
+const usuarioRepository = new MongoUsuarioRepository()
+
+const turnoService = new TurnoService(turnoRepository, 
+    pacienteRepository, 
+    medicoRepository, 
+    notificacionRepository, 
+    sedeRepository, 
+    usuarioRepository)
+    
+const controller = new TurnoController(turnoService)
 
 router.patch(
     "/:id/reservar",

@@ -1,10 +1,12 @@
 import { Turno } from "../domain/turno.js";
+import { EstadoTurno } from "../domain/estadoTurno.js"
 import {
     BadRequestError,
     TurnoNotFoundError,
     UnprocessableEntityError
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
+import { reservarTurnoSchema } from "../schemas/requestsSchemas/turnoRequestSchemas.js";
 
 
 export class MongoTurnoRepository {
@@ -13,74 +15,52 @@ export class MongoTurnoRepository {
     }
 
     async save(turno){
-        const nuevoTurno = new this.model(turno)
-        return await nuevoTurno.save
+        const query = turno.id ? { _id: turno.id } : { _id: new this.model()._id } 
+        
+        if(turno.id){
+            return await this.model.findOneAndUpdate(
+                query,
+                turno,
+                {
+                    new: true
+                }
+            )
+        }
+        
+        return await this.model.create(turno)
     }
 
     async saveAll(turnos){
-        const nuevosTurnos = turnos.map(turno => {
-            const nuevoTurno = new this.model(turno)
-            return nuevoTurno.save()
-        })
-        return await Promise.all(nuevosTurnos)
+        return await Promise.all(
+            turnos.map(turno =>
+                this.save(turno)
+            )
+        )
     }
 
     async findById(id){
-        return await this.model.findById(id)
-    }
+        const mongoTurno = await this.model
+            .findById(id)
+            .populate({
+                path: "medico",
+                populate: {
+                    path: "sedes"
+                }
+            })
+            .populate("pacientes")
 
-    /*
-    async findallPaginado({ filtros, paginacion } = {}){
-        const query = this.obtenerFiltros(filtros)
-
-        const { page, limit } = paginacion
-
-        const [data, total] = await Promise.all([
-            TurnoModel
-                .find(query)
-                .skip(offset)
-                .limit(limit),
-                TurnoModel.countDocuments(query)
-        ])
-
-        return {
-            data, 
-            total
+        if(!mongoTurno){
+            throw new TurnoNotFoundError(`El turno ${id} no fue encontrado`)
         }
-    }
-    */
 
-    async findAll({ filtros = {}, paginacion = {} } = {}) {
-        
-        const query = this.obtenerFiltros(filtros);
-
-        // paginación con valores por defecto por si vienen vacíos
-        const page = Number(paginacion.page) || 1;
-        const limit = Number(paginacion.limit) || 10;
-        
-        //offset matemático
-        // Ej: Si estoy en la página 2 y el límite es 10, salto los primeros 10.
-        const offset = (page - 1) * limit;
-
-        // 4. Ejecutamos ambas búsquedas a la vez (traer datos + contar el total) para que sea más rápido
-        const [data, total] = await Promise.all([
-            TurnoModel.find(query)
-                .skip(offset)
-                .limit(limit),
-            TurnoModel.countDocuments(query)
-        ]);
-
-        return {
-            data,
-            total
-        };
+        return mongoTurno
     }
 
-    obtenerFiltros(filtros){
+    async findAll({ filtros = {}, paginacion = {} } = {}){
         const query = {}
 
         if(filtros.pacienteId){
-            query.pacienteId = filtros.pacienteId
+            query.paciente = filtros.pacienteId
         }
 
         if(filtros.estado){
@@ -88,6 +68,7 @@ export class MongoTurnoRepository {
         }
 
         if(filtros.fechaDesde || filtros.fechaHasta){
+            query.fecha = {}
             if(filtros.fechaDesde){
                 query.fecha.$gte = filtros.fechaDesde
             }
@@ -97,15 +78,68 @@ export class MongoTurnoRepository {
             }
         }
 
-        if(filtros.profesional){
-            query.profesional = filtros.profesional
+        const page = paginacion.page || 1
+        const limit = paginacion.limit || 10
+
+        const offset = (page - 1) * limit
+
+        const [documents, total] = await Promise.all([
+            this.model
+                .find(query)
+                .populate({
+                    path: "medico",
+                    populate: {
+                        path: "sedes"
+                    }
+                })
+                .populate("pacientes")
+                .populate("sedes")
+                .skip(offset)
+                .limit(limit),
+
+                this.model.countDocuments(query)
+        ])
+
+        return {
+            documents, 
+            total
         }
 
-        if(filtros.especialidad){
-            query.especialidad = filtros.especialidad
+    }
+
+    async eliminarDisponiblesFuturos(idMedico, fechaHora){
+        const query = {
+            medico: idMedico,
+            estado: EstadoTurno.DISPONIBLE,
+            fechaHora:{
+                $gte: fechaHora
+            }}
+
+        
+        return await this.model.deleteMany(query)
+    }
+
+    async existeTurnoEnFecha({
+        idMedico,
+        fecha,
+        excluirTurnoId
+    }){
+       const query = {
+            medico: idMedico,
+            fechaHora: fecha,
+            estado:{
+                $in: ["CONFIRMADO", "RESERVADO"]
+            }
+       }
+
+        if(excluirTurnoId){
+            query._id = { $ne: excluirTurnoId}
         }
-    
-        return query
+
+        const existe = await this.model.exists(query)
+
+        return Boolean(existe)
+
     }
 
 }

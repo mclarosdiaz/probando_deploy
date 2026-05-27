@@ -4,11 +4,17 @@ import { Sede } from "./sede.js";
 import { Practica } from "./practica.js";
 import { Usuario } from "./usuario.js";
 
-
-
 export class Medico{
-    constructor(id,usuario,matricula,nombre,especialidades,practicas,sedes,disponibilidades){
-        this.id = id;
+    id 
+    usuario
+    matricula
+    nombre
+    especialidades
+    practicas
+    sedes 
+    disponibilidades
+
+    constructor(usuario,matricula,nombre,especialidades,practicas,sedes,disponibilidades){
         this.usuario = usuario;
         this.matricula = matricula;
         this.nombre = nombre;

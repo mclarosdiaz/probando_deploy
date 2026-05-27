@@ -3,11 +3,6 @@ import { Notificacion } from "../../domain/notificacion.js";
 
 
 const notificacionSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: true,
-        trim: true
-    },
     destinatario:
     {
         type:mongoose.Schema.Types.ObjectId,
@@ -35,6 +30,10 @@ const notificacionSchema = new mongoose.Schema({
         default: false
     }
 
+},
+{
+    timestamps: true,
+    collection: 'notificaciones'
 })
 
 notificacionSchema.loadClass(Notificacion)

@@ -15,9 +15,9 @@ export class TurnoController {
             const { id } = req.params
             const{ pacienteId } = req.body
 
-            const turno = await this.turnoService.reservar({id, pacienteId})
+            const data = await this.turnoService.reservar({id, pacienteId})
 
-            res.status(200).json(turno)
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -29,12 +29,13 @@ export class TurnoController {
             const { motivo, idUsuario } = req.body
             
 
-            await this.turnoService.cancelar({
+            const data = await this.turnoService.cancelar({
                 id, 
                 motivo, 
                 idUsuario})
 
-            res.sendStatus(204)
+            
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -49,7 +50,7 @@ export class TurnoController {
                 page,
                 limit } = req.query
 
-            const data = await this.turnoService.obtenerHistorial({ 
+            const turnos = await this.turnoService.obtenerHistorial({ 
             filtros:{
                 pacienteId, 
                 estado,
@@ -61,54 +62,10 @@ export class TurnoController {
                 limit
             }
         })
-            
-            res.status(200).json(data)
-
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    buscarTurnosDisponibles = async(req, res, next) =>{
-        try{
-
-            // 🕵️ RADAR 3: Controlador
-            console.log(`⚙️ [Controller] Entrando a buscarTurnosDisponibles`);
-            console.log(`⚙️ [Controller] req.params:`, req.params);
-            console.log(`⚙️ [Controller] req.query:`, req.query);
-            console.log(`⚙️ [Controller] req.body:`, req.body);
-
-            const{ idPaciente } = req.params
-
-            const{ page, limit } = req.query;
-
-            const{ 
-                idMedico,
-                idEspecialidad,
-                idPractica,
-                idSede,
-                fechaDesde,
-                fechaHasta } = req.body
-
-            const turnos = await this.turnoService.buscarTurnosDisponibles({
-                idPaciente: idPaciente,
-                filtros:{
-                    idMedico,
-                    idEspecialidad,
-                    idPractica,
-                    idSede,
-                    fechaDesde,
-                    fechaHasta
-                },
-                paginacion:{
-                    page,
-                    limit
-                }
-            })
 
             res.status(200).json(turnos)
-        }catch(error){
-            next(error);
+        } catch (error) {
+            next(error)
         }
     }
 
@@ -117,8 +74,8 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario } = req.body
 
-            await this.turnoService.marcarComoRealizado({id, idUsuario})
-            res.sendStatus(200)
+            const data = await this.turnoService.marcarComoRealizado({id, idUsuario})
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -129,9 +86,8 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario } = req.body
 
-            await this.turnoService.marcarComoConfirmado({id, idUsuario})
-
-            res.sendStatus(200)
+            const data = await this.turnoService.marcarComoConfirmado({id, idUsuario})
+            res.status(200).json(data)
         } catch(error) {
             next(error)
         }
@@ -153,17 +109,16 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario , nuevaFecha } = req.body
             
-            await this.turnoService.modificarFechaTurno({ 
+            const data = await this.turnoService.modificarFechaTurno({ 
                 id, 
                 idUsuario, 
                 fecha: nuevaFecha })
 
-            res.sendStatus(200)
+            res.status(200).json(data)
         }catch(error){
             next(error)
         }
     }
-
 
     extraerPaginacion(query){
         const numPag = query?.page === undefined ? 1 : Number(query.page)

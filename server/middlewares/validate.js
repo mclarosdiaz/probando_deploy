@@ -16,11 +16,7 @@ export const validate = (schema) => (req, res, next) =>{
             req.params = result.params
         next()
     }catch(error){
-        /*
-       // 🕵️ RADAR 2: Chismoso de Zod
-        console.log(`❌ [Zod] Error validando la ruta: ${req.originalUrl}`);
-        console.log(`❌ [Zod] Detalles del rechazo:`, JSON.stringify(error.issues, null, 2));
-        */
+        console.log(error)
         next(new BadRequestError("Request mal formada"))
     }
 }
