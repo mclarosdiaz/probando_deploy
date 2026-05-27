@@ -60,7 +60,7 @@ export const modificarFechaTurnoSchema = z.object({
     })
 })
 
-export const busquedaDeTurnosDisponibles = z.object({
+export const busquedaDeTurnosDisponiblesSchema = z.object({
     params: z.object({
         idPaciente: z.string()
     }),

@@ -1,5 +1,5 @@
 import request from "supertest"
-import { describe, expect, jest, test, beforeEach } from "@jest/globals"
+import { describe, expect, jest, test, beforeEach, beforeAll, afterAll } from "@jest/globals"
 import { buildTestApp } from "../utils/buildApp.js"
 import { Turno } from "../../server/domain/turno.js"
 import { Paciente } from "../../server/domain/paciente.js"
@@ -11,160 +11,46 @@ import { Especialidad } from "../../server/domain/especialidad.js"
 import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria.js"
 import { Practica } from "../../server/domain/practica.js"
 import { DiaSemana } from "../../server/domain/diaSemana.js"
+import { seedTestData } from "../../scripts/seedTestData.js"
+import { MongoTurnoRepository } from "../../server/repositories/turnoRepository.js"
+import { MongoMedicoRepository } from "../../server/repositories/medicoRepository.js"
+import { MongoPacienteRepository } from "../../server/repositories/pacienteRepository.js"
 
+import mongoose from "mongoose"
+import dotenv from "dotenv"
+dotenv.config()
+jest.setTimeout(20000)
 
 //import { ObraSocial } from "../../server/domain/obraSocial.js"
 
 describe("Turno API- Integracion",()=>{
     
-
+    
     let app
-    let turnoRepository
-    let medicoRepository
-    let pacienteRepository
-    let fechaHora
-    let medico
-    let paciente
-    let revision
-    let sedeChacarita
-    let usuarioMedico
-    let usuarioPaciente
-    let practicas
-    let especialidades
-    let sedes
-    let disponibilidades
-    let sedeItaliano
-    let turnosMock
 
-    beforeEach(()=>{
-        
-        fechaHora = new Date()
-
-        usuarioMedico = new Usuario("1234", "Roberto", "1234")
-        usuarioPaciente = new Usuario("1234", "pedroGimeenez", "Contraseña")
-
-        revision = new Practica(
-            "4679",
-            "456789",
-            "Revisión",
-            30,
-            5000
-        )
-
-        especialidades = [
-            new Especialidad("5645",
-                "Traumatología",
-                60,
-                10000
-            ),
-            new Especialidad("4568",
-                "Oftalmología",
-                45,
-                75000
-            )
-        ]
-
-        practicas = [
-            revision,
-            new Practica(
-                "6598",
-                "456745",
-                "Ecografía",
-                45,
-                10000
-            )
-        ]
-
-        sedeChacarita = new Sede("222", "Chacarita jr", "Gutierrez 351")
-        sedeItaliano = new Sede("555", "Hospital Italiano", "Alto Pelado, San Luis")
-
-        sedes = [
-            new Sede("222", "Chacarita jr", "Gutierrez 351"),
-            new Sede("555", "Hospital Italiano", "Alto Pelado, San Luis")
-        ]
-
-        disponibilidades = [
-            new DisponibilidadHoraria(DiaSemana.VIERNES,
-                "14:30",
-                "17:00"
-            ),
-            new DisponibilidadHoraria(DiaSemana.MARTES,
-                "12:00",
-                "15:00"
-            )
-        ]
-        medico = new Medico(
-            "1234",
-            usuarioMedico,
-            "1234",
-            "Roberto Gimenez",
-            especialidades,
-            practicas,
-            sedes,
-            disponibilidades
-        )
-
-        paciente = new Paciente(
-            "1234",
-            usuarioPaciente,
-            "46254978",
-            "Pedro Gimenez",
-        )
-        paciente.plan = {
-            obtenerCoberturaPractica: jest.fn().mockReturnValue({ nivel: "TOTAL", costoAplicandoCobertura: 0 }),
-            obtenerCoberturaEspecialidad: jest.fn().mockReturnValue(null)
+    beforeAll(async() =>{
+        try {
+            const conn = await mongoose.connect(`${process.env.MONGODB_URI}/${process.env.MONGODB_NAME}?authSource=admin`)    
+        } catch (error) {
+            console.error(`Error: ${error.message}`)
+            process.exit(1)
         }
+    }) 
 
-        const turno = new Turno(medico, 
-                new Date(Date.now() + 1000 * 60 * 60 * 24), 
-                sedeChacarita, 
-                EstadoTurno.CONFIRMADO, 
-                revision.costo)
+    beforeEach(async ()=>{
+
+        const turnoRepository = new MongoTurnoRepository()
+        const pacienteRepository = new MongoPacienteRepository()
+        const medicoRepository = new MongoMedicoRepository()
+
+        app = buildTestApp({ turnoRepository, pacienteRepository, medicoRepository })
         
-        turno.asignarPaciente(paciente)
+        await seedTestData()
         
+    })
         
-        turno.servicio = revision 
-
-        turnosMock = [turno]
-        
-            //TODO mockear nuevas funciones
-
-        turnoRepository = {
-            findAll: jest.fn().mockResolvedValue({
-                data: turnosMock,
-                total: 1
-            }),
-            findById: 
-                jest.fn().mockImplementation(async(id) => {
-                    return id === "123"? turno: null
-                }),
-            save: jest.fn().mockImplementation(async (entidad) => entidad),
-            saveAll: jest.fn().mockImplementation(async (entidades) => entidades),
-        }
-        
-        medicoRepository = {
-            save: jest.fn().mockImplementation(async(entidad) => entidad),
-            findById: jest.fn().mockResolvedValue(medico),
-            findAll: jest.fn().mockResolvedValue([medico])
-        }
-
-        pacienteRepository = {
-            findById: jest.fn().mockResolvedValue(paciente)
-        }
-
-        app=buildTestApp({turnoRepository, pacienteRepository, medicoRepository})
-        
-
-
-        /*
-        turnosMock = [
-            new Turno(medico, fechaHora, sedeChacarita, EstadoTurno.RESERVADO, revision.costo)
-        ]
-        turnosMock[0].asignarPaciente(paciente)
-        turnosMock[0].actualizarEstado(EstadoTurno.CONFIRMADO, usuarioPaciente, "Turno confirmado")
-        turnosMock[0].servicio = revision
-        */
+    afterAll(async () => {
+       // await mongoose.disconnect()
     })
 
     describe("GET /turnos/", () => {
@@ -315,4 +201,5 @@ describe("GET /turnos/:idPaciente/turnosDisponibles", () => {
     })
 })
     //fallas
-}) 
+
+})

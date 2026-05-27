@@ -15,11 +15,8 @@ import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js
 
 dotenv.config()
 
-async function seed() {
-    await mongoose.connect(process.env.MONGODB_URI)
-
-    console.log("Conectado")
-
+export async function seedTestData() {
+   
     // limpiar
     await Promise.all([
         UsuarioModel.deleteMany({}),
@@ -218,11 +215,4 @@ const medico = await MedicoModel.create({
     })
 
     console.log("Seed completado")
-
-    await mongoose.disconnect()
 }
-
-seed().catch(err => {
-    console.error(err)
-    process.exit(1)
-})

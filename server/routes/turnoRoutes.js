@@ -8,7 +8,8 @@ import {
     obtenerHistorialTurnosSchema,
     modificarEstadoTurnoSchema,
     generarTurnosDisponiblesSchema,
-    modificarFechaTurnoSchema
+    modificarFechaTurnoSchema,
+    busquedaDeTurnosDisponiblesSchema
  } from '../schemas/requestsSchemas/turnoRequestSchemas.js'
 import { MongoTurnoRepository } from '../repositories/turnoRepository.js'
 import { MongoMedicoRepository } from '../repositories/medicoRepository.js'
@@ -80,7 +81,7 @@ router.patch(
 
 router.get(
     "/:idPaciente/turnosDisponibles", //TEMPORAL
-    validate(busquedaDeTurnosDisponibles),
+    validate(busquedaDeTurnosDisponiblesSchema),
     controller.buscarTurnosDisponibles
 )
 
