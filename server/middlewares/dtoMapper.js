@@ -40,6 +40,8 @@ class DTOMapper{
             leida: notificacion.leida
         }
     }
+
+    
 }
 
 export const dtoMapper = new DTOMapper()

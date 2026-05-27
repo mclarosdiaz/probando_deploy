@@ -190,25 +190,6 @@ export class TurnoService{
         return dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(turnoGuardado))
 
     }
-/* metodo que teniamos antes (si funciona el otro hay que borrarlo)
-    async generarTurnosDisponibles(){
-        const medicos = await this.turnoRepository.obtenerMedicos()
-        const disponiblesTotales = []
-
-        medicos.forEach(medico => {
-
-            const servicios = medico.especialidades.concat(medico.practicas)
-
-            const disponibles = servicios.forEach(servicio => {
-                agenda.generarTurnosPara(servicio, medico, 1)
-
-                disponiblesTotales.concat(disponibles)
-            })
-        })
-
-        return this.turnoRepository.saveAll(disponiblesTotales)
-    }
-*/
 
     async generarTurnosDisponibles(){
         const mongoMedico = await this.medicoRepository.findAll()
@@ -248,9 +229,10 @@ export class TurnoService{
 
         await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) 
         
-        const nuevosTurnos = this.generarTurnosParaMedico(medico)
+        const nuevosTurnosPosibles = this.generarTurnosParaMedico(medico)
+            .filter(nuevoTurno => this.validarDisponibilidad(nuevoTurno, nuevoTurno.fechaHora))
 
-        const turnosGuardados = await this.turnoRepository.saveAll(nuevosTurnos) 
+        const turnosGuardados = await this.turnoRepository.saveAll(nuevosTurnosPosibles) 
 
         return turnosGuardados.map(turnoGuardado => dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(turnoGuardado))) 
             
@@ -264,8 +246,13 @@ export class TurnoService{
             throw new NotAllowedError("El usuario no puede solicitar cambio de fecha de este turno")
         }
 
-        await this.validarDisponibilidad(turno, fecha)
+        const existeConflicto = await this.validarDisponibilidad(turno, fecha)
 
+        if (existeConflicto) {
+            throw new ValidationError("El médico no tiene disponibilidad en este horario")
+        }
+
+            
         const usuario = turno.obtenerUsuario(idUsuario)  
         
         turno.solicitarCambioFecha(
@@ -295,20 +282,15 @@ export class TurnoService{
     }
 
     async validarDisponibilidad(turno, fecha){
-        const existeConflicto = 
-            await this.turnoRepository.existeTurnoEnFecha({
+        return await this.turnoRepository.existeTurnoEnFecha({
                 idMedico: turno.medico.id,
                 fecha,
                 excluirTurnoId: turno.id
             })
 
-        if(existeConflicto){
-            throw new ValidationError("El médico no tiene disponibilidad en este horario")
-        }
     }
 
     
-
     async findById(id){
         const turno = await this.turnoRepository.findById(id)
 

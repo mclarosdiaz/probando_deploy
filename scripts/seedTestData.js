@@ -49,6 +49,8 @@ async function seed() {
 
     // medico
 const medico = await MedicoModel.create({
+    _id: "1234",
+
     usuario: usuarioMedico._id,
 
     matricula: "MN-45821",
@@ -57,11 +59,13 @@ const medico = await MedicoModel.create({
 
     especialidades: [
         {
+            id: "1234",
             nombre: "Clínica Médica",
             duracionTurnoEnMins: 30,
             costo: 15000
         },
         {
+            id: "1235",
             nombre: "Diagnóstico",
             duracionTurnoEnMins: 60,
             costo: 25000
@@ -70,12 +74,14 @@ const medico = await MedicoModel.create({
 
     practicas: [
         {
+            id: "1236",
             codigo: "ECG001",
             nombre: "Electrocardiograma",
             duracionTurnoEnMins: 20,
             costo: 12000
         },
         {
+            id: "1237",
             codigo: "LAB101",
             nombre: "Análisis de Sangre",
             duracionTurnoEnMins: 15,

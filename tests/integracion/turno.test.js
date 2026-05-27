@@ -16,6 +16,8 @@ import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria
 //import { ObraSocial } from "../../server/domain/obraSocial.js"
 
 describe("Turno API- Integracion",()=>{
+    
+
     let app
     let turnoRepository
     let medicoRepository
