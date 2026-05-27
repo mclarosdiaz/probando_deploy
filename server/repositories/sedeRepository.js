@@ -6,7 +6,7 @@ import {
 } from "../errors/appError.js"
 import { SedeModel } from "../schemas/DBSchemas/sedeSchema.js";
 
-export class MongoMedicoRepository{
+export class MongoSedeRepository{
     cosntructor(){
         this.model = SedeModel
     }

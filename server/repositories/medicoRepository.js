@@ -37,7 +37,10 @@ export class MongoMedicoRepository{
     }
     
     async findById(id){
-        const mongoMedico = await this.model.findById(id)
+        const mongoMedico = await this.model
+        .findById(id)
+        .populate("usuarios")
+        .populate("sedes")
 
         if (!mongomedico) {
             throw new MedicoNotFoundError(`El médico ${id} no fue encontrado`)

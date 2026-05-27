@@ -13,26 +13,6 @@ export class MongoTurnoRepository {
         this.model = TurnoModel 
     }
 
-    toDomain(mongoTurno){
-        const data = mongoTurno.toObject()
-
-        const turno = new Turno(
-            data.medico,
-            data.fechaHora,
-            data.sede,
-            data.estado,
-            data.costo
-        )
-
-        turno.historialEstados = data.historialEstados
-
-        if(data.paciente){
-            turno.paciente = data.paciente
-        }
-
-        return turno
-    }
-
     async save(turno){
         const query = turno.id ? { _id: turno.id } : { _id: new this.model()._id } 
         
@@ -58,16 +38,24 @@ export class MongoTurnoRepository {
     }
 
     async findById(id){
-        const mongoTurno = await this.model.findById(id)
+        const mongoTurno = await this.model
+            .findById(id)
+            .populate({
+                path: "medico",
+                populate: {
+                    path: "sedes"
+                }
+            })
+            .populate("pacientes")
 
         if(!mongoTurno){
             throw new TurnoNotFoundError(`El turno ${id} no fue encontrado`)
         }
 
-        return this.toDomain(mongoTurno)
+        return mongoTurno
     }
 
-    async findAll({ filtros, paginacion } = {}){
+    async findAll({ filtros = {}, paginacion = {} } = {}){
         const query = {}
 
         if(filtros.pacienteId){
@@ -79,6 +67,7 @@ export class MongoTurnoRepository {
         }
 
         if(filtros.fechaDesde || filtros.fechaHasta){
+            query.fecha = {}
             if(filtros.fechaDesde){
                 query.fecha.$gte = filtros.fechaDesde
             }
@@ -96,19 +85,30 @@ export class MongoTurnoRepository {
         const [documents, total] = await Promise.all([
             this.model
                 .find(query)
+                .populate({
+                    path: "medico",
+                    populate: {
+                        path: "sedes"
+                    }
+                })
+                .populate("pacientes")
                 .skip(offset)
                 .limit(limit),
 
                 this.model.countDocuments(query)
         ])
 
-        const data = documents.map(doc => this.toDomain(doc))
-
         return {
-            data, 
+            documents, 
             total
         }
 
+    }
+
+    async eliminarDisponiblesFuturos(idMedico, fechaHora){
+        const query = {
+            
+        }
     }
 
 }

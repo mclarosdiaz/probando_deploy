@@ -1,7 +1,7 @@
 import { Mongoose } from "mongoose";
 import { DiaSemana } from "../../domain/diaSemana";
 
-export const disponibilidadHorariaEmbeddedSchema = new Mongoose.schema({
+export const disponibilidadHorariaEmbeddedSchema = Mongoose.schema({
     diaSemana: {
         type: String,
         enum: Object.values(DiaSemana),
