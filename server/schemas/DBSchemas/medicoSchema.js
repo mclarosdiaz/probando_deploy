@@ -6,11 +6,6 @@ import { disponibilidadHorariaEmbeddedSchema } from "./disponibilidadHorariaEmbe
 import { Usuario } from "../../domain/usuario.js";
 
 const medicoSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: true,
-        trim: true
-    },
     usuario:{
         type:mongoose.Schema.Types.ObjectId,
         ref: "usuarios",

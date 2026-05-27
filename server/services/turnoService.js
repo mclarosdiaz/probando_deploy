@@ -243,10 +243,13 @@ export class TurnoService{
         const mongoMedico = await this.obtenerMedicoPorId(idMedico) 
         const medico = domainMapper.mongoMedicoToDomain(mongoMedico) 
 
-        await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) //TODO falta el metodo en el repositorio
+        await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) 
         const nuevosTurnos = this.generarTurnosParaMedico(medico)
 
-        return await this.turnoRepository.saveAll(nuevosTurnos)
+        const turnosGuardados = await this.turnoRepository.saveAll(nuevosTurnos) 
+
+        return turnosGuardados.map(turnoGuardado => dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(turnoGuardado))) 
+            
     }
 
     async modificarFechaTurno({ id, idUsuario , fecha }){

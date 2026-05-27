@@ -59,7 +59,7 @@ export class MongoTurnoRepository {
         const query = {}
 
         if(filtros.pacienteId){
-            query.pacienteId = filtros.pacienteId
+            query.paciente = filtros.pacienteId
         }
 
         if(filtros.estado){
@@ -92,6 +92,7 @@ export class MongoTurnoRepository {
                     }
                 })
                 .populate("pacientes")
+                .populate("sedes")
                 .skip(offset)
                 .limit(limit),
 
@@ -107,8 +108,17 @@ export class MongoTurnoRepository {
 
     async eliminarDisponiblesFuturos(idMedico, fechaHora){
         const query = {
+            medico: idMedico
+            fechaHora.$gte = fechaHora}
+
+        
+        return await Promise.all(
+            this.model.
+            .deleteMany(query)
             
-        }
+        )
+
+
     }
 
 }

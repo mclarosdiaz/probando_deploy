@@ -22,6 +22,8 @@ class DomainMapper{
             data.estado,
             data.costo
         )
+        turno.id = data._id.toString()
+
 
         turno.paciente = paciente
         turno.historialEstados = data.historialEstados
@@ -42,7 +44,7 @@ class DomainMapper{
                 sede => this.mongoSedeToDomain(sede)
             )
         )
-        medico.id = data.id
+        medico.id = data._id.toString()
 
         return medico
     }
@@ -54,7 +56,7 @@ class DomainMapper{
             data.nombre,
             data.direccion
         )
-        sede.id = data.id
+        sede.id = data._id.toString()
 
         return sede
     }
@@ -67,7 +69,7 @@ class DomainMapper{
             data.password
         )
 
-        usuario.id = data.id
+        usuario.id = data._id.toString()
 
         return usuario
     }
@@ -82,7 +84,7 @@ class DomainMapper{
             this.mongoObraSocialToDomain(data.obraSocial),
             this.mongoPlanToDomain(data.plan)
         )
-        paciente.id = data.id
+        paciente.id = data._id.toString()
 
         return paciente
     }
@@ -95,7 +97,7 @@ class DomainMapper{
             data.planes.map(plan => this.mongoPlanToDomain(plan))
         )
 
-        obraSocial.id = data.id
+        obraSocial.id = data._id.toString()
     }
 
     mongoPlanToDomain(mongoPlan){
@@ -106,6 +108,8 @@ class DomainMapper{
             data.coberturasEspecialidad,
             data.coberturasPractica
         )
+
+        plan.id = data._id.toString()
     }
 }
 

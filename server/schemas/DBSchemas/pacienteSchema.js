@@ -3,11 +3,6 @@ import { Paciente } from "../../domain/paciente.js";
 import { UsuarioModel } from "./usuarioSchema.js";
 
 const pacienteSchema = new mongoose.Schema({
-    id: {
-        type:String,
-        required:true,
-        trim:true
-    },
     usuario: {
         type:mongoose.Schema.Types.ObjectId,
         ref:"usuarios",
