@@ -27,23 +27,19 @@ export class NotificacionService{
         return notificaciones.filter(notificacion=> !notificacion.leida)
     }
     async mostrarLeidas({idUsuario}){
-        const notificaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
+        const mongoNotifaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
+        const notifiaciones = domainMapper.mongoNotifacionesToDomain(mongoNotifaciones)
         
         return notificaciones.filter(notificacion=> notificacion.leida)
     }
-    //TODO tengo que devolver un DTO?
+
     async marcarComoLeida({idNotificacion}){
         const mongoNotificacion = await this.notificacionRepository.findById(idNotificacion)
         const notificacion = domainMapper.mongoNotificacionToDomain(mongoNotificacion)
 
         notificacion.marcarComoLeida()
 
-        const mongoNotificacionGuardada = await Promise.all(this.notificacionRepository.save(notificacion))
-        return {
-            notificacion : dtoMapper.notificacionToDTO(
-                domainMapper.mongoNotificacionToDomain(mongoNotificacionGuardada)
-            )
-        } 
+        return notificacion
     }
     
 

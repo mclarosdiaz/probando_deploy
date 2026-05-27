@@ -40,12 +40,16 @@ export class MedicoService {
     }
 
     async modificarDisponibilidades({ idMedico, nuevaDisponibilidades }) {
-        const medico = await this.findById(idMedico)
+        
+        const mongoMedico = await this.findById(idMedico)
+        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
+
         medico.definirDisponibilidad(nuevasDisponibilidades)
 
         await this.turnoService.sincronizarTurnosDisponibles(idMedico, nuevasDisponibilidades)
 
-        return this.medicoRepository.save(medico)
+        const medicoGuardado = await this.medicoRepository.save(medico)
+        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
     }
 
     async findById(idMedico) {
@@ -60,27 +64,33 @@ export class MedicoService {
     }
 
     async agregarServicio(idMedico, nuevoServicio){
-        const medico = await this.findById(idMedico)
+        const mongoMedico = await this.findById(idMedico)
+        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
 
         medico.agregarServicio(nuevoServicio)
 
-        return await this.medicoRepository.save(medico)
+        const medicoGuardado = await this.medicoRepository.save(medico)
+        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
     }
 
     async eliminarServicio(idMedico, idServicio){
-        const medico = await this.findById(idMedico)
+        const mongoMedico = await this.findById(idMedico)
+        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
 
         medico.eliminarServicio(idServicio)
 
-        return await this.medicoRepository.save(medico)
+        const medicoGuardado = await this.medicoRepository.save(medico)
+        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
     }
 
     async modificarServicio(idMedico, servicioModificado){
-        const medico = await this.findById(idMedico)
+        const mongoMedico = await this.findById(idMedico)
+        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
 
         medico.modificarServicio(servicioModificado)
 
-        return await this.medicoRepository.save(medico)
+        const medicoGuardado = await this.medicoRepository.save(medico)
+        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
     }
 
 }

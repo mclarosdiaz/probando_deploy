@@ -29,19 +29,17 @@ export class Medico{
     }
 
     puedeHacerServicio(idServicio){
-         return this.especialidades.some(s => s.id === idServicio)
+        return this.especialidades.some(s => s.id === idServicio)
         || this.practicas.some(s => s.id === idServicio)
     }
     
     agregarServicio(nuevoServicio) {
-       /*  if (this.puedeHacerServicio(nuevoServicio.id)) {
-            throw new ConflictError("El médico ya tiene asignado este servicio")
-        } */
-
-        if (nuevoServicio.codigo) {
-            this.practicas.push(nuevoServicio)
-        } else {
+        if (!this.puedeHacerServicio(nuevoServicio.id)) {
+            if (nuevoServicio.codigo) {
+                this.practicas.push(nuevoServicio)
+            }else {
             this.especialidades.push(nuevoServicio)
+            }
         }
     }
 

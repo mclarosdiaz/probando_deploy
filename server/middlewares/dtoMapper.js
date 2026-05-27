@@ -1,5 +1,7 @@
 import { Turno } from "../domain/turno.js";
 import { Notificacion } from "../domain/notificacion.js";
+import { Usuario } from "../domain/usuario.js";
+import { Medico } from "../domain/medico.js";
 
 class DTOMapper{
     turnoToDTO(turno){
@@ -41,6 +43,18 @@ class DTOMapper{
         }
     }
 
+    medicoToDTO(medico){
+        return{
+            id: medico.id,
+            Usuario: medico.usuario,
+            matricula: medico.matricula,
+            nombre: medico.nombre,
+            especialidades: medico.especialidades,
+            practicas: medico.practicas,
+            sedes: medico.sedes,
+            disponibilidades: medico.disponibilidades
+        }
+    }
     
 }
 

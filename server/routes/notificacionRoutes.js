@@ -15,8 +15,10 @@ import { MongoUsuarioRepository } from '../repositories/usuarioRepository.js'
 import { MongoPacienteRepository } from '../repositories/pacienteRepository.js'
 
 const router=Router()
-const notificacionService = new NotificacionService()
 
+const notificacionRepository = new MongoNotificacionRepository()
+
+const service = new NotificacionService(notificacionRepository)
 const controller = new NotificacionController({notificacionService})
 
 router.get(
