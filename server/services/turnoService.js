@@ -68,7 +68,7 @@ export class TurnoService{
 
     async cancelar({id, motivo, idUsuario}){
         const mongoTurno = await this.findById(id)
-        const turno = domainMapper(mongoTurno)
+        const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
 
         const ahora = new Date()
 

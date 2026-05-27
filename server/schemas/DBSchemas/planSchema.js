@@ -4,10 +4,6 @@ import { coberturaPracticaEmbeddedSchema } from "./coberturaPracticaEmbeddedSche
 import { Plan } from "../../domain/plan.js";
 
 const planSchema = new mongoose.Schema({
-    id:{
-        type: String,
-        required: true
-    },
     nombre:{
         type: String,
         required: true,

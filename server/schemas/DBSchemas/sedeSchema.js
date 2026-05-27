@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 import { Sede } from "../../domain/sede.js";
 
 const sedeSchema = new mongoose.Schema({
-    id:{
-        type: String,
-        required: true
-    },
     nombre:{
         type: String,
         required: true,

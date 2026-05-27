@@ -55,10 +55,6 @@ export class Turno {
         this.servicio = especialidad
     }
     
-    modificarFecha(fecha){
-        this.fechaHora = fecha
-        //TODO ¿Esto debería modificar el estado? 
-    }
 
     puedeModificar(usuarioId){
         return this.esPaciente(usuarioId) ||

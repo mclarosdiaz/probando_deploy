@@ -1,4 +1,4 @@
-import { Turno } from "../domain/sede.js";
+import { Sede } from "../domain/sede.js";
 import {
     BadRequestError,
     TurnoNotFoundError,
@@ -7,7 +7,7 @@ import {
 import { SedeModel } from "../schemas/DBSchemas/sedeSchema.js";
 
 export class MongoSedeRepository{
-    cosntructor(){
+    constructor(){
         this.model = SedeModel
     }
 

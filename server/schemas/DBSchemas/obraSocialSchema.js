@@ -1,10 +1,6 @@
 import mongoose, { Collection, Mongoose } from "mongoose";
 
 export const obraSocialSchema = Mongoose.schema({
-    id:{
-        type: String,
-        required: true
-    }, 
     nombre:{
         type: String, 
         required: true

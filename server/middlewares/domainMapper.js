@@ -16,7 +16,7 @@ class DomainMapper{
             : null
 
         const turno = new Turno(
-            this.mongoMedicoToDomain(data.medico),
+            medico,
             data.fechaHora,
             data.sede,
             data.estado,

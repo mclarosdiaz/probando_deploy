@@ -1,10 +1,22 @@
 import mongoose from "mongoose";
+import { required } from "zod/mini";
 
-export const practicaEmbeddedSchema = new mongoose.Schema({
-        id: String, 
-        codigo: String, 
-        nombre: String, 
-        duracionTurnoEnMins: Number,
-        costo: Number
+export const practicaEmbeddedSchema = new mongoose.Schema({ 
+        codigo: {
+            type: String,
+            required: true
+        }, 
+        nombre: {
+            type: String,
+            required: true
+        }, 
+        duracionTurnoEnMins: {
+            type: Number, 
+            required: true
+        },
+        costo:{
+            type: Number, 
+            required: true
+        } 
     },
     {_id: false});

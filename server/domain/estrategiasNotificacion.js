@@ -1,5 +1,5 @@
-import { Turno } from "./turno";
-import { Notificacion } from "./notificacion";
+import { Turno } from "./turno.js";
+import { Notificacion } from "./notificacion.js";
 
 export const estrategiasNotificacion = {
         // RESERVADO (ID: 2)

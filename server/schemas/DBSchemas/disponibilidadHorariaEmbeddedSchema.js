@@ -1,7 +1,7 @@
-import { Mongoose } from "mongoose";
-import { DiaSemana } from "../../domain/diaSemana";
+import mongoose, { Mongoose } from "mongoose";
+import { DiaSemana } from "../../domain/diaSemana.js";
 
-export const disponibilidadHorariaEmbeddedSchema = Mongoose.schema({
+export const disponibilidadHorariaEmbeddedSchema = new mongoose.Schema({
     diaSemana: {
         type: String,
         enum: Object.values(DiaSemana),

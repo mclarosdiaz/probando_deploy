@@ -16,7 +16,7 @@ export const validate = (schema) => (req, res, next) =>{
             req.params = result.params
         next()
     }catch(error){
-
+        console.log(error)
         next(new BadRequestError("Request mal formada"))
     }
 }

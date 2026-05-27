@@ -110,7 +110,7 @@ export class MongoTurnoRepository {
     async eliminarDisponiblesFuturos(idMedico, fechaHora){
         const query = {
             medico: idMedico,
-            estado: EstadoTurno.DISPONIBLE
+            estado: EstadoTurno.DISPONIBLE,
             fechaHora:{
                 $gte: fechaHora
             }}
@@ -121,7 +121,7 @@ export class MongoTurnoRepository {
 
     async existeTurnoEnFecha({
         idMedico,
-        fecha,,
+        fecha,
         excluirTurnoId
     }){
        const query = {

@@ -2,10 +2,6 @@ import mongoose from "mongoose";
 import { Usuario } from "../../domain/usuario.js";
 
 const usuarioSchema = new mongoose.Schema({
-    id:{
-        type: String,
-        required: true
-    },
     nombre:{
         type: String,
         required: true,
