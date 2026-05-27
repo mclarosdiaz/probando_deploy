@@ -9,8 +9,11 @@ import { MongoSedeRepository } from '../repositories/sedeRepository.js'
 import { MongoUsuarioRepository } from '../repositories/usuarioRepository.js'
 import { validate, validateQuery } from '../middlewares/validate.js'
 import { consultarDisponibilidadSchema, 
-        modificarDisponibilidadSchema
- } from '../schemas/requestsSchemas/medicoRequestSchema.js'
+        modificarDisponibilidadSchema,
+        agregarServicioSchema,
+        eliminarServicioSchema,
+        modificarServicioSchema
+} from '../schemas/requestsSchemas/medicoRequestSchema.js'
 import { TurnoService } from '../services/turnoService.js'
 
 const router = Router()
@@ -49,13 +52,18 @@ router.patch(
 router.post(
     "/:id/agregarServicio",
     validate(agregarServicioSchema),
-    controller.agregarServicio()
+    controller.agregarServicio
 )
 
 router.delete(
     "/:id/eliminarServicio",
     validate(eliminarServicioSchema),
-    controller.eliminarServicio()
+    controller.eliminarServicio
+)
+router.patch(
+    "/:id/modificarServicio",
+    validate(modificarServicioSchema),
+    controller.modificarServicio
 )
 
 export default router

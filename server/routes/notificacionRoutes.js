@@ -7,23 +7,32 @@ import {
     mostrarLeidasSchema,
     marcarComoLeidaSchema
 } from "../schemas/requestsSchemas/notificacionRequestSchema.js"
+import { MongoTurnoRepository } from '../repositories/turnoRepository.js'
+import { MongoMedicoRepository } from '../repositories/medicoRepository.js'
+import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'
+import { MongoSedeRepository } from '../repositories/sedeRepository.js'
+import { MongoUsuarioRepository } from '../repositories/usuarioRepository.js'
+import { MongoPacienteRepository } from '../repositories/pacienteRepository.js'
 
 const router=Router()
 const notificacionService = new NotificacionService()
+
 const controller = new NotificacionController({notificacionService})
 
 router.get(
-    "/usuarios/:idUsuario/mostrarNoLeidas",
+    "/:idUsuario/mostrarNoLeidas",
     validate(mostrarNoLeidasSchema),
     controller.mostrarNoLeidas
 )
 router.get(
-    "/usuarios/:idUsuario/mostrarLeidas",
+    "/:idUsuario/mostrarLeidas",
     validate(mostrarLeidasSchema),
     controller.mostrarLeidas
 )
 router.patch(
-    "/usuarios/:idUsuario/:idNotifiacion/marcarComoLeida",
+    "/:idUsuario/:idNotifiacion/marcarComoLeida",
     validate(marcarComoLeidaSchema),
     controller.marcarComoLeida
 )
+
+export default router

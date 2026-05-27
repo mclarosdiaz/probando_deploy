@@ -9,7 +9,7 @@ import {
     modificarEstadoTurnoSchema,
     generarTurnosDisponiblesSchema,
     modificarFechaTurnoSchema
- } from '../schemas/requestsSchemas/turnoRequestSchemas.js'
+} from '../schemas/requestsSchemas/turnoRequestSchemas.js'
 import { MongoTurnoRepository } from '../repositories/turnoRepository.js'
 import { MongoMedicoRepository } from '../repositories/medicoRepository.js'
 import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'

@@ -12,6 +12,8 @@ import {
     UnprocessableEntityError
 } from "../errors/appError.js";
 import { TurnoService } from "./turnoService.js";
+import { domainMapper } from "../middlewares/domainMapper.js";
+import { dtoMapper } from "../middlewares/dtoMapper.js";
 
 export class MedicoService {
     constructor(medicoRepository, turnoService) {
@@ -21,8 +23,8 @@ export class MedicoService {
 
     async consultarDisponibilidades({ idMedico, servicio, idServicio }) {
 
-
-        const medico = await this.findById(idMedico)
+        const mongoMedico = await this.findById(idMedico)
+        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
 
 
         if (!medico.puedeHacerServicio(servicio)) {

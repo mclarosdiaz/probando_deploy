@@ -13,15 +13,17 @@ import {
     ConflictError, 
     UnprocessableEntityError
 } from "../errors/appError.js";
+import { domainMapper } from "../middlewares/domainMapper.js";
+import { dtoMapper } from "../middlewares/dtoMapper.js";
 
 export class NotificacionService{
     constructor( notificacionRepository){
         this.notificacionRepository = notificacionRepository
     }
     async mostrarNoLeidas({idUsuario}){
-           
-        const notificaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
-       
+        
+        const mongoNotifaciones = await this.notificacionRepository.obtenerTodasLasNotificaciones(idUsuario)
+        const notifiaciones = domainMapper.mongoNotifacionesToDomain(mongoNotifaciones)
         return notificaciones.filter(notificacion=> !notificacion.leida)
     }
     async mostrarLeidas({idUsuario}){
@@ -29,13 +31,20 @@ export class NotificacionService{
         
         return notificaciones.filter(notificacion=> notificacion.leida)
     }
+    //TODO tengo que devolver un DTO?
     async marcarComoLeida({idNotificacion}){
-        const notificacion = await this.notificacionRepository.findById(idNotificacion)
-        const notificacionModificada=notificacion.marcarComoLeida()
-        
-        return this.notificacionRepository.save(notificacionModificada)
+        const mongoNotificacion = await this.notificacionRepository.findById(idNotificacion)
+        const notificacion = domainMapper.mongoNotificacionToDomain(mongoNotificacion)
+
+        notificacion.marcarComoLeida()
+
+        const mongoNotificacionGuardada = await Promise.all(this.notificacionRepository.save(notificacion))
+        return {
+            notificacion : dtoMapper.notificacionToDTO(
+                domainMapper.mongoNotificacionToDomain(mongoNotificacionGuardada)
+            )
+        } 
     }
-    //TODO obtenerTodasLasNotificaciones deberia devolver
-    // toda la lista a partir de un id de usuario
+    
 
 }
