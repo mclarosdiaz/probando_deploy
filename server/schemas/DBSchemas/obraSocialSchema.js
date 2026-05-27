@@ -1,6 +1,6 @@
-import mongoose, { Collection, Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
-export const obraSocialSchema = Mongoose.schema({
+const obraSocialSchema = new mongoose.Schema({
     nombre:{
         type: String, 
         required: true
@@ -14,3 +14,5 @@ export const obraSocialSchema = Mongoose.schema({
 {
     collection: 'obras_sociales'
 })
+
+export const ObraSocialModel = mongoose.model('Obra_Social',obraSocialSchema)

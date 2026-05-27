@@ -24,4 +24,4 @@ const planSchema = new mongoose.Schema({
 );
 
 planSchema.loadClass(Plan);
-export const planModel = mongoose.model("Plan", planSchema);
+export const PlanModel = mongoose.model("Plan", planSchema);
