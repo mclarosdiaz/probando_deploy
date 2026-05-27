@@ -1,6 +1,9 @@
 export class Sede{
-    constructor(id,nombre,direccion){
-        this.id = id;
+    id
+    nombre
+    direccion
+    
+    constructor(nombre,direccion){
         this.nombre = nombre;
         this.direccion = direccion;
     }

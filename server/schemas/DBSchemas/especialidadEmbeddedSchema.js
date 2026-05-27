@@ -3,12 +3,11 @@ import { required } from "zod/mini";
 import { Especialidad } from "../../domain/especialidad.js";
 
 export const especialidadEmbeddedSchema = new mongoose.Schema({
-    id: {
+    id:{
         type: String,
-        required: true,
-        trim: true
-    }, 
-    nombre: {
+        required: true
+    }
+    ,nombre: {
         type: String,
         required: true, 
         trim: true

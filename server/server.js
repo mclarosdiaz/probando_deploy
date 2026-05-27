@@ -1,6 +1,9 @@
-import app from "./app.js"
 import dotenv from "dotenv"
 dotenv.config()
+
+console.log(process.env.MONGODB_URI)
+
+import app from "./app.js"
 import { MongoDBClient } from "./config/database.js"
 
 const port = process.env.PORT || 3000
@@ -19,6 +22,8 @@ const start = async() =>{
 
     }
 }
+
+start()
 
 
 

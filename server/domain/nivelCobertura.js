@@ -1,5 +1,5 @@
 export const NivelCobertura ={
-    "TOTAL": 1,
-    "PARCIAL": 2,
-    "NO CUBIERTO": 3
+    TOTAL: "TOTAL",
+    PARCIAL: "PARCIAL",
+    NO_CUBIERTO: "NO_CUBIERTO"
 }

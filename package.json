@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "node ./server/server.js",
+    "seed:test": "node ./scripts/seedTestData.js",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [],

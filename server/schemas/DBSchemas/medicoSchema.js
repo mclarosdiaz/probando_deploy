@@ -2,17 +2,13 @@ import mongoose from "mongoose";
 import { Medico } from "../../domain/medico.js"
 import { especialidadEmbeddedSchema } from "./especialidadEmbeddedSchema.js";
 import { practicaEmbeddedSchema } from "./practicaEmbeddedSchema.js";
+import { disponibilidadHorariaEmbeddedSchema } from "./disponibilidadHorariaEmbeddedSchema.js";
 import { Usuario } from "../../domain/usuario.js";
 
 const medicoSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: true,
-        trim: true
-    },
     usuario:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: "Usuario",
+        ref: "usuarios",
         required:true
     },
     matricula:{
@@ -35,19 +31,20 @@ const medicoSchema = new mongoose.Schema({
     },
     sede:{
         type:[mongoose.Schema.Types.ObjectId],
-        ref: "Sedes",
+        ref: "sedes",
         required:true
     },
     disponibilidades:{
-        type:[mongoose.Schema.Types.ObjectId],
-        ref:"DisponibilidadHoraria",
+        type:[disponibilidadHorariaEmbeddedSchema],
         required:true
     },
     eliminado: {
         type: Boolean,
         default: false
     }
-
+},
+{
+    collection: 'medicos'
 })
 
 medicoSchema.loadClass(Medico)

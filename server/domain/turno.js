@@ -7,8 +7,16 @@ import { CambioEstadoTurno } from "./cambioEstadoTurno.js";
 import { factoryNotificacion } from "./factoryNotificacion.js";
 
 export class Turno {
-    static numeroTurno = 0
-
+    id
+    medico
+    paciente
+    fechaHora
+    sede
+    servicio
+    estado
+    historialEstados
+    costo
+    
     constructor(medico, fechaHora, sede, estado, costo) {
         
         this.medico = medico, 
@@ -27,15 +35,16 @@ export class Turno {
         , this
         , usuario
         , motivo) 
-        
-        this.historialEstados.push(cambioEstado)
-
-        factoryNotificacion.crearSegunEstadoTurno(this)
-        //  TODO ¿Dónde guardamos las notificaciones?   
+           
     }
 
     asignarPaciente(paciente){
         this.paciente = paciente
+        this.actualizarEstado(
+            EstadoTurno.RESERVADO,
+            paciente.usuario,
+            `El paciente ${paciente.id} reservó el turno`
+        )
     }
 
     asignarPractica(practica){
@@ -46,9 +55,6 @@ export class Turno {
         this.servicio = especialidad
     }
     
-    modificarFecha(fecha){
-        this.fechaHora = fecha
-    }
 
     puedeModificar(usuarioId){
         return this.esPaciente(usuarioId) ||

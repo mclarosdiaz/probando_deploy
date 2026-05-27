@@ -2,7 +2,6 @@ import { Usuario } from "./usuario.js";
 
 export class Notificacion{
     
-    
     constructor(id, destinatario, remitente, mensaje){
         this.id = id;
         this.destinatario = destinatario;
@@ -13,7 +12,6 @@ export class Notificacion{
         this.leida = false;
     }
 
-    
 
     marcarComoLeida(){
         this.leida=true;

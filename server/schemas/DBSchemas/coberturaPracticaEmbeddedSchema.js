@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { NivelCobertura } from "../../domain/nivelCobertura.js";
-import { CoberturaPractica } from "../../domain/coberturaEspecialidad.js";
-import { practicaEmbeddedSchema } from "./practicaidadEmbeddedSchema.js";
+import { CoberturaPractica } from "../../domain/coberturaPractica.js";
+import { practicaEmbeddedSchema } from "./practicaEmbeddedSchema.js";
 
 export const coberturaPracticaEmbeddedSchema = new mongoose.Schema({
-    especialidad:{
+    practica:{
         type: practicaEmbeddedSchema,
         required: true
     },

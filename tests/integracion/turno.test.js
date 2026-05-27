@@ -16,6 +16,8 @@ import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria
 //import { ObraSocial } from "../../server/domain/obraSocial.js"
 
 describe("Turno API- Integracion",()=>{
+    
+
     let app
     let turnoRepository
     let medicoRepository
@@ -121,6 +123,8 @@ describe("Turno API- Integracion",()=>{
 
         turnosMock = [turno]
         
+            //TODO mockear nuevas funciones
+
         turnoRepository = {
             findAll: jest.fn().mockResolvedValue({
                 data: turnosMock,
@@ -160,7 +164,7 @@ describe("Turno API- Integracion",()=>{
                     limit: 10
                 })
 
-
+             console.log(response.body)
             expect(response.status).toBe(200)
          })
 
@@ -171,6 +175,8 @@ describe("Turno API- Integracion",()=>{
                     pacienteId: "032616",
                     estado: "PENDIENTE"
                 })
+
+                console.log(response.body)
 
                 expect(response.status).toBe(400)
         })
@@ -189,7 +195,7 @@ describe("Turno API- Integracion",()=>{
                     limit: 10
             })
 
-
+            console.log(response.body)
 
             expect(response.status).toBe(200)
             expect(response.body.data).toHaveLength(1)
@@ -208,7 +214,7 @@ describe("PATCH /turnos/123/reservar", () =>{
             .send({
                 pacienteId: "1234"
             })
-
+        console.log(response.body)
 
         expect(response.status).toBe(200)
     })  
@@ -232,7 +238,7 @@ describe("PATCH /turnos/123/cancelar",()=>{
                 motivo: "No puedo asistir",
                 idUsuario: "1234"        
         })
-
+        console.log(response.body)
 
         expect(response.status).toBe(204)
     })
@@ -242,7 +248,8 @@ describe ("POST /turnos/generarTurnosDisponibles",()=>{
     test("deberia retornar 200 con los turnos generados",async()=>{
         const response = await request(app)
         .post("/turnos/generarTurnosDisponibles")
-        
+       
+        console.log(response.body)
         expect(response.status).toBe(200)
     })
 })

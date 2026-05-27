@@ -15,9 +15,9 @@ export class TurnoController {
             const { id } = req.params
             const{ pacienteId } = req.body
 
-            const turno = await this.turnoService.reservar({id, pacienteId})
+            const data = await this.turnoService.reservar({id, pacienteId})
 
-            res.status(200).json(turno)
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -29,12 +29,13 @@ export class TurnoController {
             const { motivo, idUsuario } = req.body
             
 
-            await this.turnoService.cancelar({
+            const data = await this.turnoService.cancelar({
                 id, 
                 motivo, 
                 idUsuario})
 
-            res.sendStatus(204)
+            
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -62,7 +63,7 @@ export class TurnoController {
             }
         })
 
-            res.json(turnos)
+            res.status(200).json(turnos)
         } catch (error) {
             next(error)
         }
@@ -73,8 +74,8 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario } = req.body
 
-            await this.turnoService.marcarComoRealizado({id, idUsuario})
-            res.sendStatus(200)
+            const data = await this.turnoService.marcarComoRealizado({id, idUsuario})
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -85,8 +86,8 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario } = req.body
 
-            await this.turnoService.marcarComoConfirmado({id, idUsuario})
-            res.sendStatus(200)
+            const data = await this.turnoService.marcarComoConfirmado({id, idUsuario})
+            res.status(200).json(data)
         } catch(error) {
             next(error)
         }
@@ -108,12 +109,12 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario , nuevaFecha } = req.body
             
-            await this.turnoService.modificarFechaTurno({ 
+            const data = await this.turnoService.modificarFechaTurno({ 
                 id, 
                 idUsuario, 
                 fecha: nuevaFecha })
 
-            res.sendStatus(200)
+            res.status(200).json(data)
         }catch(error){
             next(error)
         }
