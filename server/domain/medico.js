@@ -4,11 +4,17 @@ import { Sede } from "./sede.js";
 import { Practica } from "./practica.js";
 import { Usuario } from "./usuario.js";
 
-
-
 export class Medico{
-    constructor(id,usuario,matricula,nombre,especialidades,practicas,sedes,disponibilidades){
-        this.id = id;
+    id 
+    usuario
+    matricula
+    nombre
+    especialidades
+    practicas
+    sedes 
+    disponibilidades
+
+    constructor(usuario,matricula,nombre,especialidades,practicas,sedes,disponibilidades){
         this.usuario = usuario;
         this.matricula = matricula;
         this.nombre = nombre;
@@ -18,13 +24,15 @@ export class Medico{
         this.disponibilidades = disponibilidades;
     }
 
-    definirDisponibilidad(disponibilidad){
-        this.disponibilidades.push(disponibilidad);
+    definirDisponibilidad(nuevasDisponibilidades){
+        this.disponibilidades = nuevasDisponibilidades;
     }
 
     puedeHacerServicio(servicio){
         return this.especialidades.includes(servicio)
             || this.practicas.includes(servicio)
     }
+    
+    
 
 }

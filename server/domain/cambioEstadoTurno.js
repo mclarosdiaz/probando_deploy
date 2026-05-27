@@ -10,4 +10,11 @@ export class CambioEstadoTurno{
         this.usuario = usuario;
         this.motivo = motivo;
     }
+
+    toJSON(){
+        return{
+            estadoAnterior: this.estado,
+            fecha: this.fechaHoraIngreso
+        }
+    }
 }

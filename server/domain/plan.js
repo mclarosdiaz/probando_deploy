@@ -3,12 +3,19 @@ import { CoberturaPractica } from "./coberturaPractica.js";
 import { NivelCobertura } from "./nivelCobertura.js"
 
 export class Plan{
-    constructor(id, nombre, coberturasEspecialidad, coberturasPractica){
-        this.id = id;
+    id
+    nombre
+    coberturasEspecialidad
+    coberturasPractica
+    
+    
+    constructor(nombre, coberturasEspecialidad, coberturasPractica){
         this.nombre = nombre;
         this.coberturasEspecialidad = coberturasEspecialidad;
         this.coberturasPractica = coberturasPractica;
     }
+
+    
 
     obtenerCoberturaEspecialidad(especialidad){
         const cobertura = this.coberturasEspecialidad

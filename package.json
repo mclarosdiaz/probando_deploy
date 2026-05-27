@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "server": "node ./server/server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "lint": "eslint ."
+    "seed:test": "node ./scripts/seedTestData.js",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [],
   "author": "",
@@ -16,11 +16,12 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "mongoose": "^9.6.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "eslint": "^10.3.0",
-    "jest": "^30.3.0",
+    "cross-env": "^10.1.0",
+    "jest": "^30.4.2",
     "supertest": "^7.2.2"
   }
 }
