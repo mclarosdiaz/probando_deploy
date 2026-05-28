@@ -32,7 +32,7 @@ export class MongoMedicoRepository{
 
     async save(medico){
         const nuevoMedico = new this.model(medico)
-        return await nuevoMedico.save
+        return await nuevoMedico.save()
         
     }
     

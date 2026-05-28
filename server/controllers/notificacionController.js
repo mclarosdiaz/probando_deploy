@@ -8,8 +8,10 @@ export class NotificacionController{
     
     mostrarNoLeidas = async (req,res,next)=>{
     
-        const { idUsuario } = req.params
+        
         try{
+            const { idUsuario } = req.params
+
             const notificacionesNoLeidas = await this.notificacionService.mostrarNoLeidas({idUsuario})
             res.status(200).json(notificacionesNoLeidas)
         }
@@ -17,10 +19,13 @@ export class NotificacionController{
             next(error)
         }
     }
+
+
     mostrarLeidas = async (req,res,next)=>{
         
-        const { idUsuario } = req.params
         try{
+            const { idUsuario } = req.params
+
             const notificacionesLeidas = await this.notificacionService.mostrarLeidas({idUsuario})
             res.status(200).json(notificacionesLeidas)
         }
@@ -29,9 +34,10 @@ export class NotificacionController{
         }
     }
     marcarComoLeida = async(req,res,next)=>{
-        const { idUsuario , idNotificacion } = req.params
         try{
-            const data = await this.notificacionService.marcarComoLeida(idNotificacion)
+            const { idUsuario, idNotificacion } = req.params
+
+            const data = await this.notificacionService.marcarComoLeida(idUsuario, idNotificacion)
             res.status(200).json(data)
         }
         catch(error)
