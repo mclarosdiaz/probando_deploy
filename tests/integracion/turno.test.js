@@ -49,8 +49,6 @@ describe("Turno API- Integracion",()=>{
 
             console.log("Conectado a Mongo")
 
-            await seedTestData()
-
         } catch (error) {
 
             console.error(error)

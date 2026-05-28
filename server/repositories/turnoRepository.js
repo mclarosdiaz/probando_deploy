@@ -16,7 +16,7 @@ export class MongoTurnoRepository {
     }
 
             async save(turno) {
-            const dto = domainMapper.domainTurnoToMongo(turno)
+
 
             let updated
 
@@ -131,7 +131,8 @@ export class MongoTurnoRepository {
             .limit(limit)
 
         const total = await this.model.countDocuments(query)
-
+            //TODO devolver count en el service. 
+            //TODO
         return {
             documents,
             total

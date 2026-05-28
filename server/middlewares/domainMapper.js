@@ -6,8 +6,12 @@ import { Paciente } from "../domain/paciente.js"
 import { ObraSocial } from "../domain/obraSocial.js"
 import { Plan } from "../domain/plan.js"
 import { Notificacion } from "../domain/notificacion.js"
+//TODO mappers separados para cada clase, que unifiquen toDomain y toDTO
+
 class DomainMapper{
     mongoTurnoToDomain(mongoTurno){
+        //TODO recibir Medico y Paciente por id, buscar en repos. Ahorrarnos el populate
+
         const data = mongoTurno.toObject()
 
         const medico = this.mongoMedicoToDomain(data.medico)

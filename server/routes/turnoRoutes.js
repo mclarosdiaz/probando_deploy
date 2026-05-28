@@ -46,6 +46,8 @@ router.patch(
 router.get(
     "/",
     validate(obtenerHistorialTurnosSchema),
+    //TODO mover pacienteId a PATH param
+    //mover a rutas de paciente
     controller.obtenerHistorialTurnos
 )
 
@@ -61,24 +63,29 @@ router.patch(
     controller.marcarComoConfirmado
 )
 
+//TODO patch sobre confirmado/cancelado es incorrecto
+
 router.patch(
     "/:id/realizado",
     validate(modificarEstadoTurnoSchema),
     controller.marcarComoRealizado
 )
 
+//TODO nombre de ruta debería ser sustantivo/adjetivo ("/TURNOS/disponibilidad")
 router.post(
     "/generarTurnosDisponibles",
     validate(generarTurnosDisponiblesSchema),
     controller.generarTurnosDisponibles
 )
 
+//(PATCH contra Turno. Quitar modificarFecha) / PUT contra fecha
 router.patch(
     "/:id/modificarFecha",
     validate(modificarFechaTurnoSchema),
     controller.modificarFechaTurno
 )
 
+//Mover a Body de Request o mover ENDPOINT a gestión de pacientes
 router.get(
     "/:idPaciente/turnosDisponibles", //TEMPORAL
     validate(busquedaDeTurnosDisponiblesSchema),

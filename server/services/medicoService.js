@@ -39,6 +39,8 @@ export class MedicoService {
         return disponibilidades
     }
 
+    //TODO mover mapeo a Controllers
+
     async modificarDisponibilidades({ idMedico, nuevaDisponibilidades }) {
         
         const mongoMedico = await this.findById(idMedico)

@@ -21,6 +21,10 @@ const notificacionRepository = new MongoNotificacionRepository()
 const notificacionService = new NotificacionService(notificacionRepository)
 const controller = new NotificacionController({notificacionService})
 
+
+//TODO sacar LEIDA del PATH, mover a Query Param. 
+//TODO path: /USUARIOS/:idUsuario/NOTIFICACIONES
+//TODO mover a usuarioRoutes
 router.get(
     "/:idUsuario/mostrarNoLeidas",
     validate(mostrarNoLeidasSchema),

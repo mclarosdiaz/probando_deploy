@@ -3,7 +3,7 @@ import { TurnoService } from "../services/turnoService.js"
 import { BadRequestError } from "../errors/appError.js"
 import { validateQuery } from "../middlewares/validate.js"
 
-
+//Usar ENDPOINT Handler de Gastón
 export class TurnoController {
     constructor(turnoService  =  new TurnoService()){
         this.turnoService = turnoService
