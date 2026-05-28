@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { MedicoController } from '../controllers/medicoController.js'
 import { MedicoService } from "../services/medicoService.js"
 import { MongoMedicoRepository } from '../repositories/medicoRepository.js'
+import { MongoTurnoRepository } from '../repositories/turnoRepository.js'
 import { validate, validateQuery } from '../middlewares/validate.js'
 import { consultarDisponibilidadSchema, 
         modificarDisponibilidadSchema,

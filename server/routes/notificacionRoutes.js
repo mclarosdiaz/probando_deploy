@@ -18,7 +18,7 @@ const router=Router()
 
 const notificacionRepository = new MongoNotificacionRepository()
 
-const service = new NotificacionService(notificacionRepository)
+const notificacionService = new NotificacionService(notificacionRepository)
 const controller = new NotificacionController({notificacionService})
 
 router.get(
