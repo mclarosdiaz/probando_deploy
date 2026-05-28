@@ -1,7 +1,7 @@
 import dotenv from "dotenv"
 dotenv.config()
 
-console.log(process.env.MONGODB_URI)
+//console.log(process.env.MONGODB_URI)
 
 import app from "./app.js"
 import { MongoDBClient } from "./config/database.js"

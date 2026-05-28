@@ -15,19 +15,20 @@ export class Plan{
         this.coberturasPractica = coberturasPractica;
     }
 
-    
-
     obtenerCoberturaEspecialidad(especialidad){
         const cobertura = this.coberturasEspecialidad
             .find(c => c.especialidad.id === especialidad.id)
 
-        return cobertura ? cobertura.nivel : NivelCobertura["NO CUBIERTO"];
+        return cobertura
     }
 
     obtenerCoberturaPractica(practica){
         const cobertura = this.coberturasPractica
             .find(c => c.practica.id === practica.id)
 
-        return cobertura ? cobertura.nivel : NivelCobertura["NO CUBIERTO"]
+        return cobertura
     }
+
+
+
 }

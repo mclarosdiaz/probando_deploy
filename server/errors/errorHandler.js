@@ -1,16 +1,16 @@
 import { AppError} from "./appError.js"
 
 export const errorHandler = (err, req, res, next) =>{
-    console.error({
-        timeStamp: new Date().toISOString(), 
-        method: req.method,
-        path: req.originalUrl,
-        error: {
-            name: err.name,
-            message: err.message, 
-            stack: err.stack
-        }
-    })
+        console.error({
+            timeStamp: new Date().toISOString(), 
+            method: req.method,
+            path: req.originalUrl,
+            error: {
+                name: err.name,
+                message: err.message, 
+                stack: err.stack
+            }
+        })
 
     if(err instanceof AppError)
     {

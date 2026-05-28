@@ -8,7 +8,7 @@ import { Usuario } from "../../domain/usuario.js";
 const medicoSchema = new mongoose.Schema({
     usuario:{
         type:mongoose.Schema.Types.ObjectId,
-        ref: "usuarios",
+        ref: "Usuario",
         required:true
     },
     matricula:{
@@ -29,9 +29,9 @@ const medicoSchema = new mongoose.Schema({
         type: [practicaEmbeddedSchema],
         required:true
     },
-    sede:{
+    sedes:{
         type:[mongoose.Schema.Types.ObjectId],
-        ref: "sedes",
+        ref: 'Sede',
         required:true
     },
     disponibilidades:{

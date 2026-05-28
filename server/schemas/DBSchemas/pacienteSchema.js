@@ -5,7 +5,7 @@ import { UsuarioModel } from "./usuarioSchema.js";
 const pacienteSchema = new mongoose.Schema({
     usuario: {
         type:mongoose.Schema.Types.ObjectId,
-        ref:"usuarios",
+        ref:"Usuario",
         required: true
     },
     dni:{
@@ -18,12 +18,12 @@ const pacienteSchema = new mongoose.Schema({
     },
     obraSocial:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"obras_sociales",
+        ref:"Obra_Social",
         required:true
     },
     plan:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"planes",
+        ref:"Plan",
         required:true
     },
     eliminado:{

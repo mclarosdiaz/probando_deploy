@@ -12,30 +12,36 @@ import { practicaEmbeddedSchema } from "../server/schemas/DBSchemas/practicaEmbe
 import { especialidadEmbeddedSchema } from "../server/schemas/DBSchemas/especialidadEmbeddedSchema.js"
 import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js"
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js"
+import { ObraSocial } from "../server/domain/obraSocial.js"
 
 dotenv.config()
 
-async function seed() {
-    await mongoose.connect(process.env.MONGODB_URI)
-
-    console.log("Conectado")
-
+export async function seedTestData() {
+   
     // limpiar
     await Promise.all([
         UsuarioModel.deleteMany({}),
         MedicoModel.deleteMany({}),
         PacienteModel.deleteMany({}),
         SedeModel.deleteMany({}),
-        TurnoModel.deleteMany({})
+        TurnoModel.deleteMany({}),
+        ObraSocialModel.deleteMany({}),
+        PlanModel.deleteMany({})
     ])
 
     // usuarios
+
+    const idUsuarioMedico = new mongoose.Types.ObjectId("507f1f77bcf86cd799439014")
+    const idUsuarioPaciente = new mongoose.Types.ObjectId("507f1f77bcf86cd799439015")
+
     const usuarioMedico = await UsuarioModel.create({
+        _id: idUsuarioMedico,
         nombre: "Gregory_House",
         password: "1234"
     })
 
     const usuarioPaciente = await UsuarioModel.create({
+        _id: idUsuarioPaciente,
         nombre: "Juan_Perez",
         password: "1234",
     })
@@ -46,10 +52,11 @@ async function seed() {
         direccion: "Av Siempre Viva 123"
     })
 
-
     // medico
+const medicoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439011")
+
 const medico = await MedicoModel.create({
-    _id: "1234",
+    _id: medicoId,
 
     usuario: usuarioMedico._id,
 
@@ -119,6 +126,7 @@ const medico = await MedicoModel.create({
         coberturasEspecialidad: [
             {
                 especialidad: {
+                    id : "1234",
                     nombre: "Clínica Médica",
                     duracionTurnoEnMins: 30,
                     costo: 15000
@@ -127,6 +135,7 @@ const medico = await MedicoModel.create({
             },
             {
                 especialidad: {
+                    id : "1235",
                     nombre: "Diagnóstico",
                     duracionTurnoEnMins: 60,
                     costo: 25000
@@ -138,6 +147,7 @@ const medico = await MedicoModel.create({
         coberturasPractica: [
             {
                 practica: {
+                    id : "1236",
                     codigo: "ECG001",
                     nombre: "Electrocardiograma",
                     duracionTurnoEnMins: 20,
@@ -147,6 +157,7 @@ const medico = await MedicoModel.create({
             },
             {
                 practica: {
+                    id : "1237",
                     codigo: "LAB101",
                     nombre: "Análisis de Sangre",
                     duracionTurnoEnMins: 15,
@@ -168,7 +179,10 @@ const medico = await MedicoModel.create({
 
     // PACIENTE
 
+    const pacienteId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439013")
     const paciente = await PacienteModel.create({
+        _id: pacienteId,
+        
         usuario: usuarioPaciente._id,
 
         dni: "40111222",
@@ -181,7 +195,11 @@ const medico = await MedicoModel.create({
     })
 
     // turnos
+    const turnoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439012")
+
     const turno = await TurnoModel.create({
+        _id: turnoId,
+
         medico: medico._id,
 
         paciente: paciente._id,
@@ -191,6 +209,7 @@ const medico = await MedicoModel.create({
         sede: sede._id,
 
         practica: {
+            id : "1236",
             codigo: "ECG001",
             nombre: "Electrocardiograma",
             duracionTurnoEnMins: 20,
@@ -207,7 +226,7 @@ const medico = await MedicoModel.create({
                 motivo: "Creación del turno disponible"
             },
             {
-                fechaHoraIngreso: new Date("2026-05-21T14:30:00"),
+                fechaHoraIngreso: new Date("2026-05-28T14:30:00"),
                 estado: "RESERVADO",
                 usuario: usuarioPaciente._id,
                 motivo: "Reserva realizada por el paciente"
@@ -217,12 +236,5 @@ const medico = await MedicoModel.create({
         costo: 12000
     })
 
-    console.log("Seed completado")
-
-    await mongoose.disconnect()
+    //console.log("Seed completado")
 }
-
-seed().catch(err => {
-    console.error(err)
-    process.exit(1)
-})

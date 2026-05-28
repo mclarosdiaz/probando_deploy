@@ -7,6 +7,7 @@ import {
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
 import { reservarTurnoSchema } from "../schemas/requestsSchemas/turnoRequestSchemas.js";
+import { domainMapper } from "../middlewares/domainMapper.js";
 
 
 export class MongoTurnoRepository {
@@ -14,27 +15,38 @@ export class MongoTurnoRepository {
         this.model = TurnoModel 
     }
 
-    async save(turno){
-        const query = turno.id ? { _id: turno.id } : { _id: new this.model()._id } 
-        
-        if(turno.id){
-            return await this.model.findOneAndUpdate(
-                query,
-                turno,
-                {
-                    new: true
-                }
-            )
-        }
-        
-        return await this.model.create(turno)
-    }
+            async save(turno) {
+            const dto = domainMapper.domainTurnoToMongo(turno)
 
-    async saveAll(turnos){
+            let updated
+
+            if (turno.id) {
+                updated = await this.model.findOneAndUpdate(
+                    { _id: turno.id },
+                    dto,
+                    { returnDocument: 'after' }
+                )
+            } else {
+                updated = await this.model.create(dto)
+            }
+
+            return this.model.findById(updated._id)
+                .populate("medico")
+                .populate("paciente")
+                .populate("sede")
+        }
+
+
+   async saveAll(turnos) {
+
+        if (!Array.isArray(turnos)) {
+            throw new Error("saveAll esperaba un array de turnos")
+        }
+
+        const limpios = turnos.filter(t => t != null)
+
         return await Promise.all(
-            turnos.map(turno =>
-                this.save(turno)
-            )
+            limpios.map(turno => this.save(turno))
         )
     }
 
@@ -43,68 +55,87 @@ export class MongoTurnoRepository {
             .findById(id)
             .populate({
                 path: "medico",
-                populate: {
+                populate:
+            [ 
+                {
+                    path: "usuario"
+                },
+                {
                     path: "sedes"
                 }
+            ]
             })
-            .populate("pacientes")
+            .populate({
+                path: "paciente",
+                populate: 
+                [
+                    {
+                        path: "usuario"
+                    },
+                    {
+                        path: "obraSocial",
+                        populate: {
+                            path: "planes"
+                        }
+                    },
+                    {
+                        path: "plan"
+                    }
+                ]
+            })
+            .populate("sede")
 
         if(!mongoTurno){
             throw new TurnoNotFoundError(`El turno ${id} no fue encontrado`)
         }
 
+        //console.dir(mongoTurno.toObject(), { depth: null })
+      
         return mongoTurno
     }
 
-    async findAll({ filtros = {}, paginacion = {} } = {}){
+    async findAll({ filtros = {}, paginacion = {} } = {}) {
+
         const query = {}
 
-        if(filtros.pacienteId){
+        if (filtros.pacienteId) {
             query.paciente = filtros.pacienteId
         }
 
-        if(filtros.estado){
+        if (filtros.estado) {
             query.estado = filtros.estado
         }
 
-        if(filtros.fechaDesde || filtros.fechaHasta){
+        if (filtros.fechaDesde || filtros.fechaHasta) {
             query.fecha = {}
-            if(filtros.fechaDesde){
-                query.fecha.$gte = filtros.fechaDesde
-            }
-
-            if(filtros.fechaHasta){
-                query.fecha.$lte = filtros.fechaHasta
-            }
+            if (filtros.fechaDesde) query.fecha.$gte = filtros.fechaDesde
+            if (filtros.fechaHasta) query.fecha.$lte = filtros.fechaHasta
         }
 
-        const page = paginacion.page || 1
-        const limit = paginacion.limit || 10
-
+        const page = paginacion.page ?? 1
+        const limit = paginacion.limit ?? 10
         const offset = (page - 1) * limit
 
-        const [documents, total] = await Promise.all([
-            this.model
-                .find(query)
-                .populate({
-                    path: "medico",
-                    populate: {
-                        path: "sedes"
-                    }
-                })
-                .populate("pacientes")
-                .populate("sedes")
-                .skip(offset)
-                .limit(limit),
+        const documents = await this.model
+            .find(query)
+            .populate({
+                path: "medico",
+                populate: ["usuario", "sedes"]
+            })
+            .populate({
+                path: "paciente",
+                populate: ["usuario", "obraSocial", "plan"]
+            })
+            .populate("sede")
+            .skip(offset)
+            .limit(limit)
 
-                this.model.countDocuments(query)
-        ])
+        const total = await this.model.countDocuments(query)
 
         return {
-            documents, 
+            documents,
             total
         }
-
     }
 
     async eliminarDisponiblesFuturos(idMedico, fechaHora){
@@ -124,13 +155,13 @@ export class MongoTurnoRepository {
         fecha,
         excluirTurnoId
     }){
-       const query = {
+        const query = {
             medico: idMedico,
             fechaHora: fecha,
             estado:{
                 $in: ["CONFIRMADO", "RESERVADO"]
             }
-       }
+        }
 
         if(excluirTurnoId){
             query._id = { $ne: excluirTurnoId}

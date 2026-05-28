@@ -8,8 +8,9 @@ import {
     obtenerHistorialTurnosSchema,
     modificarEstadoTurnoSchema,
     generarTurnosDisponiblesSchema,
-    modificarFechaTurnoSchema
-} from '../schemas/requestsSchemas/turnoRequestSchemas.js'
+    modificarFechaTurnoSchema,
+    busquedaDeTurnosDisponiblesSchema
+ } from '../schemas/requestsSchemas/turnoRequestSchemas.js'
 import { MongoTurnoRepository } from '../repositories/turnoRepository.js'
 import { MongoMedicoRepository } from '../repositories/medicoRepository.js'
 import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'
@@ -44,7 +45,7 @@ router.patch(
 
 router.get(
     "/",
-    validateQuery(obtenerHistorialTurnosSchema),
+    validate(obtenerHistorialTurnosSchema),
     controller.obtenerHistorialTurnos
 )
 
@@ -76,6 +77,12 @@ router.patch(
     "/:id/modificarFecha",
     validate(modificarFechaTurnoSchema),
     controller.modificarFechaTurno
+)
+
+router.get(
+    "/:idPaciente/turnosDisponibles", //TEMPORAL
+    validate(busquedaDeTurnosDisponiblesSchema),
+    controller.buscarTurnosDisponibles
 )
 
 

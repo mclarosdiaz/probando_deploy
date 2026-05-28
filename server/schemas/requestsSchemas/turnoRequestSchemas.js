@@ -59,3 +59,23 @@ export const modificarFechaTurnoSchema = z.object({
 
     })
 })
+
+export const busquedaDeTurnosDisponiblesSchema = z.object({
+    params: z.object({
+        idPaciente: z.string()
+    }),
+    body: z.object({
+        idMedico: z.string().optional(),
+        idEspecialidad: z.string().optional(),
+        idPractica: z.string().optional(),
+        idSede: z.string().optional(),
+        fechaDesde: z.iso.datetime().optional()
+            .transform((val) => val ? new Date(val): undefined),
+        fechaHasta: z.string().datetime().optional()
+            .transform((val) => val ? new Date(val): undefined)
+    }),
+    query: z.object({
+        page: z.coerce.number().optional(),
+        limit: z.coerce.number().optional()
+    }).optional()
+})

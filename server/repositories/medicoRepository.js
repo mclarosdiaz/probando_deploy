@@ -39,7 +39,7 @@ export class MongoMedicoRepository{
     async findById(id){
         const mongoMedico = await this.model
         .findById(id)
-        .populate("usuarios")
+        .populate("usuario")
         .populate("sedes")
 
         if (!mongoMedico) {
@@ -49,14 +49,12 @@ export class MongoMedicoRepository{
         return mongoMedico
     }
 
-    async findAll(){
-
-        const documents = await Promise.all(this.find())
-
-        const data = documents.map(doc => this.toDomain(doc))
-
-        return data
-
+    async findAll() {
+        return await this.model
+            .find()
+            .populate("usuario")
+            .populate("sedes")
+            .lean() // 🔥 clave
     }
     
 }

@@ -35,7 +35,7 @@ export class Turno {
         , this
         , usuario
         , motivo) 
-           
+        
     }
 
     asignarPaciente(paciente){
@@ -71,12 +71,17 @@ export class Turno {
 
     
     remitenteUltimoCambioEstado(){
-        const ultimo = this.historialEstados.at(-1)
+        const historial = this.historialEstados || []
+        const ultimo = historial.at(-1)
+
+        if(!ultimo){
+            return this.medico
+        }
 
         return ultimo.usuario
     }
 
-    destinatarioUltimoCambioEstado(){
+     destinatarioUltimoCambioEstado(){
         const id = this.remitenteUltimoCambioEstado().id
 
         if(this.esPaciente(id)) return this.medico.usuario
@@ -95,7 +100,7 @@ export class Turno {
         }
 
         const ahora = new Date()
-        const fechaTurno = new Date(this.fecha)
+        const fechaTurno = this.fecha
 
         const diferenciaMs = fechaTurno - ahora
         const unaHoraMs = 60 * 60 * 1000
@@ -121,7 +126,7 @@ export class Turno {
     solicitarCambioFecha(fecha, usuario, motivo){
         this.fechaHoraPropuesta = fecha
         this.actualizarEstado(
-            this.estado.RESERVADO,
+            EstadoTurno.RESERVADO,
             usuario, 
             motivo
         )
@@ -151,5 +156,7 @@ export class Turno {
     sePuedeCancelar(fecha){
         return (this.fechaHora - fecha) >= 3600000 //una hora en milisegundos
     }
-    
+    getServicio(){
+    return this.practica || this.especialidad
+    }
 }
