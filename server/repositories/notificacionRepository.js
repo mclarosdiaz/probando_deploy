@@ -20,7 +20,7 @@ export class MongoNotificacionRepository{
     async findById(id){
         const mongoNotificacion = await this.model
             .findById(id)
-            .populate("usuarios")
+            .populate("usuario")
 
         if(!mongoNotificacion){
             throw new NotFoundError(`La notificación no ${id} no fue encontrada`)

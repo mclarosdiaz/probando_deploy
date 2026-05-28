@@ -39,7 +39,7 @@ export class MongoMedicoRepository{
     async findById(id){
         const mongoMedico = await this.model
         .findById(id)
-        .populate("usuarios")
+        .populate("usuario")
         .populate("sedes")
 
         if (!mongoMedico) {
@@ -51,7 +51,7 @@ export class MongoMedicoRepository{
 
     async findAll(){
 
-        const documents = await Promise.all(this.find())
+        const documents = await Promise.all(this.model.find())
 
         const data = documents.map(doc => this.toDomain(doc))
 

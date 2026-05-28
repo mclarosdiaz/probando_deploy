@@ -178,18 +178,26 @@ export class TurnoService{
         const coberturasPractica = plan.coberturasPractica
         const coberturasEspecialidad = plan.coberturasEspecialidad
 
-        const {data: turnos, total} = await this.turnoRepository.findAll({filtros, paginacion})
-
+        const { documents: turnos, total } = await this.turnoRepository.findAll({filtros, paginacion})
+        console.log(turnos[0])
+        
         const turnosConCobertura = turnos.map(
             (turno) => {
+                const servicio = turno.practica || turno.especialidad
                 const cobertura = 
-                    plan.obtenerCoberturaPractica(turno.servicio)
-                    || plan.obtenerCoberturaEspecialidad(turno.servicio) 
+                    plan.obtenerCoberturaPractica(servicio)
+                    || plan.obtenerCoberturaEspecialidad(servicio) 
+                    let costoFinal = servicio?.costo || 0
 
+                    if (cobertura?.nivel === "TOTAL") {
+                        costoFinal = 0
+                    } else if (cobertura?.nivel === "PARCIAL") {
+                        costoFinal = costoFinal - (costoFinal * (cobertura.porcentaje / 100))
+                    }
                 return{
-                    turno: turno,
+                    turno,
                     cobertura: cobertura.nivel,
-                    costo: cobertura.costoAplicandoCobertura  
+                    costo: costoFinal
                 }
             }
         )
@@ -233,10 +241,10 @@ export class TurnoService{
             EstadoTurno.REALIZADO, 
             usuario, 
             "Turno realizado")
-
+        console.log(JSON.stringify(mongoTurno.paciente, null, 2))
         const turnoGuardado = await this.turnoRepository.save(turno)
-
-        return dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(turnoGuardado))
+        const freshMongoTurno = await this.findById(id)
+        return dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(freshMongoTurno))
 
     }
 

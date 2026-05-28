@@ -43,16 +43,43 @@ export class MongoTurnoRepository {
             .findById(id)
             .populate({
                 path: "medico",
-                populate: {
+                populate:
+            [ 
+                {
+                    path: "usuario"
+                },
+                {
                     path: "sedes"
                 }
+            ]
             })
-            .populate("pacientes")
+            .populate({
+                path: "paciente",
+                populate: 
+                [
+                    {
+                        path: "usuario"
+                    },
+                    {
+                        path: "obraSocial",
+                        populate: {
+                            path: "planes"
+                        }
+                    },
+                    {
+                        path: "plan"
+                    }
+                ]
+            })
+            .populate("sede")
 
         if(!mongoTurno){
             throw new TurnoNotFoundError(`El turno ${id} no fue encontrado`)
         }
 
+        console.dir(mongoTurno.toObject(), { depth: null })
+        console.log("PACIENTE RAW:", mongoTurno.paciente)
+        console.log("OBRA SOCIAL RAW:", mongoTurno.paciente?.obraSocial)
         return mongoTurno
     }
 
@@ -88,12 +115,35 @@ export class MongoTurnoRepository {
                 .find(query)
                 .populate({
                     path: "medico",
-                    populate: {
-                        path: "sedes"
-                    }
+                    populate:
+                        [
+                            {
+                                path: "usuario"
+                            },
+                            {
+                                path: "sedes"
+                            }
+                        ]
                 })
-                .populate("pacientes")
-                .populate("sedes")
+                .populate({
+                    path: "paciente",
+                    populate:
+                        [
+                            {
+                                path: "usuario"
+                            },
+                            {
+                                path: "obraSocial",
+                                populate: {
+                                    path: "planes"
+                                }
+                            },
+                            {
+                                path: "plan"
+                            }
+                        ]
+                })
+                .populate("sede")
                 .skip(offset)
                 .limit(limit),
 

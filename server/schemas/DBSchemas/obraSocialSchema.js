@@ -7,7 +7,7 @@ const obraSocialSchema = new mongoose.Schema({
     },
     planes:{
         type: [mongoose.Schema.Types.ObjectId],
-        ref: 'planes',
+        ref: 'Plan',
         required: true
     }
 },

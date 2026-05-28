@@ -151,5 +151,7 @@ export class Turno {
     sePuedeCancelar(fecha){
         return (this.fechaHora - fecha) >= 3600000 //una hora en milisegundos
     }
-    
+    getServicio(){
+    return this.practica || this.especialidad
+    }
 }

@@ -1,5 +1,4 @@
-import request from "supertest"
-import { describe, expect, jest, test, beforeEach, beforeAll, afterAll } from "@jest/globals"
+
 import { buildTestApp } from "../utils/buildApp.js"
 import { Turno } from "../../server/domain/turno.js"
 import { Paciente } from "../../server/domain/paciente.js"
@@ -16,10 +15,10 @@ import { MongoTurnoRepository } from "../../server/repositories/turnoRepository.
 import { MongoMedicoRepository } from "../../server/repositories/medicoRepository.js"
 import { MongoPacienteRepository } from "../../server/repositories/pacienteRepository.js"
 
+import request from "supertest"
 import mongoose from "mongoose"
 import dotenv from "dotenv"
 dotenv.config()
-jest.setTimeout(20000)
 
 //import { ObraSocial } from "../../server/domain/obraSocial.js"
 
@@ -27,22 +26,40 @@ describe("Turno API- Integracion",()=>{
     
     
     let app
+    const turnoRepository = new MongoTurnoRepository()
+    const pacienteRepository = new MongoPacienteRepository()
+    const medicoRepository = new MongoMedicoRepository()
+
+    const medicoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439011")
+    const turnoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439012")
+    const pacienteId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439013")
+    const idUsuarioMedico = new mongoose.Types.ObjectId("507f1f77bcf86cd799439014")
+    const idUsuarioPaciente = new mongoose.Types.ObjectId("507f1f77bcf86cd799439015")
+    
 
     beforeAll(async() =>{
         try {
-            const conn = await mongoose.connect(`${process.env.MONGODB_URI}/${process.env.MONGODB_NAME}?authSource=admin`)    
+            
+            await mongoose.connect(
+                `${process.env.MONGODB_URI}/${process.env.MONGODB_NAME}`,
+                {
+                    serverSelectionTimeoutMS: 3000
+                }
+            )
+
+            console.log("Conectado a Mongo")
+
+            await seedTestData()
+
         } catch (error) {
-            console.error(`Error: ${error.message}`)
-            process.exit(1)
+
+            console.error(error)
+
+            throw error
         }
-    }) 
-
+    })
     beforeEach(async ()=>{
-
-        const turnoRepository = new MongoTurnoRepository()
-        const pacienteRepository = new MongoPacienteRepository()
-        const medicoRepository = new MongoMedicoRepository()
-
+        
         app = buildTestApp({ turnoRepository, pacienteRepository, medicoRepository })
         
         await seedTestData()
@@ -59,8 +76,8 @@ describe("Turno API- Integracion",()=>{
             const response = await request(app)
                 .get("/turnos")
                 .query({
-                    pacienteId: "213456",
-                    estado: EstadoTurno.CONFIRMADO, 
+                    pacienteId: pacienteId,
+                    estado: "CONFIRMADO", 
                     fechaDesde: "2026-05-01T00:00:00.000Z",
                     page: 1, 
                     limit: 10
@@ -89,10 +106,10 @@ describe("Turno API- Integracion",()=>{
             const response = await request(app)
                 .get("/turnos")
                 .query({
-                    pacienteId: "1234",
-                    estado: EstadoTurno.CONFIRMADO,
-                    fechaDesde: fechaHora.toISOString(),
-                    fechaHasta: "2026-05-19T00:00:00.000Z",
+                    pacienteId: pacienteId,
+                    estado: "RESERVADO",
+                    fechaDesde: new Date().toISOString(),
+                    fechaHasta: "2026-06-19T00:00:00.000Z",
                     page: 1,
                     limit: 10
             })
@@ -109,12 +126,13 @@ describe("Turno API- Integracion",()=>{
     })
 
 
-describe("PATCH /turnos/123/reservar", () =>{
-    test("debería reservar un turno correctamente", async () =>{
+
+describe("PATCH /turnos/:id/reservar", () =>{
+    test(`debería reservar un turno correctamente`, async () =>{
         const response = await request(app)
-            .patch("/turnos/123/reservar")
+            .patch(`/turnos/${turnoId}/reservar`)
             .send({
-                pacienteId: "1234"
+                pacienteId: pacienteId
             })
         console.log(response.body)
 
@@ -135,14 +153,14 @@ describe("PATCH /turnos/123/reservar", () =>{
 describe("PATCH /turnos/123/cancelar",()=>{
     test("deberia cancelar un turno correctamente",async()=>{
         const response = await request(app)
-            .patch("/turnos/123/cancelar")
+            .patch(`/turnos/${turnoId}/cancelar`)
             .send({
                 motivo: "No puedo asistir",
-                idUsuario: "1234"        
+                idUsuario: idUsuarioPaciente      
         })
         console.log(response.body)
 
-        expect(response.status).toBe(204)
+        expect(response.status).toBe(200)
     })
 })
 
@@ -150,7 +168,7 @@ describe ("POST /turnos/generarTurnosDisponibles",()=>{
     test("deberia retornar 200 con los turnos generados",async()=>{
         const response = await request(app)
         .post("/turnos/generarTurnosDisponibles")
-       
+        
         console.log(response.body)
         expect(response.status).toBe(200)
     })
@@ -160,9 +178,9 @@ describe ("POST /turnos/generarTurnosDisponibles",()=>{
 describe ("PATCH /turnos/:id/modificarFecha",()=>{
     test("deberia modificar la fecha de un query valida",async()=>{
         const response = await request(app)
-        .patch("/turnos/123/modificarFecha")
+        .patch(`/turnos/${turnoId}/modificarFecha`)
         .send({
-            idUsuario: "1234",
+            idUsuario: idUsuarioPaciente,
             nuevaFecha: "2026-06-01T10:00:00.000Z"
         })
 
@@ -173,9 +191,9 @@ describe ("PATCH /turnos/:id/modificarFecha",()=>{
 describe("PATCH /turnos/:id/realizado",()=>{
     test("deberia marcar como realizada una query valida",async()=>{
         const response = await request(app)
-        .patch("/turnos/123/realizado")
+        .patch(`/turnos/${turnoId}/realizado`)
         .send({
-            idUsuario: "1234"
+            idUsuario: idUsuarioMedico
         })
 
 
@@ -186,11 +204,11 @@ describe("PATCH /turnos/:id/realizado",()=>{
 describe("GET /turnos/:idPaciente/turnosDisponibles", () => {
     test("debería retornar los turnos con la cobertura calculada correctamente", async()=>{
         const response = await request(app)
-            .get("/turnos/1234/turnosDisponibles")
+            .get(`/turnos/${pacienteId}/turnosDisponibles`)
             .query({ page: 1, limit:10 })
             .send({
-                idMedico: "1234",
-                idPractica: "4679"
+                idMedico: medicoId,
+                idPractica: "1236"
             })
 
         expect(response.status).toBe(200)

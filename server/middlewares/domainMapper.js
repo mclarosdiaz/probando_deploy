@@ -12,7 +12,7 @@ class DomainMapper{
 
         const medico = this.mongoMedicoToDomain(data.medico)
         const paciente = data.paciente
-            ? this.mongoPacienteToDomain(data.medico)
+            ? this.mongoPacienteToDomain(data.paciente)
             : null
 
         const turno = new Turno(
@@ -32,7 +32,11 @@ class DomainMapper{
     }
 
     mongoMedicoToDomain(mongoMedico){
-        const data = mongoMedico.toObject()
+
+
+        const data = mongoMedico.toObject
+            ? mongoMedico.toObject()
+            : mongoMedico
 
         const medico = new Medico(
             this.mongoUsuarioToDomain(data.usuario),
@@ -62,7 +66,9 @@ class DomainMapper{
     }
 
     mongoUsuarioToDomain(mongoUsuario){
-        const data = mongoUsuario.toObject()
+        const data = mongoUsuario.toObject
+            ? mongoUsuario.toObject()
+            : mongoUsuario
 
         const usuario = new Usuario(
             data.nombreUsuario,
@@ -75,7 +81,9 @@ class DomainMapper{
     }
 
     mongoPacienteToDomain(mongoPaciente) {
-        const data = mongoPaciente.toObject()
+        const data = mongoPaciente.toObject
+            ? mongoPaciente.toObject()
+            : mongoPaciente 
 
         const paciente = new Paciente(
             this.mongoUsuarioToDomain(data.usuario),
@@ -90,7 +98,9 @@ class DomainMapper{
     }
 
     mongoObraSocialToDomain(mongoObraSocial){
-        const data = mongoObraSocial.toObject()
+        const data = mongoObraSocial.toObject
+            ? mongoObraSocial.toObject()
+            : mongoObraSocial
 
         const obraSocial = new ObraSocial(
             data.nombre,
@@ -98,10 +108,14 @@ class DomainMapper{
         )
 
         obraSocial.id = data._id.toString()
+
+        return obraSocial
     }
 
     mongoPlanToDomain(mongoPlan){
-        const data = mongoPlan.toObject()
+        const data = mongoPlan.toObject
+            ? mongoPlan.toObject()
+            : mongoPlan
 
         const plan = new Plan(
             data.nombre,
@@ -110,6 +124,8 @@ class DomainMapper{
         )
 
         plan.id = data._id.toString()
+
+        return plan
     }
 }
 

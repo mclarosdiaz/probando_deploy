@@ -13,23 +13,30 @@ export class MongoPacienteRepository{
 
     async save(paciente){
         const nuevoPaciente= new this.model(paciente)
-        return await nuevoPaciente.save
+        return await nuevoPaciente.save()
     }
 
     async findById(id){
-        const mongoPaciente = this
+        const mongoPaciente = await this.model
         .findById(id)
-        .populate("usuarios")
-        .populate({
-            path: "obras_sociales",
-            populate:{
-                path: "planes"
+        .populate([
+            {
+                path: "usuario"
+            },
+            {
+                path: "obraSocial",
+                populate:{
+                    path:"planes"
+                }
+            },
+            {
+                path: "plan"
             }
-        })
-        .populate("planes")
+        ])
 
+    
         if (!mongoPaciente) {
-            throw new TurnoNotFoundError(`El paciente ${id} no fue encontrado`)
+            throw new PacienteNotFoundError(`El paciente ${id} no fue encontrado`)
         }
 
         return mongoPaciente

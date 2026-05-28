@@ -8,15 +8,4 @@ export class CoberturaPractica {
         this.porcentaje = porcentaje.Math.max(porcentaje.Math.min(porcentaje, 100), 0);
     }
 
-    costoAplicandoCobertura(turno){
-        let costo = turno.costo
-
-        if(turno.servicio === this.practica){
-            costo -= turno.costo * (porcentaje/100)
-        }
-
-        return costo
-    }
-
-    
 }
