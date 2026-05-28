@@ -28,11 +28,38 @@ export class Medico{
         this.disponibilidades = nuevasDisponibilidades;
     }
 
-    puedeHacerServicio(servicio){
-        return this.especialidades.includes(servicio)
-            || this.practicas.includes(servicio)
+    puedeHacerServicio(idServicio){
+        return this.especialidades.some(s => s.id === idServicio)
+        || this.practicas.some(s => s.id === idServicio)
     }
     
-    
+    agregarServicio(nuevoServicio) {
+        if (!this.puedeHacerServicio(nuevoServicio.id)) {
+            if (nuevoServicio.codigo) {
+                this.practicas.push(nuevoServicio)
+            }else {
+            this.especialidades.push(nuevoServicio)
+            }
+        }
+    }
+
+    eliminarServicio(idServicio) {
+        if (!this.puedeHacerServicio(idServicio)) {
+            console.log("HOLA")
+            throw new UnprocessableEntityError("El servicio no pertenece a este médico")
+        } 
+
+        this.especialidades = this.especialidades.filter(especialidad => especialidad.id !== idServicio)
+        this.practicas = this.practicas.filter(practica => practica.id !== idServicio)
+    }
+
+    modificarServicio(servicioModificado) {
+        if (!this.puedeHacerServicio(servicioModificado.id)) {
+            throw new UnprocessableEntityError("El servicio no pertenece a este médico")
+        }
+
+        this.eliminarServicio(servicioModificado.id)
+        this.agregarServicio(servicioModificado)
+    }
 
 }

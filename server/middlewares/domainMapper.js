@@ -5,7 +5,8 @@ import { Usuario } from "../domain/usuario.js"
 import { Paciente } from "../domain/paciente.js"
 import { ObraSocial } from "../domain/obraSocial.js"
 import { Plan } from "../domain/plan.js"
-
+import { Notificacion } from "../domain/notificacion.js"
+ 
 class DomainMapper{
     mongoTurnoToDomain(mongoTurno){
         const data = mongoTurno.toObject()
@@ -110,6 +111,17 @@ class DomainMapper{
         )
 
         plan.id = data._id.toString()
+    }
+    mongoNotificacionToDomian(mongoNotificacion){
+        const data = mongoNotificacion.toObject()
+
+        const notificacion= new Notificacion(
+            data.id, 
+            data.mongoUsuarioToDomain(data.destinatario),
+            data.mongoUsuarioToDomain(data.remitente),
+            data.mensaje
+        )
+        return notificacion
     }
 }
 

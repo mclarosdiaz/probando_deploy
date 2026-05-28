@@ -148,7 +148,7 @@ describe("Turno API- Integracion",()=>{
             findById: jest.fn().mockResolvedValue(paciente)
         }
 
-        app = buildTestApp(turnoRepository, pacienteRepository, medicoRepository)
+        app = buildTestApp({turnoRepository, pacienteRepository, medicoRepository})
     })
 
     describe("GET /turnos/", () => {
