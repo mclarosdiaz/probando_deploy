@@ -49,14 +49,12 @@ export class MongoMedicoRepository{
         return mongoMedico
     }
 
-    async findAll(){
-
-        const documents = await Promise.all(this.model.find())
-
-        const data = documents.map(doc => this.toDomain(doc))
-
-        return data
-
+    async findAll() {
+        return await this.model
+            .find()
+            .populate("usuario")
+            .populate("sedes")
+            .lean() // 🔥 clave
     }
     
 }

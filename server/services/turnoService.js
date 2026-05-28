@@ -179,7 +179,7 @@ export class TurnoService{
         const coberturasEspecialidad = plan.coberturasEspecialidad
 
         const { documents: turnos, total } = await this.turnoRepository.findAll({filtros, paginacion})
-        console.log(turnos[0])
+      
         
         const turnosConCobertura = turnos.map(
             (turno) => {
@@ -227,52 +227,85 @@ export class TurnoService{
         }
     }
 
-    async marcarComoRealizado({id, idUsuario}){
+    async marcarComoRealizado({id, idUsuario}) {
         const mongoTurno = await this.findById(id)
         const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
 
         const usuario = turno.obtenerUsuarioMedico()
 
-        if(usuario.id !== idUsuario){
+        if (usuario.id !== idUsuario) {
             throw new NotAllowedError("El usuario no puede marcar como realizado este turno")
         }
 
         turno.actualizarEstado(
-            EstadoTurno.REALIZADO, 
-            usuario, 
-            "Turno realizado")
-        console.log(JSON.stringify(mongoTurno.paciente, null, 2))
-        const turnoGuardado = await this.turnoRepository.save(turno)
-        const freshMongoTurno = await this.findById(id)
-        return dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(freshMongoTurno))
+            EstadoTurno.REALIZADO,
+            usuario,
+            "Turno realizado"
+        )
 
+        await this.turnoRepository.save(turno)
+
+        const updatedMongo = await this.findById(id)
+
+        return dtoMapper.turnoToDTO(updatedMongo) // 👈 SIN reconvertir a domain otra vez
     }
 
-    async generarTurnosDisponibles(){
-        const mongoMedico = await this.medicoRepository.findAll()
-        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
+    async generarTurnosDisponibles() {
 
-        let todosLosNuevosTurnos = []
+        // 1. Traer médicos
+        const mongoMedicos = await this.medicoRepository.findAll()
 
-        for (const medico of medicos) {
-            const turnosDelMedico = this.generarTurnosParaMedico(medico);
-            todosLosNuevosTurnos = todosLosNuevosTurnos.concat(turnosDelMedico);
+        if (!Array.isArray(mongoMedicos)) {
+            throw new Error("medicoRepository.findAll debe devolver un array")
         }
 
-        const turnosGuardados = this.turnoRepository.saveAll(todosLosNuevosTurnos)
-        
-        return turnosGuardados.map(turnoGuardado => dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(turnoGuardado)))
+        // 2. Mapear a dominio
+        const medicos = mongoMedicos.map(m =>
+            domainMapper.mongoMedicoToDomain(m)
+        )
 
+        // 3. Generar turnos (sin mutación rara)
+        const todosLosNuevosTurnos = medicos.flatMap(medico =>
+            this.generarTurnosParaMedico(medico)
+        )
+
+        // 4. Guardar
+        const turnosGuardados = await this.turnoRepository.saveAll(todosLosNuevosTurnos)
+
+        // 5. DTO final
+        return turnosGuardados.map(turno =>
+            dtoMapper.turnoToDTO(
+                domainMapper.mongoTurnoToDomain(turno)
+            )
+        )
     }
 
-    async generarTurnosParaMedico(medico) {
-        const servicios = [...medico.especialidades, ...medico.practicas]
+   async generarTurnosParaMedico(medico) {
+
+        if (!medico) {
+            throw new Error("medico undefined en generarTurnosParaMedico")
+        }
+
+        const especialidades = medico.especialidades ?? []
+        const practicas = medico.practicas ?? []
+
+        const servicios = [...especialidades, ...practicas]
+
         let turnosDelMedico = []
 
-        servicios.forEach(servicio => {
+        for (const servicio of servicios) {
+
+            if (!servicio) continue
+
             const nuevosTurnos = agenda.generarTurnosPara(servicio, medico, 1)
+
+            if (!Array.isArray(nuevosTurnos)) {
+                throw new Error("agenda.generarTurnosPara debe devolver array")
+            }
+
             turnosDelMedico = turnosDelMedico.concat(nuevosTurnos)
-        })
+        }
+
         return turnosDelMedico
     }
 
@@ -326,17 +359,16 @@ export class TurnoService{
                 this.notificacionRepository.save(notificacion)
             ])
 
+        const freshMongoTurno = await this.turnoRepository.findById(id)
+
         return {
-            turno: dtoMapper.turnoToDTO(
-                domainMapper.mongoTurnoToDomain(mongoTurnoGuardado)
-            ),
+            turno: dtoMapper.turnoToDTO(freshMongoTurno),
             notificacion: dtoMapper.notificacionToDTO(
-                domainMapper.mongoNotificacionToDomain(
-                    mongoNotificacionGuardada
-                )
+                domainMapper.mongoNotificacionToDomain(mongoNotificacionGuardada)
             )
         }
-    }
+        }
+    
 
     async validarDisponibilidad(turno, fecha){
         return await this.turnoRepository.existeTurnoEnFecha({

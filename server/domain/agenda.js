@@ -8,7 +8,9 @@ import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha.js";
 class Agenda {
 
     generarTurnosPara(servicio, medico, semanas = 4) {
-
+        if (!medico) {
+            throw new Error("medico undefined en agenda")
+        }
         if (!medico.puedeHacerServicio(servicio)) {
             throw new Error("El médico no realiza esta especialidad");
         }

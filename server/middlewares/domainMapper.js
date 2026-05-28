@@ -5,6 +5,7 @@ import { Usuario } from "../domain/usuario.js"
 import { Paciente } from "../domain/paciente.js"
 import { ObraSocial } from "../domain/obraSocial.js"
 import { Plan } from "../domain/plan.js"
+import { Notificacion } from "../domain/notificacion.js"
 
 class DomainMapper{
     mongoTurnoToDomain(mongoTurno){
@@ -31,23 +32,18 @@ class DomainMapper{
         return turno
     }
 
-    mongoMedicoToDomain(mongoMedico){
-
-
-        const data = mongoMedico.toObject
-            ? mongoMedico.toObject()
-            : mongoMedico
+    mongoMedicoToDomain(data) {
 
         const medico = new Medico(
             this.mongoUsuarioToDomain(data.usuario),
             data.matricula,
             data.nombre,
-            data.disponibilidades,
-            data.practicas,
-            data.sedes.map(
-                sede => this.mongoSedeToDomain(sede)
-            )
+            data.especialidades ?? [],
+            data.practicas ?? [],
+            (data.sedes ?? []).map(s => this.mongoSedeToDomain(s)),
+            data.disponibilidades ?? []
         )
+
         medico.id = data._id.toString()
 
         return medico
@@ -93,23 +89,27 @@ class DomainMapper{
             this.mongoPlanToDomain(data.plan)
         )
         paciente.id = data._id.toString()
-
+        console.log("PACIENTE RAW:", mongoPaciente)
+        console.log("OBRA SOCIAL:", mongoPaciente.obraSocial)
+        console.log("PLANES:", mongoPaciente.obraSocial?.planes)
         return paciente
     }
 
-    mongoObraSocialToDomain(mongoObraSocial){
-        const data = mongoObraSocial.toObject
-            ? mongoObraSocial.toObject()
-            : mongoObraSocial
+    mongoObraSocialToDomain(mongoObraSocial) {
+    const data = mongoObraSocial.toObject
+        ? mongoObraSocial.toObject()
+        : mongoObraSocial
 
-        const obraSocial = new ObraSocial(
-            data.nombre,
-            data.planes.map(plan => this.mongoPlanToDomain(plan))
-        )
+    const obraSocial = new ObraSocial(
+        data.nombre,
+        Array.isArray(data.planes)
+            ? data.planes.map(plan => this.mongoPlanToDomain(plan))
+            : []
+    )
 
-        obraSocial.id = data._id.toString()
+    obraSocial.id = data._id.toString()
 
-        return obraSocial
+    return obraSocial
     }
 
     mongoPlanToDomain(mongoPlan){
@@ -127,6 +127,39 @@ class DomainMapper{
 
         return plan
     }
+    domainTurnoToMongo(turno) {
+    return {
+        medico: turno.medico.id,
+        paciente: turno.paciente?.id ?? null,
+        sede: turno.sede?.id,
+        fechaHora: turno.fechaHora,
+        estado: turno.estado,
+        costo: turno.costo,
+        historialEstados: turno.historialEstados?.map(h => ({
+            ...h,
+            usuario: h.usuario?.id ?? h.usuario
+        }))
+    }
+}
+        mongoNotificacionToDomain(mongoNotificacion) {
+        const data = mongoNotificacion.toObject
+            ? mongoNotificacion.toObject()
+            : mongoNotificacion
+
+        const notificacion = new Notificacion(
+            data._id?.toString(),
+            data.destinatario,
+            data.remitente,
+            data.mensaje
+        )
+
+        notificacion.fechaHoraCreacion = data.fechaHoraCreacion
+        notificacion.fechaHoraLeida = data.fechaHoraLeida
+        notificacion.leida = data.leida
+
+        return notificacion
+    }
+
 }
 
 export const domainMapper = new DomainMapper()

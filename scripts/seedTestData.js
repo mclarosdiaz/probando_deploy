@@ -236,5 +236,5 @@ const medico = await MedicoModel.create({
         costo: 12000
     })
 
-    console.log("Seed completado")
+    //console.log("Seed completado")
 }

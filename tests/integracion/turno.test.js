@@ -76,16 +76,16 @@ describe("Turno API- Integracion",()=>{
             const response = await request(app)
                 .get("/turnos")
                 .query({
-                    pacienteId: pacienteId,
+                    pacienteId: pacienteId.toString(),
                     estado: "CONFIRMADO", 
                     fechaDesde: "2026-05-01T00:00:00.000Z",
                     page: 1, 
                     limit: 10
                 })
 
-             console.log(response.body)
+           //  console.log(response.body)
             expect(response.status).toBe(200)
-         })
+        })
 
         test("debería fallar si estado no pertenece al enum", async() =>{
             const response = await request(app)
@@ -95,7 +95,7 @@ describe("Turno API- Integracion",()=>{
                     estado: "PENDIENTE"
                 })
 
-                console.log(response.body)
+                //console.log(response.body)
 
                 expect(response.status).toBe(400)
         })
@@ -106,7 +106,7 @@ describe("Turno API- Integracion",()=>{
             const response = await request(app)
                 .get("/turnos")
                 .query({
-                    pacienteId: pacienteId,
+                    pacienteId: pacienteId.toString(),
                     estado: "RESERVADO",
                     fechaDesde: new Date().toISOString(),
                     fechaHasta: "2026-06-19T00:00:00.000Z",
@@ -114,7 +114,7 @@ describe("Turno API- Integracion",()=>{
                     limit: 10
             })
 
-            console.log(response.body)
+           // console.log(response.body)
 
             expect(response.status).toBe(200)
             expect(response.body.data).toHaveLength(1)
@@ -132,9 +132,9 @@ describe("PATCH /turnos/:id/reservar", () =>{
         const response = await request(app)
             .patch(`/turnos/${turnoId}/reservar`)
             .send({
-                pacienteId: pacienteId
+                pacienteId: pacienteId.toString()
             })
-        console.log(response.body)
+       // console.log(response.body)
 
         expect(response.status).toBe(200)
     })  
@@ -156,9 +156,9 @@ describe("PATCH /turnos/123/cancelar",()=>{
             .patch(`/turnos/${turnoId}/cancelar`)
             .send({
                 motivo: "No puedo asistir",
-                idUsuario: idUsuarioPaciente      
+                idUsuario: idUsuarioPaciente.toString()
         })
-        console.log(response.body)
+        //console.log(response.body)
 
         expect(response.status).toBe(200)
     })
@@ -169,7 +169,7 @@ describe ("POST /turnos/generarTurnosDisponibles",()=>{
         const response = await request(app)
         .post("/turnos/generarTurnosDisponibles")
         
-        console.log(response.body)
+       // console.log(response.body)
         expect(response.status).toBe(200)
     })
 })
@@ -180,7 +180,7 @@ describe ("PATCH /turnos/:id/modificarFecha",()=>{
         const response = await request(app)
         .patch(`/turnos/${turnoId}/modificarFecha`)
         .send({
-            idUsuario: idUsuarioPaciente,
+            idUsuario: idUsuarioPaciente.toString(),
             nuevaFecha: "2026-06-01T10:00:00.000Z"
         })
 
@@ -193,7 +193,7 @@ describe("PATCH /turnos/:id/realizado",()=>{
         const response = await request(app)
         .patch(`/turnos/${turnoId}/realizado`)
         .send({
-            idUsuario: idUsuarioMedico
+            idUsuario: idUsuarioMedico.toString()
         })
 
 
@@ -207,7 +207,7 @@ describe("GET /turnos/:idPaciente/turnosDisponibles", () => {
             .get(`/turnos/${pacienteId}/turnosDisponibles`)
             .query({ page: 1, limit:10 })
             .send({
-                idMedico: medicoId,
+                idMedico: medicoId.toString(),
                 idPractica: "1236"
             })
 

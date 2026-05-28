@@ -3,39 +3,43 @@ import { Notificacion } from "../domain/notificacion.js";
 
 class DTOMapper{
     turnoToDTO(turno){
+        const servicioAsignado = turno.getServicio()
+
         return{
             id: turno.id,
             fechaHora: turno.fechaHora,
             estado: turno.estado,
             costo: turno.costo,
             medico:{
-                id: medico.id,
-                nombre: medico.nombre
+                id: turno.medico.id,
+                nombre: turno.medico.nombre
             },
-            paciente: turno.paciente?{
+            paciente: {
                 id: turno.paciente.id,
                 nombre: turno.paciente.nombre
-            }: null,
+            },
             sede: {
                 id: turno.sede.id,
                 nombre: turno.sede.nombre
             },
             servicio: {
-                nombre: servicio.nombre,
-                duracionTurnoEnMins: servicio.duracionTurnoEnMins
+                nombre: servicioAsignado.nombre,
+                duracionTurnoEnMins: servicioAsignado.duracionTurnoEnMins
             }
         }
     }
 
-    notificacionToDTO(notificacion){
-        return{
+    notificacionToDTO(notificacion) {
+        if (!notificacion) return null
+
+        return {
             id: notificacion.id,
-            destinatario: notificacion.destinatario.id,
-            remitente: notificacion.remitente.id,
+            destinatario: notificacion.destinatario?.id ?? notificacion.destinatario,
+            remitente: notificacion.remitente?.id ?? notificacion.remitente,
             mensaje: notificacion.mensaje,
-            fechaHoraCreacion: notificacion.fechaHoraCreacion.toISOString(),
-            fechaHoraLeida: 
-                notificacion.fechaHoraLeida ? notificacion.fechaHoraLeida.toISOString()
+            fechaHoraCreacion: notificacion.fechaHoraCreacion?.toISOString?.(),
+            fechaHoraLeida: notificacion.fechaHoraLeida
+                ? notificacion.fechaHoraLeida.toISOString()
                 : null,
             leida: notificacion.leida
         }
