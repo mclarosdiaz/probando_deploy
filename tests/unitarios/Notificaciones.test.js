@@ -4,6 +4,7 @@ import { Usuario } from "../../server/domain/usuario.js";
 
 describe("Notificacion",()=>{
     let usuario1
+    let usuario2
     beforeEach(()=>{
         usuario1 = new Usuario("1234", "pizzaBirraYFaso", "123abc")
         usuario2 = new Usuario("123", "JEJESALU3", "abc123")

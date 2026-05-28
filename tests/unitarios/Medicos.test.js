@@ -43,13 +43,15 @@ describe("Médico", () => {
             ecografia
         ]
 
-        traumatologia = new Especialidad("5645",
+        traumatologia = new Especialidad(
+            "5645",
             "Traumatología",
             60,
             10000
         )
 
-        oftalmologia = new Especialidad("4568",
+        oftalmologia = new Especialidad(
+            "4568",
             "Oftalmología",
             45,
             75000
@@ -110,8 +112,5 @@ describe("Médico", () => {
     test("Un medico puede eliminar un servicio",()=>{
         medico.eliminarServicio("4568")
         expect(medico.puedeHacerServicio(oftalmologia)).toBeFalsy()
-    })
-    test("Un medico puede modificar un servicio",()=>{
-        //todo hay que replantear el metodo de modificar servicio, creemos que lo mejor seria pasarle un objeto entero
     })
 })

@@ -29,8 +29,8 @@ export class Medico{
     }
 
     puedeHacerServicio(idServicio){
-        return this.especialidades.some(s => s.id === idServicio)
-        || this.practicas.some(s => s.id === idServicio)
+        return this.especialidades.some((s) => s.id === idServicio)
+        || this.practicas.some((s) => s.id === idServicio)
     }
     
     agregarServicio(nuevoServicio) {
