@@ -51,19 +51,17 @@ router.get(
     controller.obtenerHistorialTurnos
 )
 
-router.patch(
+router.post(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
     controller.cancelarTurno
 )
 
-router.patch(
-    "/:id/confirmado",
+router.post(
+    "/:id/confirmar",
     validate(modificarEstadoTurnoSchema),
     controller.marcarComoConfirmado
 )
-
-//TODO patch sobre confirmado/cancelado es incorrecto
 
 router.patch(
     "/:id/realizado",
@@ -71,23 +69,21 @@ router.patch(
     controller.marcarComoRealizado
 )
 
-//TODO nombre de ruta debería ser sustantivo/adjetivo ("/TURNOS/disponibilidad")
 router.post(
-    "/generarTurnosDisponibles",
+    "/disponibilidad",
     validate(generarTurnosDisponiblesSchema),
     controller.generarTurnosDisponibles
 )
 
-//(PATCH contra Turno. Quitar modificarFecha) / PUT contra fecha
-router.patch(
+router.post(
     "/:id/modificarFecha",
     validate(modificarFechaTurnoSchema),
     controller.modificarFechaTurno
 )
 
 //Mover a Body de Request o mover ENDPOINT a gestión de pacientes
-router.get(
-    "/:idPaciente/turnosDisponibles", //TEMPORAL
+router.post(
+    "/busqueda", //TEMPORAL
     validate(busquedaDeTurnosDisponiblesSchema),
     controller.buscarTurnosDisponibles
 )
