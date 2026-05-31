@@ -29,29 +29,27 @@ router.get(
     controller.consultarDisponibilidades
 )
 
-//TODO  Es un PUT a DISPONIBILIDADES
+
 router.patch(
-    "/:id/modificarDisponibilidad",
+    "/:id/disponibilidades",
     validate(modificarDisponibilidadSchema),
     controller.modificarDisponibilidades
 )
 
-//TODO POST /:id/SERVICIOS
 router.post(
-    "/:id/agregarServicio",
+    "/:id/servicios",
     validate(agregarServicioSchema),
     controller.agregarServicio
 )
 
-//TODO DELETE /:id/SERVICIOS/:idServicio
 router.delete(
-    "/:id/eliminarServicio",
+    "/:id/eliminarServicio/:idServicio",
     validate(eliminarServicioSchema),
     controller.eliminarServicio
 )
 
 router.patch(
-    "/:id/modificarServicio",
+    "/:id/servicios",
     validate(modificarServicioSchema),
     controller.modificarServicio
 )

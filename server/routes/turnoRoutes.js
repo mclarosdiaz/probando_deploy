@@ -43,14 +43,6 @@ router.patch(
     controller.reservar
 )
 
-router.get(
-    "/",
-    validate(obtenerHistorialTurnosSchema),
-    //TODO mover pacienteId a PATH param
-    //mover a rutas de paciente
-    controller.obtenerHistorialTurnos
-)
-
 router.post(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
@@ -76,14 +68,13 @@ router.post(
 )
 
 router.post(
-    "/:id/modificarFecha",
+    "/:id/modificacionFecha",
     validate(modificarFechaTurnoSchema),
     controller.modificarFechaTurno
 )
 
-//Mover a Body de Request o mover ENDPOINT a gestión de pacientes
 router.post(
-    "/busqueda", //TEMPORAL
+    "/disponibles/busqueda", 
     validate(busquedaDeTurnosDisponiblesSchema),
     controller.buscarTurnosDisponibles
 )

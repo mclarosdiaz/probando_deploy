@@ -1,17 +1,7 @@
-import { Turno } from "../domain/turno.js";
-import { Usuario } from "../domain/usuario.js";
 import { Notificacion } from "../domain/notificacion.js";
-import { MongoTurnoRepository } from "../repositories/turnoRepository.js";
-import { MongoPacienteRepository } from "../repositories/pacienteRepository.js"
-import { MongoMedicoRepository } from "../repositories/medicoRepository.js"
 import { 
-    BadRequestError, 
-    PacienteNotFoundError,
     NotAllowedError, 
-    TurnoNotFoundError, 
-    MedicoNotFoundError, 
-    ConflictError, 
-    UnprocessableEntityError
+    
 } from "../errors/appError.js";
 import { domainMapper } from "../middlewares/domainMapper.js";
 import { dtoMapper } from "../middlewares/dtoMapper.js";
@@ -20,19 +10,14 @@ export class NotificacionService{
     constructor( notificacionesRepository){
         this.notificacionesRepository = notificacionesRepository
     }
-    async mostrarNoLeidas({idUsuario}){
-        
-        const mongoNotificaciones = await this.notificacionesRepository.obtenerNotificacionesDestinatario({idRemitente: idUsuario, leida: false})
-        const notificaciones = mongoNotificaciones.map(mongoNotificacion => domainMapper.mongoNotificacionesToDomain(mongoNotificacion)) 
-        
+
+    async mostrarNotificaciones({ idUsuario, leidas}){
+        const mongoNotificaciones = await this.notificacionesRepository.obtenerNotificacionesDestinatario({ idDestinatario: idUsuario, leida: leidas })
+        const notificaciones = mongoNotificaciones.map(mongoNotificacion => domainMapper.mongoNotificacionToDomain(mongoNotificacion))
+
         return notificaciones.map(notificacion => dtoMapper.notificacionToDTO(notificacion)) 
     }
-    async mostrarLeidas({idUsuario}){
-        const mongoNotificaciones = await this.notificacionesRepository.obtenerNotificacionesDestinatario({idDestinatario: idUsuario, leida: true})
-        const notificaciones = mongoNotificaciones.map(mongoNotificacion => domainMapper.mongoNotificacionesToDomain(mongoNotificacion)) 
-        
-        return notificaciones.map(notificacion => dtoMapper.notificacionToDTO(notificacion)) 
-    }
+
 
     async marcarComoLeida({idUsuario ,idNotificacion}){
         const mongoNotificacion = await this.notificacionesRepository.findById(idNotificacion)
@@ -46,8 +31,6 @@ export class NotificacionService{
 
         const notificacionGuardada = await this.notificacionesRepository
             .update(notificacion.id)
-
-
 
         return dtoMapper.notificacionToDTO(notificacionGuardada)
     }
