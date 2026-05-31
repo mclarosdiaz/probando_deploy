@@ -13,170 +13,74 @@ import { DiaSemana } from "../../server/domain/diaSemana.js"
 import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria.js"
 import { Notificacion } from "../../server/domain/notificacion.js"
 
-//import { ObraSocial } from "../../server/domain/obraSocial.js"
+import request from "supertest"
+import mongoose from "mongoose"
+import dotenv from "dotenv"
+dotenv.config()
 
-describe("Turno API- Integracion",()=>{
+describe("Notificacion API- Integracion",()=>{
     let app
-    let turnoRepository
-    let medicoRepository
-    let pacienteRepository
-    let notificacionRepository
-    let fechaHora
-    let medico
-    let paciente
-    let revision
-    let sedeChacarita
-    let usuarioMedico
-    let usuarioPaciente
-    let practicas
-    let especialidades
-    let sedes
-    let disponibilidades
-    let sedeItaliano
-    let turnosMock
-    let notificacion
-
-    beforeEach(()=>{
-        
-        fechaHora = new Date()
-
-        usuarioMedico = new Usuario("1234", "Roberto", "1234")
-        usuarioPaciente = new Usuario("1234", "pedroGimeenez", "Contraseña")
-
-        revision = new Practica(
-            "4679",
-            "456789",
-            "Revisión",
-            30,
-            5000
-        )
-
-        especialidades = [
-            new Especialidad("5645",
-                "Traumatología",
-                60,
-                10000
-            ),
-            new Especialidad("4568",
-                "Oftalmología",
-                45,
-                75000
+    
+    const notificacionRepository = new MongoNotificacionRepository()
+    const idUsuarioPaciente = new mongoose.Types.ObjectId("507f1f77bcf86cd799439015")
+    const notificacionId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439016")
+    beforeAll(async() =>{
+        try {
+            
+            await mongoose.connect(
+                `${process.env.MONGODB_URI}/${process.env.MONGODB_NAME}`,
+                {
+                    serverSelectionTimeoutMS: 3000
+                }
             )
-        ]
 
-        practicas = [
-            revision,
-            new Practica(
-                "6598",
-                "456745",
-                "Ecografía",
-                45,
-                10000
-            )
-        ]
+            console.log("Conectado a Mongo")
 
-        sedeChacarita = new Sede("222", "Chacarita jr", "Gutierrez 351")
-        sedeItaliano = new Sede("555", "Hospital Italiano", "Alto Pelado, San Luis")
+        } catch (error) {
 
-        sedes = [
-            new Sede("222", "Chacarita jr", "Gutierrez 351"),
-            new Sede("555", "Hospital Italiano", "Alto Pelado, San Luis")
-        ]
+            console.error(error)
 
-        disponibilidades = [
-            new DisponibilidadHoraria(DiaSemana.VIERNES,
-                "14:30",
-                "17:00"
-            ),
-            new DisponibilidadHoraria(DiaSemana.MARTES,
-                "12:00",
-                "15:00"
-            )
-        ]
-        medico = new Medico(
-            "1234",
-            usuarioMedico,
-            "1234",
-            "Roberto Gimenez",
-            especialidades,
-            practicas,
-            sedes,
-            disponibilidades
-        )
-
-        paciente = new Paciente(
-            "1234",
-            usuarioPaciente,
-            "46254978",
-            "Pedro Gimenez",
-
-        )
-        
-        const turno = new Turno(medico, 
-                new Date(Date.now() + 1000 * 60 * 60 * 24), 
-                sedeChacarita, 
-                EstadoTurno.RESERVADO, 
-                revision.costo)
-        
-        turno.asignarPaciente(paciente)
-        turno.actualizarEstado(EstadoTurno.CONFIRMADO, usuarioPaciente, "Turno confirmado")
-
-        turnosMock = [turno]
-        
-        notificacion = new Notificacion("123",usuarioMedico,usuarioPaciente,"HOLA")
-
-        turnoRepository = {
-            findAll: jest.fn().mockResolvedValue({
-                data: turnosMock,
-                total: 1
-            }),
-            findById: 
-                jest.fn().mockImplementation(async(id) => {
-                    return id === "123"? turno: null
-                }),
-            save: jest.fn().mockImplementation(async (entidad) => entidad),
-            saveAll: jest.fn().mockImplementation(async (entidades) => entidades)
+            throw error
         }
-
-        medicoRepository = {
-            save: jest.fn().mockImplementation(async(entidad) => entidad),
-            findById: jest.fn().mockResolvedValue(medico),
-            findAll: jest.fn().mockResolvedValue([medico])
-        }
-
-        pacienteRepository = {
-            findById: jest.fn().mockResolvedValue(paciente)
-        }
-        notificacionRepository =  {
-            save: jest.fn().mockImplementation(async(entidad) => entidad),
-            findById: jest.fn().mockResolvedValue(notificacion),
-            obtenerTodasLasNotificaciones : jest.fn().mockResolvedValue([notificacion])
-        }
-
-        app = buildTestApp({notificacionRepository})
     })
-    describe("GET /usuarios/:idUsuario/mostrarNoLeidas",()=>{
+    beforeEach(async ()=>{
+        
+        app = buildTestApp({ notificacionRepository })
+        
+        await seedTestData()
+        
+    })
+    afterAll(async ()=>{
+        await mongoose.disconnect()
+    })
+
+    describe(`GET /usuarios/${idUsuarioPaciente}/notificaciones`,()=>{
         test("Deberia retornar 200 mostrando las no leidas",async()=>{
             const response = await request(app)
-            .get("/usuarios/1234/mostrarNoLeidas")
+            .get(`/usuarios/${idUsuarioPaciente}/mostrarNoLeidas`)
+            .send(
+                leida = "false"
+            )
             
             expect(response.status).toBe(200)
             expect(response.body.every(n => n.leida === false)).toBe(true)
         })
     })
-    describe("GET /usuarios/:idUsuario/mostrarLeidas",()=>{
+    describe(`GET /usuarios/${idUsuarioPaciente}/notificaciones`,()=>{
         test("Deberia retornar 200 mostrando las leidas",async()=>{
             const response = await request(app)
-            .get("/usuarios/1234/mostrarLeidas")
-
+            .get(`/usuarios/${idUsuarioPaciente}/mostrarLeidas`)
+            .send(
+                leida="true"
+            )
             expect(response.status).toBe(200)
             expect(response.body.every(n => n.leida === true)).toBe(true)
         })
     })
-    describe("PATCH /usuarios/:idUsuario/:idNotificacion/mostrarNoLeidas",()=>{
-        test("Deberia retornar 200 modificando un servicio",async()=>{
+    describe("PATCH /usuarios/:idUsuario/:idNotificacion",()=>{
+        test("Deberia retornar 200 marcando como leida una notificacion",async()=>{
             const response = await request(app)
-            .patch("/usuarios/1234/123/marcarComoLeida")
+            .patch(`/usuarios/${idUsuarioPaciente}/${notificacionId}`)
             expect(response.status).toBe(200)
         })
     })

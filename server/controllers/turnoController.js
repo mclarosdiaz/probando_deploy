@@ -2,6 +2,8 @@ import { response } from "express"
 import { TurnoService } from "../services/turnoService.js"
 import { BadRequestError } from "../errors/appError.js"
 import { validateQuery } from "../middlewares/validate.js"
+import { turnoMapper } from "../middlewares/mappers/turnoMapper.js"
+import { notificacionMapper} from "../middlewares/mappers/notificacionMapper.js"
 
 //Usar ENDPOINT Handler de Gastón
 export class TurnoController {
@@ -15,7 +17,12 @@ export class TurnoController {
             const { id } = req.params
             const{ pacienteId } = req.body
 
-            const data = await this.turnoService.reservar({id, pacienteId})
+            const {turno, notificacion} = await this.turnoService.reservar({id, pacienteId})
+
+            const data = {
+                turno: turnoMapper.turnoToDTO(turno),
+                notificacion: notificacionMapper.notificacionToDTO(notificacion)
+            }
 
             res.status(200).json(data)
         } catch (error) {
@@ -29,12 +36,16 @@ export class TurnoController {
             const { motivo, idUsuario } = req.body
             
 
-            const data = await this.turnoService.cancelar({
+            const {turno, notificacion} = await this.turnoService.cancelar({
                 id, 
                 motivo, 
                 idUsuario})
 
-            
+            const data = {
+                turno: turnoMapper.turnoToDTO(turno),
+                notificacion: notificacionMapper.notificacionToDTO(notificacion)
+            }
+
             res.status(200).json(data)
         } catch (error) {
             next(error)
@@ -43,27 +54,33 @@ export class TurnoController {
 
     obtenerHistorialTurnos = async(req, res, next) =>{
         try {
-            const { pacienteId, 
-                estado, 
-                fechaDesde, 
+            const { pacienteId,
+                estado,
+                fechaDesde,
                 fechaHasta,
                 page,
                 limit } = req.query
 
-            const turnos = await this.turnoService.obtenerHistorial({ 
-            filtros:{
-                pacienteId, 
-                estado,
-                fechaDesde,
-                fechaHasta
-            },
-            paginacion:{
-                page,
-                limit
-            }
-        })
+            const {turnos, paginacion} = await this.turnoService.obtenerHistorial({
+                filtros: {
+                    pacienteId,
+                    estado,
+                    fechaDesde,
+                    fechaHasta
+                },
+                paginacion: {
+                    page,
+                    limit
+                }
+            })
 
-            res.status(200).json(turnos)
+            const data = { 
+                turnos: turnos.map(turno => turnoMapper.turnoToDTO(turno)), 
+                paginacion: paginacion 
+            }
+
+
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -83,7 +100,7 @@ export class TurnoController {
                 fechaDesde,
                 fechaHasta } = req.body
 
-            const turnos = await this.turnoService.buscarTurnosDisponibles({
+            const {turnosConCobertura, paginacion} = await this.turnoService.buscarTurnosDisponibles({
                 idPaciente: idPaciente,
                 filtros:{
                     idMedico,
@@ -99,7 +116,11 @@ export class TurnoController {
                 }
             })
 
-            res.status(200).json(turnos)
+            const data = {
+                turnosConCobertura : turnosConCobertura, 
+                paginacion: paginacion}
+
+            res.status(200).json(data)
         }catch(error){
             next(error);
         }
@@ -110,7 +131,10 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario } = req.body
 
-            const data = await this.turnoService.marcarComoRealizado({id, idUsuario})
+            const turno = await this.turnoService.marcarComoRealizado({id, idUsuario})
+
+            const data = turnoMapper.turnoToDTO(turno)
+
             res.status(200).json(data)
         } catch (error) {
             next(error)
@@ -122,7 +146,13 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario } = req.body
 
-            const data = await this.turnoService.marcarComoConfirmado({id, idUsuario})
+            const {turno, notificaion} = await this.turnoService.marcarComoConfirmado({id, idUsuario})
+
+            const data = {
+                turno: turnoMapper.turnoToDTO(),
+                notificacion: notificacionMapper.notificacionToDTO()
+            }
+
             res.status(200).json(data)
         } catch(error) {
             next(error)
@@ -132,9 +162,11 @@ export class TurnoController {
     generarTurnosDisponibles = async(req, res, next) =>{
         try {
 
-            const turnos = await this.turnoService.generarTurnosDisponibles()
+            const turnosGuardados = await this.turnoService.generarTurnosDisponibles()
+
+            const data = turnosGuardados.map(turno => turnoMapper.turnoToDTO(turno))
             
-            res.status(200).json(turnos)
+            res.status(200).json(data)
         } catch (error) {
             next(error)
         }
@@ -145,10 +177,15 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario , nuevaFecha } = req.body
             
-            const data = await this.turnoService.modificarFechaTurno({ 
+            const {turno, notificacion} = await this.turnoService.modificarFechaTurno({ 
                 id, 
                 idUsuario, 
                 fecha: nuevaFecha })
+
+            const data = {
+                turno: turnoMapper.turnoToDTO(),
+                notificacion: notificacionMapper.notificacionToDTO()
+            }
 
             res.status(200).json(data)
         }catch(error){

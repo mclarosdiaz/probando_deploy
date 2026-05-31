@@ -5,18 +5,24 @@ import {
     UnprocessableEntityError
 } from "../errors/appError.js"
 import {PlanModel} from "../schemas/DBSchemas/planSchema.js"
+import { planMapper } from "../middlewares/mappers/planMapper.js"
 
 export class MongoPlanRepository{
+  
+
     constructor(){
         this.model=PlanModel
     }
 
     async save(plan){
         const nuevoPlan=new this.model(plan)
-        return await nuevoPlan.save
+        const mongoPlanGuardado = await nuevoPlan.save()
+
+        return await planMapper.mongoPlanToDomain(mongoPlanGuardado)
     }
 
     async findById(id){
-        return await this.model.findById(id)
+        const mongoPlan =  await this.model.findById(id)
+        return planMapper.mongoPlanToDomain(mongoPlan)
     }
 }

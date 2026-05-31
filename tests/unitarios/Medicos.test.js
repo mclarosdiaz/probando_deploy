@@ -77,21 +77,20 @@ describe("Médico", () => {
         
 
         medico = new Medico(
-            "1234", 
             usuario,
             "4659874",
-            "Marcelo Díaz",
+            "Marcelo Diaz",
             especialidades,
             practicas,
             sedes,
-            disponibilidades)
+            disponibilidades
+        )
         
         
     })
 
     test("Un médico sabe responder qué servicios (especialidades/prácticas) puede hacer", () =>{
-        
-        
+       
         expect(medico.puedeHacerServicio(revision.id)).toBeTruthy()
         expect(medico.puedeHacerServicio(ecografia.id)).toBeTruthy()
         expect(medico.puedeHacerServicio(traumatologia.id)).toBeTruthy()

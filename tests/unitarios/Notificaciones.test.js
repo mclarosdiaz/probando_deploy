@@ -10,7 +10,15 @@ describe("Notificacion",()=>{
         usuario2 = new Usuario("123", "JEJESALU3", "abc123")
     })
     
-
+    describe("constructor",()=>{
+        test("debe crear una Notificacion correctamente con datos validos",()=>{
+            //notificacion=new Notificacion("123",usuario1,usuario2,"ESTO ES UNA NOTIFICACION")
+            expect(notificacion.id).toBe("123")
+            expect(notificacion.destinatario).toBe(usuario1)
+            expect(notificacion.remitente).toBe(usuario2)
+            expect(notificacion.mensaje).toBe("ESTO ES UNA NOTIFICACION")
+        })
+    })
     test("Se deberia poder marcar como leida una notificacion",()=>{
         let notificacion = new Notificacion(123,usuario1,usuario2,"TEST")
         notificacion.marcarComoLeida()

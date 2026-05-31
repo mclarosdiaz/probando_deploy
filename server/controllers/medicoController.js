@@ -2,6 +2,9 @@ import { response, request } from "express"
 import { MedicoService } from "../services/medicoService.js"
 
 export class MedicoController{
+    //TODO Mapeo a DTO
+    //TODO Implementar biblioteca de Try-Catch de Gastón
+
     constructor(medicoService = new MedicoService()){
         this.medicoService = medicoService
     }
@@ -15,7 +18,7 @@ export class MedicoController{
                 idMedico,
                 servicio,
                 idServicio
-            })
+        })
             res.status(200).json(disponibilidades)
         } catch (error) {
             next(error)

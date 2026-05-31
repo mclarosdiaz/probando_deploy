@@ -12,8 +12,9 @@ import {
     UnprocessableEntityError
 } from "../errors/appError.js";
 import { TurnoService } from "./turnoService.js";
-import { domainMapper } from "../middlewares/domainMapper.js";
-import { dtoMapper } from "../middlewares/dtoMapper.js";
+import { medicoMapper } from "../middlewares/mappers/medicoMapper.js";
+
+//TODO mapear el dto en el controller (?
 
 export class MedicoService {
     constructor(medicoRepository, turnoService) {
@@ -23,9 +24,7 @@ export class MedicoService {
 
     async consultarDisponibilidades({ idMedico, servicio, idServicio }) {
 
-        const mongoMedico = await this.findById(idMedico)
-        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
-
+        const medico = await this.medicoRepository.findById(idMedico)
 
         if (!medico.puedeHacerServicio(servicio)) {
             throw new BadRequestError("El médico no realiza esta práctica o especialidad")
@@ -39,60 +38,43 @@ export class MedicoService {
         return disponibilidades
     }
 
-    //TODO mover mapeo a Controllers
 
     async modificarDisponibilidades({ idMedico, nuevaDisponibilidades }) {
         
-        const mongoMedico = await this.findById(idMedico)
-        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
+        const medico = await this.medicoRepository.findById(idMedico)
 
         medico.definirDisponibilidad(nuevasDisponibilidades)
-
         await this.turnoService.sincronizarTurnosDisponibles(idMedico, nuevasDisponibilidades)
 
         const medicoGuardado = await this.medicoRepository.save(medico)
-        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
-    }
-
-    async findById(idMedico) {
-
-        const medico = await this.medicoRepository.findById(idMedico)
-
-        if (!medico) {
-            throw new MedicoNotFoundError("No se encontró el médico")
-        }
-
-        return medico
+        
+        return medicoGuardado
     }
 
     async agregarServicio(idMedico, nuevoServicio){
-        const mongoMedico = await this.findById(idMedico)
-        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
+        const medico = await this.medicoRepository.findById(idMedico)
 
         medico.agregarServicio(nuevoServicio)
-
         const medicoGuardado = await this.medicoRepository.save(medico)
-        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
+
+        return medicoGuardado
     }
 
     async eliminarServicio(idMedico, idServicio){
-        const mongoMedico = await this.findById(idMedico)
-        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
+        const medico = await this.medicoRepository.findById(idMedico)
 
         medico.eliminarServicio(idServicio)
 
         const medicoGuardado = await this.medicoRepository.save(medico)
-        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
+        return medicoGuardado
     }
 
     async modificarServicio(idMedico, servicioModificado){
-        const mongoMedico = await this.findById(idMedico)
-        const medico = domainMapper.mongoMedicoToDomain(mongoMedico)
+        const medico = await this.medicoRepository.findById(idMedico)
 
         medico.modificarServicio(servicioModificado)
 
         const medicoGuardado = await this.medicoRepository.save(medico)
-        return dtoMapper.medicoToDTO(domainMapper.mongoMedicoToDomain(medicoGuardado))
+        return medicoGuardado
     }
-
 }

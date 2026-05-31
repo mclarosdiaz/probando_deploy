@@ -24,7 +24,7 @@ const controller = new MedicoController(service)
 
 
 router.get(
-    "/disponibilidades",
+    "/:id/disponibilidades",
     validate(consultarDisponibilidadSchema),
     controller.consultarDisponibilidades
 )

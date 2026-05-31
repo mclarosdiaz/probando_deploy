@@ -3,8 +3,7 @@ import {
     NotAllowedError, 
     
 } from "../errors/appError.js";
-import { domainMapper } from "../middlewares/domainMapper.js";
-import { dtoMapper } from "../middlewares/dtoMapper.js";
+
 
 export class NotificacionService{
     constructor( notificacionesRepository){
@@ -12,16 +11,12 @@ export class NotificacionService{
     }
 
     async mostrarNotificaciones({ idUsuario, leidas}){
-        const mongoNotificaciones = await this.notificacionesRepository.obtenerNotificacionesDestinatario({ idDestinatario: idUsuario, leida: leidas })
-        const notificaciones = mongoNotificaciones.map(mongoNotificacion => domainMapper.mongoNotificacionToDomain(mongoNotificacion))
-
-        return notificaciones.map(notificacion => dtoMapper.notificacionToDTO(notificacion)) 
+        return await this.notificacionesRepository.obtenerNotificacionesDestinatario({ idDestinatario: idUsuario, leida: leidas })
     }
 
 
     async marcarComoLeida({idUsuario ,idNotificacion}){
-        const mongoNotificacion = await this.notificacionesRepository.findById(idNotificacion)
-        const notificacion = domainMapper.mongoNotificacionToDomain(mongoNotificacion)
+        const notificacion = await this.notificacionesRepository.findById(idNotificacion)
 
         if(notificacion.destinatario.id !== idUsuario){
             throw new NotAllowedError("La notificación no pertenece al usuario")
@@ -32,7 +27,7 @@ export class NotificacionService{
         const notificacionGuardada = await this.notificacionesRepository
             .update(notificacion.id)
 
-        return dtoMapper.notificacionToDTO(notificacionGuardada)
+        return notificacionGuardada
     }
     
 

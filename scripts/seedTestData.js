@@ -13,11 +13,11 @@ import { especialidadEmbeddedSchema } from "../server/schemas/DBSchemas/especial
 import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js"
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js"
 import { ObraSocial } from "../server/domain/obraSocial.js"
-
+import { NotificacionModel } from "../server/schemas/DBSchemas/notificacionSchema.js"
 dotenv.config()
 
 export async function seedTestData() {
-   
+    
     // limpiar
     await Promise.all([
         UsuarioModel.deleteMany({}),
@@ -234,6 +234,19 @@ const medico = await MedicoModel.create({
         ],
 
         costo: 12000
+    })
+    
+    //Notificacion
+    const notificacionId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439016")
+
+    const notificacion = await NotificacionModel.create({
+        _id = notificacionId,
+        
+        destinatario: usuarioPaciente,
+
+        remitente: usuarioMedico,
+
+        mensaje: "HOLA"
     })
 
     //console.log("Seed completado")

@@ -6,58 +6,42 @@ import {
     UnprocessableEntityError
 } from "../errors/appError.js"
 import { MedicoModel } from "../schemas/DBSchemas/medicoSchema.js";
+import { medicoMapper } from "../middlewares/mappers/medicoMapper.js";
 
 
 export class MongoMedicoRepository{
+    
     constructor(){
         this.model = MedicoModel
     }
 
-    toDomain(mongoMedico){
-        const data = mongoMedico.toObject()
-
-        const medico = new Medico(
-            data.usuario,
-            data.matricula,
-            data.nombre,
-            data.especialidades,
-            data.practicas,
-            data.sedes,
-        )
-
-        medico.id = data.id
-
-        return medico
-    }
 
     async save(medico){
         const nuevoMedico = new this.model(medico)
-        return await nuevoMedico.save()
+        const medicoGuardado = await nuevoMedico.save()
+        return await medicoMapper.mongoMedicoToDomain(medicoGuardado)
         
     }
     
     async findById(id){
         const mongoMedico = await this.model
         .findById(id)
-        .populate("usuario")
-        .populate("sedes")
 
         if (!mongoMedico) {
             throw new MedicoNotFoundError(`El médico ${id} no fue encontrado`)
         }
 
-        return mongoMedico
-    }
-
-    async findAll() {
-        return await this.model
-            .find()
-            .populate("usuario")
-            .populate("sedes")
-            .lean() // 🔥 clave
+        return medicoMapper.mongoMedicoToDomain(mongoMedico)
     }
     
+    async findAll() {
+        const medicosMongo = await this.model.find()
+
+        return await Promise.all(
+            medicosMongo.map(m => medicoMapper.mongoMedicoToDomain(m))
+        )
 }
 
 
 
+}

@@ -18,7 +18,7 @@ const controller = new NotificacionController(notificacionService)
 
 
 router.get(
-    "/:idUsuario//notificaciones",
+    "/:idUsuario/notificaciones",
     validate(mostrarNotificacionesSchema),
     controller.mostrarNotificaciones
 )
