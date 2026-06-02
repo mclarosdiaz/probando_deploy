@@ -24,9 +24,9 @@ export class Medico{
         this.disponibilidades = nuevasDisponibilidades;
     }
 
-    puedeHacerServicio(nombreServicio){
-        return this.especialidades.some((s) => s.nombre === nombreServicio)
-        || this.practicas.some((s) => s.nombre === nombreServicio)
+    puedeHacerServicio(idServicio){
+        return this.especialidades.some((s) => s.id === idServicio)
+        || this.practicas.some((s) => s.id === idServicio)
     }
 
     buscarServicio(nombreServicio){
