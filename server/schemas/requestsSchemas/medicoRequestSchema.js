@@ -27,7 +27,7 @@ export const especialidadSchema = z.object({
     nombre: z.string().min(1),
     duracionTurnoEnMins: z.number().int().positive(),
     costo: z.number().positive()
-})
+}).strict()
 
 export const practicaSchema = z.object({
     id: z.string(),
@@ -35,25 +35,30 @@ export const practicaSchema = z.object({
     nombre: z.string().min(1),
     duracionTurnoEnMins: z.number().int().positive(),
     costo: z.number().positive()
-})
+}).strict()
 
 export const agregarServicioSchema = z.object({
     params: z.object({
-        id: z.string()
+        idMedico: z.string(),
+        tipo: z.enum(["practica", "especialidad"])
     }),
     body: z.union([especialidadSchema, practicaSchema])
  
 })
+
 export const eliminarServicioSchema = z.object({
     params: z.object({
         idMedico: z.string(),
+        tipo: z.enum(["practica", "especialidad"]),
         idServicio: z.string()
     })
 })
 
 export const modificarServicioSchema = z.object({
     params: z.object({
-        idMedico: z.string()
+        idMedico: z.string(),
+        tipo: z.enum(["practica", "especialidad"]),
+        idServicio: z.string()
     }),
     body: z.union([especialidadSchema, practicaSchema])
 })

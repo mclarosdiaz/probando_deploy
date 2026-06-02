@@ -1,14 +1,8 @@
-import{ Turno } from "../domain/turno.js"
-import { Paciente } from "../domain/paciente.js";
-import { Medico } from "../domain/medico.js";
-import { Usuario } from "../domain/usuario.js";
-import { Plan } from "../domain/plan.js";
 import { factoryNotificacion } from "../domain/factoryNotificacion.js";
 import { agenda } from "../domain/agenda.js";
 import { EstadoTurno } from "../domain/estadoTurno.js";
 import { 
-    NotAllowedError, 
-    MedicoNotFoundError, 
+    NotAllowedError,  
     ValidationError
 } from "../errors/appError.js";
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
@@ -71,7 +65,7 @@ export class TurnoService{
         const {turno, notificacion} =
             await Promise.all([
                 this.turnoRepository.save(turno),
-                this.notificacionRepository.save(notificacion)
+                this.notificacionRepository.save(notificacionCancelado)
         ])
 
         return {turno, notificacion}
@@ -134,9 +128,6 @@ export class TurnoService{
 
         const plan = paciente.plan
 
-        const coberturasPractica = plan.coberturasPractica
-        const coberturasEspecialidad = plan.coberturasEspecialidad
-
         const { turnos, total } = await this.turnoRepository.findAll({filtros, paginacion})
         
         const turnosConCobertura = turnos.map(
@@ -145,6 +136,7 @@ export class TurnoService{
                 const cobertura = 
                     plan.obtenerCoberturaPractica(servicio)
                     || plan.obtenerCoberturaEspecialidad(servicio) 
+                    
                     let costoFinal = servicio?.costo || 0
 
                     if (cobertura?.nivel === "TOTAL") {
@@ -246,7 +238,7 @@ export class TurnoService{
         return turnosDelMedico
     }
 
-    async sincronizarTurnosDisponibles(idMedico, nuevaDisponibilidades){
+    async sincronizarTurnosDisponibles({idMedico, nuevaDisponibilidades}){
         const ahora = new Date()
 
         const medico = await this.medicoRepository.findById(idMedico)
@@ -286,7 +278,7 @@ export class TurnoService{
 
         const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
 
-        const [turnoModificado, notificacion] =
+        const [turnoModificado, notificacionModificada] =
             await Promise.all([
                 this.turnoRepository.save(turno),
                 this.notificacionRepository.save(notificacion)
@@ -296,7 +288,7 @@ export class TurnoService{
 
         return {
             turnoModificado,
-            notificacion
+            notificacionModificada
         }
     }
     
