@@ -35,7 +35,8 @@ export class Turno {
         , this
         , usuario
         , motivo) 
-        
+
+        this.historialEstados.push(cambioEstado) 
     }
 
     asignarPaciente(paciente){
@@ -45,6 +46,7 @@ export class Turno {
             paciente.usuario,
             `El paciente ${paciente.id} reservó el turno`
         )
+        
     }
 
     asignarPractica(practica){
@@ -75,11 +77,12 @@ export class Turno {
         const ultimo = historial.at(-1)
 
         if(!ultimo){
-            return this.medico
+            return this.medico.usuario
         }
 
         return ultimo.usuario
     }
+    
 
      destinatarioUltimoCambioEstado(){
         const id = this.remitenteUltimoCambioEstado().id

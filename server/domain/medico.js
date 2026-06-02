@@ -24,10 +24,7 @@ export class Medico{
         this.disponibilidades = nuevasDisponibilidades;
     }
 
-    puedeHacerServicio(idServicio){
-        return this.especialidades.some((s) => s.id === idServicio)
-        || this.practicas.some((s) => s.id === idServicio)
-    }
+   
     obtenerColeccionServicios(tipo) {
         const tipoNormalizado = tipo.toLowerCase()
 

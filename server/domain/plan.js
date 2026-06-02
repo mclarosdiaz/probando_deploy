@@ -23,6 +23,7 @@ export class Plan{
     }
 
     obtenerCoberturaPractica(practica){
+        
         const cobertura = this.coberturasPractica
             .find(c => c.practica.id === practica.id)
 

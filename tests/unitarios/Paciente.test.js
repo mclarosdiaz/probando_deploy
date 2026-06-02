@@ -22,11 +22,11 @@ describe ("Paciente",()=>{
             obraSocial = new ObraSocial("123", "Osde", [plan])
         })
         test("debe crear un paciente correctamente con datos validos",()=>{
-        const paciente = new Paciente("2",usuario,"40123321","Tomas",obraSocial,plan)
+        const paciente = new Paciente(usuario,"40123321","Tomas",obraSocial,plan)
 
         
 
-        expect(paciente.id).toBe("2")
+       
         expect(paciente.usuario).toBe(usuario)
         expect(paciente.dni).toBe("40123321")
         expect(paciente.nombre).toBe("Tomas")

@@ -91,10 +91,10 @@ describe("Médico", () => {
 
     test("Un médico sabe responder qué servicios (especialidades/prácticas) puede hacer", () =>{
        
-        expect(medico.puedeHacerServicio(revision.id)).toBeTruthy()
-        expect(medico.puedeHacerServicio(ecografia.id)).toBeTruthy()
-        expect(medico.puedeHacerServicio(traumatologia.id)).toBeTruthy()
-        expect(medico.puedeHacerServicio(oftalmologia.id)).toBeTruthy()
+        expect(medico.puedeHacerServicio(revision.id,"practica")).toBeTruthy()
+        expect(medico.puedeHacerServicio(ecografia.id,"practica")).toBeTruthy()
+        expect(medico.puedeHacerServicio(traumatologia.id,"especialidad")).toBeTruthy()
+        expect(medico.puedeHacerServicio(oftalmologia.id,"especialidad")).toBeTruthy()
 
     })
 
@@ -105,11 +105,11 @@ describe("Médico", () => {
         //to([disponibilidad1,disponibilidad2])
     })
     test("Un medico puede agregar un servicio",()=>{
-        medico.agregarServicio(ecografia)
-        expect(medico.puedeHacerServicio(ecografia.id)).toBeTruthy()
+        medico.agregarServicio(ecografia,"practica")
+        expect(medico.puedeHacerServicio(ecografia.id,"practica")).toBeTruthy()
     })
     test("Un medico puede eliminar un servicio",()=>{
-        medico.eliminarServicio("4568")
-        expect(medico.puedeHacerServicio(oftalmologia)).toBeFalsy()
+        medico.eliminarServicio("4568","especialidad")
+        expect(medico.puedeHacerServicio(oftalmologia,"especialidad")).toBeFalsy()
     })
 })

@@ -10,17 +10,16 @@ describe("obraSocial",()=>{
         beforeEach(()=>{
             revision = new Practica("4679","456789","Revisión",30, 5000)
             cobertura = new CoberturaPractica(revision, "TOTAL")
-            plan = new Plan("123", "basico", [], [cobertura])
+            plan = new Plan("basico", [], [cobertura])
         }
         
         )
         test("debe crear una practica correctamente con datos validos",()=>{
-            const obraSocial=new ObraSocial("123","Osde",[plan])
+            const obraSocial=new ObraSocial("Osde",[plan])
             
             
         expect(obraSocial).toMatchObject(
             {
-                id: "123",
                 nombre: "Osde", 
                 planes: [plan]
             }

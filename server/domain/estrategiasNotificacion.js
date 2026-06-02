@@ -7,7 +7,7 @@ export const estrategiasNotificacion = {
             turno.id,
             turno.destinatarioUltimoCambioEstado(), 
             turno.remitenteUltimoCambioEstado(), 
-            `Se reservó un turno para ${turno.servicio}`
+            `Se reservó un turno para ${turno.servicio.nombre}`
         ),
 
         // CONFIRMADO (ID: 3)

@@ -31,20 +31,20 @@ describe("Plan", () => {
             )
             practicas = [revision]
 
-            coberturaEspecialidad = new CoberturaEspecialidad(traumatologia, "PARCIAL")
-            coberturaPractica = new CoberturaPractica(revision, "TOTAL")
-            plan = new Plan("123", "basico", [coberturaEspecialidad], [coberturaPractica])
+            coberturaEspecialidad = new CoberturaEspecialidad(traumatologia, "PARCIAL",50)
+            coberturaPractica = new CoberturaPractica(revision, "TOTAL",100)
+            plan = new Plan( "basico", [coberturaEspecialidad], [coberturaPractica])
         })
 
         test("Comprobar si cubre la practica revision", () =>{
             
             const result = plan.obtenerCoberturaPractica(revision) 
-            expect(result).toBe("TOTAL")
+            expect(result.nivel).toBe("TOTAL")
         })
 
         test("Comprobar el metodo obtenerCoberturaEspecialidad", () =>{
             const result = plan.obtenerCoberturaEspecialidad(traumatologia) 
-            expect(result).toBe("PARCIAL")
+            expect(result.nivel).toBe("PARCIAL")
         })
 
         test("Comprobando que una practica que no tiene cobertura debe avisar que no esta cubierta", () => {

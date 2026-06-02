@@ -31,7 +31,7 @@ describe("factoryNotificacion", () => {
         let cobertura
         let plan
         beforeEach(() => {
-            usuario = new Usuario("1234", "Roberto", "1234")
+            usuario = new Usuario( "Roberto", "1234")
 
             revision = new Practica(
                 "4679",
@@ -65,8 +65,8 @@ describe("factoryNotificacion", () => {
                 )
             ]
 
-            sedeChacarita = new Sede("222", "Chacarita jr", "Gutierrez 351")
-            sedeItaliano = new Sede("555", "Hospital Italiano", "Alto Pelado, San Luis")
+            sedeChacarita = new Sede( "Chacarita jr", "Gutierrez 351")
+            sedeItaliano = new Sede( "Hospital Italiano", "Alto Pelado, San Luis")
 
             sedes = [
                 sedeChacarita,
@@ -83,7 +83,7 @@ describe("factoryNotificacion", () => {
                     "15:00"
                 )
             ]
-            medico = new Medico("1234",
+            medico = new Medico(
                 usuario,
                 "1234",
                 "Roberto Gimenez",
@@ -95,13 +95,12 @@ describe("factoryNotificacion", () => {
             
             costo = 5000
 
-            usuario2 = new Usuario("5678", "Tomas", "5678")
+            usuario2 = new Usuario( "Tomas", "5678")
             cobertura = new CoberturaPractica(revision, "TOTAL")
-            plan = new Plan("123", "basico", [], [cobertura])
-            obraSocial = new ObraSocial("123", "Osde", [plan])
+            plan = new Plan( "basico", [], [cobertura])
+            obraSocial = new ObraSocial( "Osde", [plan])
 
             paciente = new Paciente(
-                "5678",
                 usuario2,
                 "458990",
                 "Tomas",
@@ -110,25 +109,27 @@ describe("factoryNotificacion", () => {
             )
 
             turno = new Turno(medico, new Date(), sedeChacarita, "DISPONIBLE", costo)
-            turno.asignarPaciente(paciente)
+          
+            turno.asignarPaciente(paciente) //esto pasa a reservado, por eso tuve que crear otro turno en disponible para probar el primer test
             turno.asignarPractica(revision)
+            turno2 = new Turno(medico, new Date(), sedeChacarita, "DISPONIBLE", costo)
             
         })
 
 
         test("Al estar diponible el estado de turno no debe generar notificacion", () => {
-            expect(() => factoryNotificacion.crearSegunEstadoTurno(turno)).toThrow("No hay cambios en el turno para notificar")
+            expect(() => factoryNotificacion.crearSegunEstadoTurno(turno2)).toThrow("No hay cambios en el turno para notificar")
         })
 
         test("cambiamos a turno reservado y debe dar una notificacion", () => {
             
-            turno.actualizarEstado(EstadoTurno.RESERVADO, medico.usuario, "debe revisarse")
+            //turno.actualizarEstado(EstadoTurno.RESERVADO, medico.usuario, "debe revisarse")
 
             const notificacionEsperada = new Notificacion(
                 turno.id,
                 turno.medico.usuario,
                 turno.paciente.usuario,
-                `El paciente ${turno.paciente.nombre} reservó un turno para ${turno.practica}`
+                `Se reservó un turno para ${turno.servicio.nombre}`
             )
             
             let notificacion = factoryNotificacion.crearSegunEstadoTurno(turno) 

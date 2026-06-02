@@ -11,14 +11,14 @@ class FactoryNotificacion {
     crearSegunEstadoTurno(turno) {   
         const estrategia = estrategiasNotificacion[turno.estado];
         if(!estrategia){
-            return null
+           throw new Error("No hay cambios en el turno para notificar")
         }
 
         return estrategia(turno)
     }
     
-    
-    static crearRecordatorio(turno) {
+    //habia un static aca
+     crearRecordatorio(turno) {
         const mensajeBase = `Recordatorio: Mañana tiene un turno agendado a las ${turno.fechaHora.toLocaleTimeString()}`;
 
         return [
