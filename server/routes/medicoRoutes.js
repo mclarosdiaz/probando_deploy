@@ -43,13 +43,13 @@ router.post(
 )
 
 router.delete(
-    "/:id/eliminarServicio/:idServicio",
+    "/:id/servicios/:tipo/:idServicio",
     validate(eliminarServicioSchema),
     controller.eliminarServicio
 )
 
-router.patch(
-    "/:id/servicios",
+router.put(
+    "/:id/servicios/:tipo/:idServicio",
     validate(modificarServicioSchema),
     controller.modificarServicio
 )

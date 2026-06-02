@@ -28,40 +28,68 @@ export class Medico{
         return this.especialidades.some((s) => s.id === idServicio)
         || this.practicas.some((s) => s.id === idServicio)
     }
+    obtenerColeccionServicios(tipo) {
+        const tipoNormalizado = tipo.toLowerCase()
 
-    buscarServicio(nombreServicio){
-        const servicios = this.especialidades.concat(this.practicas)
-        
-        return servicios.find(servicio => servicio.nombre === nombreServicio)
+        const colecciones = {
+            especialidad: this.especialidades,
+            practica: this.practicas
+        }
+
+        const coleccion = colecciones[tipoNormalizado]
+
+        if (!coleccion) {
+            throw new UnprocessableEntityError(
+                "No es un tipo de servicio válido"
+            )
+        }
+
+        return coleccion
+    }
+
+    buscarServicio(idServicio, tipo) {
+        return this
+            .obtenerColeccionServicios(tipo)
+            .find(servicio => servicio.id === idServicio)
+    }
+
+    puedeHacerServicio(idServicio, tipo){
+        return this
+            .obtenerColeccionServicios(tipo)
+            .some(servicio => servicio.id === idServicio)
     }
     
-    agregarServicio(nuevoServicio) {
-        if (!this.puedeHacerServicio(nuevoServicio.id)) {
-            if (nuevoServicio.codigo) {
-                this.practicas.push(nuevoServicio)
-            }else {
-            this.especialidades.push(nuevoServicio)
-            }
+    agregarServicio(nuevoServicio, tipo) {
+        const servicios = this.obtenerColeccionServicios(tipo)
+
+        const yaExiste = servicios.find(servicio => servicio.id === nuevoServicio.id)
+
+        if(!yaExiste){
+            servicios.push(nuevoServicio)
         }
     }
 
-    eliminarServicio(nombreServicio) {
-        if (!this.puedeHacerServicio(nombreServicio)) {
-            console.log("HOLA")
-            throw new UnprocessableEntityError("El servicio no pertenece a este médico")
-        } 
+    eliminarServicio(idServicio, tipo) {
+        if(!this.puedeHacerServicio(idServicio, tipo)){
+            throw new UnprocessableEntityError("El médico no realiza este servicio")
+        }
 
-        this.especialidades = this.especialidades.filter(especialidad => especialidad.nombre !== nombreServicio)
-        this.practicas = this.practicas.filter(practica => practica.nombre !== nombreServicio)
+        const serviciosFiltrados = this.obtenerColeccionServicios(tipo).filter(servicio => servicio.id != idServicio)
+
+        if(tipo.toLowerCase() === "especialidad"){
+            this.especialidades = serviciosFiltrados
+        }else{
+            this.practicas = serviciosFiltrados
+        }
     }
 
-    modificarServicio(servicioModificado) {
+    modificarServicio(servicioModificado, tipo) {
         if (!this.puedeHacerServicio(servicioModificado.nombre)) {
-            throw new UnprocessableEntityError("El servicio no pertenece a este médico")
+            throw new UnprocessableEntityError("El médico no realiza este servicio")
         }
 
-        this.eliminarServicio(servicioModificado.nombre)
-        this.agregarServicio(servicioModificado)
+        this.eliminarServicio(servicioModificado.id, tipo)
+        this.agregarServicio(servicioModificado, tipo)
     }
 
 }

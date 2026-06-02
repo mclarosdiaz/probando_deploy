@@ -10,13 +10,15 @@ export class MedicoService {
         this.turnoService = turnoService 
     }
 
-    async consultarDisponibilidades({ idMedico, nombreServicio }) {
+    async consultarDisponibilidades({ idMedico, tipoServicio, idServicio }) {
 
         const medico = await this.medicoRepository.findById(idMedico)
 
-        if (!medico.puedeHacerServicio(nombreServicio)) {
+        if (!medico.puedeHacerServicio(idServicio, tipoServicio)) {
             throw new BadRequestError("El médico no realiza esta práctica o especialidad")
         }
+
+        const servicio = medico.buscarServicio(idServicio, tipoServicio)
 
         const disponibilidades = medico.disponibilidades.filter(
             (disponibilidad) => {
@@ -27,40 +29,40 @@ export class MedicoService {
     }
 
 
-    async modificarDisponibilidades({ idMedico, nuevaDisponibilidades }) {
+    async modificarDisponibilidades({ idMedico, nuevasDisponibilidades }) {
         
         const medico = await this.medicoRepository.findById(idMedico)
 
         medico.definirDisponibilidad(nuevasDisponibilidades)
-        await this.turnoService.sincronizarTurnosDisponibles(idMedico, nuevasDisponibilidades)
+        await this.turnoService.sincronizarTurnosDisponibles({idMedico, nuevasDisponibilidades})
 
         const medicoGuardado = await this.medicoRepository.save(medico)
         
         return medicoGuardado
     }
 
-    async agregarServicio(idMedico, nuevoServicio){
+    async agregarServicio({idMedico, tipoServicio, nuevoServicio}){
         const medico = await this.medicoRepository.findById(idMedico)
 
-        medico.agregarServicio(nuevoServicio)
+        medico.agregarServicio(nuevoServicio, tipoServicio)
         const medicoGuardado = await this.medicoRepository.save(medico)
 
         return medicoGuardado
     }
 
-    async eliminarServicio(idMedico, idServicio){
+    async eliminarServicio({idMedico, tipoServicio,idServicio}){
         const medico = await this.medicoRepository.findById(idMedico)
 
-        medico.eliminarServicio(idServicio)
+        medico.eliminarServicio(idServicio, tipoServicio)
 
         const medicoGuardado = await this.medicoRepository.save(medico)
         return medicoGuardado
     }
 
-    async modificarServicio(idMedico, servicioModificado){
+    async modificarServicio({idMedico, tipoServicio, servicioModificado}){
         const medico = await this.medicoRepository.findById(idMedico)
 
-        medico.modificarServicio(servicioModificado)
+        medico.modificarServicio(servicioModificado, tipoServicio)
 
         const medicoGuardado = await this.medicoRepository.save(medico)
         return medicoGuardado
