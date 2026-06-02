@@ -1,9 +1,3 @@
-import { Sede } from "../domain/sede.js";
-import {
-    BadRequestError,
-    TurnoNotFoundError,
-    UnprocessableEntityError
-} from "../errors/appError.js"
 import { SedeModel } from "../schemas/DBSchemas/sedeSchema.js";
 import { sedeMapper } from "../middlewares/mappers/sedeMapper.js";
 

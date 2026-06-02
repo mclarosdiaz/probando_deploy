@@ -1,9 +1,5 @@
-import { Notificacion } from "../domain/notificacion.js";
 import {
-    BadRequestError,
     NotFoundError,
-    TurnoNotFoundError,
-    UnprocessableEntityError
 } from "../errors/appError.js"
 import { NotificacionModel } from "../schemas/DBSchemas/notificacionSchema.js";
 import { notificacionMapper } from "../middlewares/mappers/notificacionMapper.js";
@@ -16,7 +12,7 @@ export class MongoNotificacionRepository{
     async save(notificacion){
         const nuevaNotificacion = new this.model(notificacion)
         const notificacionGuardada = await nuevaNotificacion.save()
-        return await notificacionMapper.mongoNotificacionToDomain(notificacionGuardada)
+        return notificacionMapper.mongoNotificacionToDomain(notificacionGuardada)
     }
 
     async findById(id){
@@ -27,7 +23,7 @@ export class MongoNotificacionRepository{
             throw new NotFoundError(`La notificación ${id} no fue encontrada`)
         }
 
-        return await notificacionMapper.mongoNotificacionToDomain(mongoNotificacion)
+        return notificacionMapper.mongoNotificacionToDomain(mongoNotificacion)
     }
 
     async update(idNotificacion) {
@@ -49,7 +45,7 @@ export class MongoNotificacionRepository{
             )
         }
 
-        return await notificacionMapper.mongoNotificacionToDomain(notificacionActualizada)
+        return notificacionMapper.mongoNotificacionToDomain(notificacionActualizada)
     }
 
     async obtenerNotificacionesDestinatario({idDestinatario, leida}){
@@ -58,8 +54,10 @@ export class MongoNotificacionRepository{
         if(leida !== undefined){
             query.leida = leida
         }
+
+        const notificaciones = await this.model.find(query)
         
-        return await Promise.all(
+        return Promise.all(
         notificaciones.map(n => notificacionMapper.mongoNotificacionToDomain(n))
     )
     }

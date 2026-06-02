@@ -1,9 +1,6 @@
-import { Turno } from "../domain/turno.js";
 import { EstadoTurno } from "../domain/estadoTurno.js"
 import {
-    BadRequestError,
     TurnoNotFoundError,
-    UnprocessableEntityError
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
@@ -30,7 +27,7 @@ export class MongoTurnoRepository {
 
         const mongoTurno = await this.model.findById(updated._id)
 
-        return await turnoMapper.mongoTurnoToDomain(mongoTurno)
+        return turnoMapper.mongoTurnoToDomain(mongoTurno)
             
     }
 
@@ -58,10 +55,10 @@ export class MongoTurnoRepository {
             throw new TurnoNotFoundError(`El turno ${id} no fue encontrado`)
         }
 
-        return await turnoMapper.mongoTurnoToDomain(mongoTurno)
+        return turnoMapper.mongoTurnoToDomain(mongoTurno)
     }
 
-    async findAll({ filtros = {}, paginacion = {} } = {}) {
+    async findAll({ filtros = {}, page, limit } = {}) {
 
         const query = {}
 
@@ -79,8 +76,6 @@ export class MongoTurnoRepository {
             if (filtros.fechaHasta) query.fecha.$lte = filtros.fechaHasta
         }
 
-        const page = paginacion.page ?? 1
-        const limit = paginacion.limit ?? 10
         const offset = (page - 1) * limit
 
         const documents = await this.model
@@ -108,7 +103,7 @@ export class MongoTurnoRepository {
        // const borrados = await this.model.deleteMany(query)     
         const borrados = await this.model.find(query)
         await this.model.deleteMany(query)
-        return await Promise.all(borrados.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno)))
+        return Promise.all(borrados.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno)))
     }
 
     async existeTurnoEnFecha({
@@ -128,7 +123,7 @@ export class MongoTurnoRepository {
             query._id = { $ne: excluirTurnoId}
         }
 
-        const existe = await this.model.exists(query)
+        const existe = this.model.exists(query)
 
         return Boolean(existe)
 

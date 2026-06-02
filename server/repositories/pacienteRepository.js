@@ -1,8 +1,5 @@
-import { Paciente } from "../domain/paciente.js";
 import {
-    BadRequestError,
-    PacienteNotFoundError,
-    UnprocessableEntityError
+    PacienteNotFoundError
 } from "../errors/appError.js"
 import { PacienteModel } from "../schemas/DBSchemas/pacienteSchema.js";
 import { pacienteMapper } from "../middlewares/mappers/pacienteMapper.js";
@@ -17,7 +14,7 @@ export class MongoPacienteRepository{
     async save(paciente){
         const nuevoPaciente= new this.model(paciente)
         const pacienteGuardado = await nuevoPaciente.save()
-        return await pacienteMapper.mongoPacienteToDomain(pacienteGuardado)
+        return pacienteMapper.mongoPacienteToDomain(pacienteGuardado)
     }
 
     async findById(id){
@@ -28,6 +25,6 @@ export class MongoPacienteRepository{
             throw new PacienteNotFoundError(`El paciente ${id} no fue encontrado`)
         }
 
-        return await pacienteMapper.mongoPacienteToDomain(mongoPaciente)
+        return pacienteMapper.mongoPacienteToDomain(mongoPaciente)
     }
 }

@@ -1,15 +1,8 @@
-import { Plan }from "../domain/plan.js"
-import {
-    BadRequestError,
-    PacienteNotFoundError,
-    UnprocessableEntityError
-} from "../errors/appError.js"
 import {PlanModel} from "../schemas/DBSchemas/planSchema.js"
 import { planMapper } from "../middlewares/mappers/planMapper.js"
 
 export class MongoPlanRepository{
   
-
     constructor(){
         this.model=PlanModel
     }
@@ -18,7 +11,7 @@ export class MongoPlanRepository{
         const nuevoPlan=new this.model(plan)
         const mongoPlanGuardado = await nuevoPlan.save()
 
-        return await planMapper.mongoPlanToDomain(mongoPlanGuardado)
+        return planMapper.mongoPlanToDomain(mongoPlanGuardado)
     }
 
     async findById(id){

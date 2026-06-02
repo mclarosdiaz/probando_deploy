@@ -1,11 +1,10 @@
 import { Router } from 'express'
 import { TurnoController } from '../controllers/turnoController.js'
 import { TurnoService } from "../services/turnoService.js"
-import { validate, validateQuery } from '../middlewares/validate.js'
+import { validate } from '../middlewares/validate.js'
 import { 
     reservarTurnoSchema,
     cancelarTurnoRequestSchema,
-    obtenerHistorialTurnosSchema,
     modificarEstadoTurnoSchema,
     generarTurnosDisponiblesSchema,
     modificarFechaTurnoSchema,

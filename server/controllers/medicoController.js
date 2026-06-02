@@ -4,8 +4,6 @@ import { disponibilidadHorariaMapper } from "../middlewares/mappers/disponibilid
 import { medicoMapper } from "../middlewares/mappers/medicoMapper"
 
 export class MedicoController{
-    //TODO Mapeo a DTO
-    //TODO controlar
     //TODO Implementar biblioteca de Try-Catch de Gastón
 
     consultarDisponibilidades = async (req,res,next)=>{

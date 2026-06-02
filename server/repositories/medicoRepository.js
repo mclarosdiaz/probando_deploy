@@ -1,10 +1,4 @@
-import { Medico } from "../domain/medico.js";
-import {
-    BadRequestError,
-    MedicoNotFoundError,
-    TurnoNotFoundError,
-    UnprocessableEntityError
-} from "../errors/appError.js"
+import {MedicoNotFoundError} from "../errors/appError.js"
 import { MedicoModel } from "../schemas/DBSchemas/medicoSchema.js";
 import { medicoMapper } from "../middlewares/mappers/medicoMapper.js";
 
@@ -19,7 +13,7 @@ export class MongoMedicoRepository{
     async save(medico){
         const nuevoMedico = new this.model(medico)
         const medicoGuardado = await nuevoMedico.save()
-        return await medicoMapper.mongoMedicoToDomain(medicoGuardado)
+        return medicoMapper.mongoMedicoToDomain(medicoGuardado)
         
     }
     
@@ -37,7 +31,7 @@ export class MongoMedicoRepository{
     async findAll() {
         const medicosMongo = await this.model.find()
 
-        return await Promise.all(
+        return Promise.all(
             medicosMongo.map(m => medicoMapper.mongoMedicoToDomain(m))
         )
 }

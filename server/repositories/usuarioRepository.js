@@ -1,9 +1,3 @@
-import { Usuario } from "../domain/usuario.js";
-import {
-    BadRequestError,
-    TurnoNotFoundError,
-    UnprocessableEntityError
-} from "../errors/appError.js"
 import { UsuarioModel } from "../schemas/DBSchemas/usuarioSchema.js";
 import { usuarioMapper } from "../middlewares/mappers/usuarioMapper.js";
 

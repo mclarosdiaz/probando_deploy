@@ -1,4 +1,3 @@
-import { Turno } from "./turno.js";
 import { Notificacion } from "./notificacion.js";
 
 export const estrategiasNotificacion = {
