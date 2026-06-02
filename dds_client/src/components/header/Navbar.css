@@ -1,0 +1,38 @@
+.navbar-bg{ /*Todo el bloque de navbar*/
+    background-color: aliceblue;
+    font-size: 1.5rem;
+    height: 8rem;     
+    padding: 1rem 1rem;
+}
+
+.navbar{ /*Esto aplica para cada elemento de navegacion*/
+    color: #801813;
+    margin: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /*space between los elementos*/
+    height: 100%;
+}
+
+.navbar-seccion{
+    display: flex;
+    align-items: center;
+    /*width: 100%;  Asegura que la sección ocupe el ancho disponible para poder centrar */
+}
+
+.menu-icon{
+    color: #801813;
+    font-size: 1.5rem;
+}
+
+.logoHeader{
+    height: auto;
+    max-height: 6rem; /* Ajustalo para que quede cómodo dentro de tus 8rem de header */
+    width: auto
+}
+
+.user-icon{
+    color: #801813;
+    font-size: 1.5rem;
+}
+
