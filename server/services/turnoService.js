@@ -42,33 +42,33 @@ export class TurnoService{
     }
 
     async cancelar({id, motivo, idUsuario}){
-        const turnoSinCancelar = await this.turnoRepository.findById(id)
+        const turno = await this.turnoRepository.findById(id)
 
         const ahora = new Date()
 
-        const usuario = turnoSinCancelar.obtenerUsuario(idUsuario)
+        const usuario = turno.obtenerUsuario(idUsuario)
 
         if(!usuario){
             throw new NotAllowedError("El usuario no puede cancelar este turno")
         }
-        if(!turnoSinCancelar.sePuedeCancelar(ahora)){
+        if(!turno.sePuedeCancelar(ahora)){
             throw new NotAllowedError("No se puede cancelar turnos con menos de 1 hora de anticipacion")
         }
 
-        turnoSinCancelar.actualizarEstado(
+        turno.actualizarEstado(
             EstadoTurno.CANCELADO, 
             usuario, 
             motivo)
         
         const notificacionCancelado = factoryNotificacion.crearSegunEstadoTurno(turnoSinCancelar)
 
-        const {turno, notificacion} =
+        const [turnoGuardado, notificacionGuardada] =
             await Promise.all([
                 this.turnoRepository.save(turno),
                 this.notificacionRepository.save(notificacionCancelado)
         ])
 
-        return {turno, notificacion}
+        return {turnoGuardado, notificacionGuardada}
     }
 
     async confirmar({id,idUsuario})
@@ -100,24 +100,21 @@ export class TurnoService{
         return {turno, notificacion}
     }
 
-    async obtenerHistorial({ filtros, paginacion}){
+    async obtenerHistorial({ filtros, page, limit}){
         
         const { turnos, total } = await this.turnoRepository.findAll({
-            filtros, 
-            paginacion
+            filtros: filtros, 
+            page: page, 
+            limit: limit
         })
 
-        const { page, limit } = paginacion
 
         const totalPages = Math.ceil(total / limit)
 
         return {
             turnos,
-            paginacion:{
-                page,
-                totalPages, 
-                total
-            }
+            totalPages,
+            total
         }
 
     }

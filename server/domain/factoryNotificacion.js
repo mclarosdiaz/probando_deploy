@@ -1,11 +1,10 @@
 import { Notificacion } from "./notificacion.js";
-import { Turno } from "./turno.js";
 import { estrategiasNotificacion } from "./estrategiasNotificacion.js";
 
 class FactoryNotificacion {
     
-    constructor(estrategias){
-        this.estrategias = estrategias
+    constructor(){
+        this.estrategias = estrategiasNotificacion
     }
 
     crearSegunEstadoTurno(turno) {   
@@ -30,4 +29,4 @@ class FactoryNotificacion {
     
 }
 
-export const factoryNotificacion = new FactoryNotificacion(estrategiasNotificacion)
+export const factoryNotificacion = new FactoryNotificacion()

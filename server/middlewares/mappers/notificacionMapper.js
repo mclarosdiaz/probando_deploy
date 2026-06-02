@@ -9,9 +9,11 @@ class NotificacionMapper{
     }
 
     async mongoNotificacionToDomain(data){
-        const usuarioDestinatario = await this.usuarioRepository.findById(data.destinatario)
+        const mongoUsuarioDestinatario = await this.usuarioRepository.findById(data.destinatario)
+        const usuarioDestinatario = this.usuarioMapper.mongoUsuarioToDomain(mongoUsuarioDestinatario)
 
-        const usuarioRemitente = await this.usuarioRepository.findById(data.remitente)
+        const mongoUsuarioRemitente = await this.usuarioRepository.findById(data.remitente)
+        const usuarioRemitente = await this.usuarioMapper.mongoUsuarioToDomain(mongoUsuarioRemitente)
 
         const mensaje = data.mensaje
         const id=data._id.toString()

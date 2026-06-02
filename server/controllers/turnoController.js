@@ -1,11 +1,9 @@
-import { response } from "express"
 import { TurnoService } from "../services/turnoService.js"
 import { BadRequestError } from "../errors/appError.js"
-import { validateQuery } from "../middlewares/validate.js"
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js"
 import { notificacionMapper} from "../middlewares/mappers/notificacionMapper.js"
 
-//Usar ENDPOINT Handler de Gastón
+//TODO Implementar Generación de Turnos de forma Asíncrona
 export class TurnoController {
     constructor(turnoService  =  new TurnoService()){
         this.turnoService = turnoService
@@ -61,26 +59,29 @@ export class TurnoController {
                 page,
                 limit } = req.query
 
-            const {turnos, paginacion} = await this.turnoService.obtenerHistorial({
+            const {turnos, totalPages, total} = await this.turnoService.obtenerHistorial({
                 filtros: {
                     pacienteId,
                     estado,
                     fechaDesde,
                     fechaHasta
                 },
+                page, 
+                limit
+            })
+
+            res.status(200).json({
+                turnos: turnos.map(turno => turnoMapper.turnoToDTO(turno)),
                 paginacion: {
                     page,
-                    limit
+                    limit,
+                    total: total,
+                    totalPages: totalPages,
+
                 }
             })
 
-            const data = { 
-                turnos: turnos.map(turno => turnoMapper.turnoToDTO(turno)), 
-                paginacion: paginacion 
-            }
-
-
-            res.status(200).json(data)
+            
         } catch (error) {
             next(error)
         }

@@ -1,7 +1,5 @@
 import { Usuario } from "../../domain/usuario.js"
 class UsuarioMapper{
-    
-
     mongoUsuarioToDomain(data){
         
         const nombreUsuario = data.nombreUsuario

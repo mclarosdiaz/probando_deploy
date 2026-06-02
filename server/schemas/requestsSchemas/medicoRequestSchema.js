@@ -5,7 +5,8 @@ export const consultarDisponibilidadSchema = z.object({
         id: z.string()
     }),
     body: z.object({
-        nombreServicio: z.string().min(5)
+        tipo: z.enum(["practica", "especialidad"]),
+        idServicio: z.string().min(5)
     })
 })
 
