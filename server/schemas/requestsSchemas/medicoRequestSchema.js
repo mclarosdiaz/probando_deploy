@@ -5,8 +5,7 @@ export const consultarDisponibilidadSchema = z.object({
         id: z.string()
     }),
     body: z.object({
-        servicio: z.string().min(5),
-        idServicio: z.string()
+        nombreServicio: z.string().min(5)
     })
 })
 

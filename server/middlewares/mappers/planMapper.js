@@ -25,7 +25,8 @@ class PlanMapper{
         data.coberturaPractica.map(coberturaMongo => {
             return new CoberturaPractica(
                 this.practicaMapper.mongoPracticaToDomain(coberturaMongo.practica),
-                coberturaMongo.nivel
+                coberturaMongo.nivel,
+                coberturaMongo.porcentaje
             )
         }) 
         :null

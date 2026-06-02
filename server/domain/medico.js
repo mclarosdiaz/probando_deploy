@@ -1,8 +1,4 @@
-import { DisponibilidadHoraria } from "./disponibilidadHoraria.js";
-import { Especialidad } from "./especialidad.js";
-import { Sede } from "./sede.js";
-import { Practica } from "./practica.js";
-import { Usuario } from "./usuario.js";
+import { UnprocessableEntityError } from "../errors/appError"
 
 export class Medico{
     id 
@@ -28,9 +24,15 @@ export class Medico{
         this.disponibilidades = nuevasDisponibilidades;
     }
 
-    puedeHacerServicio(idServicio){
-        return this.especialidades.some((s) => s.id === idServicio)
-        || this.practicas.some((s) => s.id === idServicio)
+    puedeHacerServicio(nombreServicio){
+        return this.especialidades.some((s) => s.nombre === nombreServicio)
+        || this.practicas.some((s) => s.nombre === nombreServicio)
+    }
+
+    buscarServicio(nombreServicio){
+        const servicios = this.especialidades.concat(this.practicas)
+        
+        return servicios.find(servicio => servicio.nombre === nombreServicio)
     }
     
     agregarServicio(nuevoServicio) {
@@ -43,22 +45,22 @@ export class Medico{
         }
     }
 
-    eliminarServicio(idServicio) {
-        if (!this.puedeHacerServicio(idServicio)) {
+    eliminarServicio(nombreServicio) {
+        if (!this.puedeHacerServicio(nombreServicio)) {
             console.log("HOLA")
             throw new UnprocessableEntityError("El servicio no pertenece a este médico")
         } 
 
-        this.especialidades = this.especialidades.filter(especialidad => especialidad.id !== idServicio)
-        this.practicas = this.practicas.filter(practica => practica.id !== idServicio)
+        this.especialidades = this.especialidades.filter(especialidad => especialidad.nombre !== nombreServicio)
+        this.practicas = this.practicas.filter(practica => practica.nombre !== nombreServicio)
     }
 
     modificarServicio(servicioModificado) {
-        if (!this.puedeHacerServicio(servicioModificado.id)) {
+        if (!this.puedeHacerServicio(servicioModificado.nombre)) {
             throw new UnprocessableEntityError("El servicio no pertenece a este médico")
         }
 
-        this.eliminarServicio(servicioModificado.id)
+        this.eliminarServicio(servicioModificado.nombre)
         this.agregarServicio(servicioModificado)
     }
 

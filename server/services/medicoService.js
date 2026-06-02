@@ -1,18 +1,6 @@
-import { MongoMedicoRepository } from "../repositories/medicoRepository.js";
-import { Medico } from "../domain/medico.js";
-import { DisponibilidadHoraria } from "../domain/disponibilidadHoraria.js";
-import { Practica } from "../domain/practica.js";
-import { Especialidad } from "../domain/especialidad.js";
 import {
-    BadRequestError,
-    PacienteNotFoundError,
-    NotAllowedError,
-    MedicoNotFoundError,
-    ConflictError,
-    UnprocessableEntityError
+    BadRequestError
 } from "../errors/appError.js";
-import { TurnoService } from "./turnoService.js";
-import { medicoMapper } from "../middlewares/mappers/medicoMapper.js";
 
 //TODO mapear el dto en el controller (?
 
@@ -22,11 +10,11 @@ export class MedicoService {
         this.turnoService = turnoService 
     }
 
-    async consultarDisponibilidades({ idMedico, servicio, idServicio }) {
+    async consultarDisponibilidades({ idMedico, nombreServicio }) {
 
         const medico = await this.medicoRepository.findById(idMedico)
 
-        if (!medico.puedeHacerServicio(servicio)) {
+        if (!medico.puedeHacerServicio(nombreServicio)) {
             throw new BadRequestError("El médico no realiza esta práctica o especialidad")
         }
 

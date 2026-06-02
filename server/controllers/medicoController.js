@@ -1,23 +1,17 @@
-import { response, request } from "express"
-import { MedicoService } from "../services/medicoService.js"
 
 export class MedicoController{
     //TODO Mapeo a DTO
+    //TODO controlar
     //TODO Implementar biblioteca de Try-Catch de Gastón
-
-    constructor(medicoService = new MedicoService()){
-        this.medicoService = medicoService
-    }
 
     consultarDisponibilidades = async (req,res,next)=>{
         const { idMedico } = req.params
-        const{ servicio, idServicio } = req.body
+        const{ nombreServicio } = req.body
 
         try {
             const disponibilidades= await this.medicoService.consultarDisponibilidades({
                 idMedico,
-                servicio,
-                idServicio
+                nombreServicio,
         })
             res.status(200).json(disponibilidades)
         } catch (error) {
@@ -31,8 +25,9 @@ export class MedicoController{
         const { nuevasDisponibilidades }= req.body
 
         try{
-            const disponibilidades= await this.medicoService.modificarDisponibilidades(idMedico, nuevasDisponibilidades)
-            res.status(200).json(disponibilidades)
+            const medicoActualizado = await this.medicoService.modificarDisponibilidades(idMedico, nuevasDisponibilidades)
+            
+            res.status(200).json(medicoActualizado)
         } catch (error) {
             next(error)
         }
