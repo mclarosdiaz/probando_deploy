@@ -8,31 +8,32 @@ class NotificacionMapper{
         this.usuarioMapper = usuarioMapper
     }
 
-    async mongoNotificacionToDomain(data){
-        const mongoUsuarioDestinatario = await this.usuarioRepository.findById(data.destinatario)
-        const usuarioDestinatario = this.usuarioMapper.mongoUsuarioToDomain(mongoUsuarioDestinatario)
+   async mongoNotificacionToDomain(data){
+    // findById ya devuelve un Usuario de dominio, no hace falta volver a mapear
+    const usuarioDestinatario = await this.usuarioRepository.findById(data.destinatario)
+    const usuarioRemitente = await this.usuarioRepository.findById(data.remitente)
 
-        const mongoUsuarioRemitente = await this.usuarioRepository.findById(data.remitente)
-        const usuarioRemitente = await this.usuarioMapper.mongoUsuarioToDomain(mongoUsuarioRemitente)
+    const notificacion = new Notificacion(
+        data._id.toString(),
+        usuarioDestinatario,
+        usuarioRemitente,
+        data.mensaje
+    )
+    notificacion.leida = data.leida
+    notificacion.fechaHoraCreacion = data.fechaHoraCreacion
+    notificacion.fechaHoraLeida = data.fechaHoraLeida
 
-        const mensaje = data.mensaje
-        const id=data._id.toString()
-        const notificacion= new Notificacion(
-            id,
-            usuarioDestinatario,
-            usuarioRemitente,
-            mensaje
-        )
 
-        return notificacion
-    }
+    return notificacion
+}
 
     notificacionToDto(notificacion){
         return{
             id: notificacion.id,
             destinatario : notificacion.destinatario.nombre,
             remitente : notificacion.remitente.nombre,
-            mensaje : notificacion.mensaje
+            mensaje : notificacion.mensaje,
+            leida: notificacion.leida
         }
     }
 

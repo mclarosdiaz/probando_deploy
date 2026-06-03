@@ -2,7 +2,7 @@ import { Usuario } from "../../domain/usuario.js"
 class UsuarioMapper{
     mongoUsuarioToDomain(data){
         
-        const nombreUsuario = data.nombreUsuario
+        const nombreUsuario = data.nombre
         const password = data.password
 
         const usuario= new Usuario(
