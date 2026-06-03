@@ -27,7 +27,7 @@ export class Turno {
         
         const cambioEstado = new CambioEstadoTurno(new Date()
         , nuevoEstado
-        , this
+        , this.id
         , usuario
         , motivo) 
 

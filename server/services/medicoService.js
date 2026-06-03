@@ -2,8 +2,6 @@ import {
     BadRequestError
 } from "../errors/appError.js";
 
-//TODO mapear el dto en el controller (?
-
 export class MedicoService {
     constructor(medicoRepository, turnoService) {
         this.medicoRepository = medicoRepository

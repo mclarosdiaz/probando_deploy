@@ -1,11 +1,7 @@
 import { Turno } from "../../domain/turno.js"
-import { Medico } from "../../domain/medico.js"
-import { Sede } from "../../domain/sede.js"
-import { Paciente } from "../../domain/paciente.js"
-import { MongoMedicoRepository } from "../../repositories/medicoRepository.js"
 import { MongoPacienteRepository } from "../../repositories/pacienteRepository.js"
 import { MongoSedeRepository } from "../../repositories/sedeRepository.js"
-import { EstadoTurno } from "../../domain/estadoTurno.js"
+import { MongoMedicoRepository } from "../../repositories/medicoRepository.js"
 import { medicoMapper } from "./medicoMapper.js"
 import { pacienteMapper } from "./pacienteMapper.js"
 import { sedeMapper } from "./sedeMapper.js"
@@ -44,8 +40,8 @@ class TurnoMapper{
 
         turno.paciente = paciente
         
-        const historialEstados = data.historialEstados.map(mongoCambioEstadoTurno =>
-            this.cambioEstadoTurnoMapper.cambioEstadoTurnoToDomain(mongoCambioEstadoTurno)
+        const historialEstados = await Promise.all (data.historialEstados.map(mongoCambioEstadoTurno =>
+            this.cambioEstadoTurnoMapper.mongoCambioEstadoTurnoToDomain(mongoCambioEstadoTurno))
         )
 
         turno.historialEstados = historialEstados

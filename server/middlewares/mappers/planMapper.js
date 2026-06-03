@@ -1,4 +1,4 @@
-import { Plan } from "../../domain/sede"
+import { Plan } from "../../domain/plan.js"
 import { CoberturaEspecialidad } from "../../domain/coberturaEspecialidad.js"
 import { CoberturaPractica } from "../../domain/coberturaPractica.js"
 import { especialidadMapper } from "./especialidadMapper.js"

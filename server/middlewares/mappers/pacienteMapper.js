@@ -1,9 +1,8 @@
 import { Paciente } from "../../domain/paciente"
 import { ObraSocial } from "../../domain/obraSocial.js"
-import { MongoPacienteRepository } from "../../repositories/pacienteRepository"
 import { MongoUsuarioRepository } from "../../repositories/usuarioRepository.js"
-import { UsuarioMapper } from "./usuarioMapper.js"
 import { planMapper } from "./planMapper.js"
+import { usuarioMapper } from "./usuarioMapper.js"
 
 class PacienteMapper{
     constructor(usuarioRepository, usuarioMapper, planMapper){
@@ -53,4 +52,5 @@ class PacienteMapper{
     }
 }
 const usuarioRepository = new MongoUsuarioRepository()
+
 export const pacienteMapper = new PacienteMapper(usuarioRepository, usuarioMapper, planMapper)

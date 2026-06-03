@@ -1,12 +1,8 @@
-import { Turno } from "./turno.js";
-import { Usuario } from "./usuario.js";
-import { EstadoTurno } from "./estadoTurno.js";
-
 export class CambioEstadoTurno{
-    constructor(fechaHoraIngreso, estadoTurno, turno, usuario, motivo){
+    constructor(fechaHoraIngreso, estadoTurno, idTurno, usuario, motivo){
         this.fechaHoraIngreso = fechaHoraIngreso;
         this.estado = estadoTurno;
-        this.turno = turno;
+        this.idTurno = idTurno;
         this.usuario = usuario;
         this.motivo = motivo;
     }

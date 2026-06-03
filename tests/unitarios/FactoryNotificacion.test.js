@@ -1,6 +1,5 @@
 import { describe, expect, test, beforeEach } from "@jest/globals";
 import { factoryNotificacion } from "../../server/domain/factoryNotificacion.js";
-import { estrategiasNotificacion } from "../../server/domain/estrategiasNotificacion.js";
 import { Turno } from "../../server/domain/turno.js";
 import { Notificacion } from "../../server/domain/notificacion.js";
 import { Medico } from "../../server/domain/medico.js";

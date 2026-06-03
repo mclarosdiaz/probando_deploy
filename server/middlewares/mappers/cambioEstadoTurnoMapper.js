@@ -1,16 +1,15 @@
 import { CambioEstadoTurno } from "../../domain/cambioEstadoTurno.js"
 import { MongoTurnoRepository } from "../../repositories/turnoRepository.js"
-import { turnoMapper } from "./turnoMapper.js"
 import { MongoUsuarioRepository } from "../../repositories/usuarioRepository.js"
 import { usuarioMapper } from "./usuarioMapper.js"
 
 
+
 class CambioEstadoTurnoMapper{
-    constructor(turnoRepository,usuarioRepository,turnoMapper,usuarioMapper)
+    constructor(turnoRepository, usuarioRepository, usuarioMapper)
     {
         this.turnoRepository = turnoRepository
         this.usuarioRepository = usuarioRepository
-        this.turnoMapper = turnoMapper
         this.usuarioMapper = usuarioMapper
     }
     async mongoCambioEstadoTurnoToDomain(data){
@@ -19,7 +18,7 @@ class CambioEstadoTurnoMapper{
         const cambioEstadoTurno = new CambioEstadoTurno(
             data.fechaHoraIngreso,
             data.estado,
-            turno,
+            turno.id,
             usuario,
             data.motivo
         )
@@ -39,4 +38,4 @@ class CambioEstadoTurnoMapper{
 const usuarioRepository = new MongoUsuarioRepository()
 const turnoRepository = new MongoTurnoRepository()
 
-export const cambioEstadoTurnoMapper = new CambioEstadoTurnoMapper(turnoRepository,usuarioRepository,turnoMapper,usuarioMapper)
+export const cambioEstadoTurnoMapper = new CambioEstadoTurnoMapper(turnoRepository,usuarioRepository, usuarioMapper)

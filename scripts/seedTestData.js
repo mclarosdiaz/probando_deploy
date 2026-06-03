@@ -8,11 +8,8 @@ import { MedicoModel } from "../server/schemas/DBSchemas/medicoSchema.js"
 import { PacienteModel } from "../server/schemas/DBSchemas/pacienteSchema.js"
 import { SedeModel } from "../server/schemas/DBSchemas/sedeSchema.js"
 import { TurnoModel } from "../server/schemas/DBSchemas/turnoSchema.js"
-import { practicaEmbeddedSchema } from "../server/schemas/DBSchemas/practicaEmbeddedSchema.js"
-import { especialidadEmbeddedSchema } from "../server/schemas/DBSchemas/especialidadEmbeddedSchema.js"
 import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js"
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js"
-import { ObraSocial } from "../server/domain/obraSocial.js"
 import { NotificacionModel } from "../server/schemas/DBSchemas/notificacionSchema.js"
 dotenv.config()
 
@@ -26,7 +23,8 @@ export async function seedTestData() {
         SedeModel.deleteMany({}),
         TurnoModel.deleteMany({}),
         ObraSocialModel.deleteMany({}),
-        PlanModel.deleteMany({})
+        PlanModel.deleteMany({}),
+        NotificacionModel.deleteMany({})
     ])
 
     // usuarios
@@ -240,14 +238,19 @@ const medico = await MedicoModel.create({
     const notificacionId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439016")
 
     const notificacion = await NotificacionModel.create({
-        _id = notificacionId,
+        _id : notificacionId,
         
-        destinatario: usuarioPaciente,
+        destinatario: idUsuarioPaciente,
 
-        remitente: usuarioMedico,
+        remitente: idUsuarioPaciente,
 
-        mensaje: "HOLA"
+        mensaje: "HOLA",
+
+        fechaHoraCreacion: new Date(),
+
+        fechaHoraLeida: new Date(),
+
     })
 
-    //console.log("Seed completado")
+    
 }
