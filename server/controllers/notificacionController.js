@@ -1,8 +1,6 @@
-import { response } from "express";
-import { NotificacionService } from "../services/notificacionService.js";
-
 export class NotificacionController{
-    constructor(notificacionService = new NotificacionService()){
+    
+    constructor(notificacionService){
         this.notificacionService= notificacionService
     }
     

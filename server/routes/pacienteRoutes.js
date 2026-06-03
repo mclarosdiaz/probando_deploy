@@ -1,6 +1,12 @@
 import { Router } from "express";
 import { TurnoController } from "../controllers/turnoController.js";
 import { TurnoService } from "../services/turnoService.js";
+import { MongoTurnoRepository } from "../repositories/turnoRepository.js";
+import { MongoPacienteRepository } from "../repositories/pacienteRepository.js";
+import { MongoMedicoRepository } from "../repositories/medicoRepository.js";
+import { MongoNotificacionRepository } from "../repositories/notificacionRepository.js"
+import { MongoSedeRepository } from "../repositories/sedeRepository.js";
+import { MongoUsuarioRepository } from "../repositories/usuarioRepository.js";
 
 const router = Router()
 
@@ -24,3 +30,5 @@ const controller = new TurnoController(turnoService)
 router.get(
     "/:pacienteId/turnos",
     controller.obtenerHistorialTurnos)
+
+export default router

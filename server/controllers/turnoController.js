@@ -147,11 +147,11 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario } = req.body
 
-            const {turno, notificaion} = await this.turnoService.marcarComoConfirmado({id, idUsuario})
+            const {turno, notificacion} = await this.turnoService.marcarComoConfirmado({id, idUsuario})
 
             const data = {
-                turno: turnoMapper.turnoToDTO(),
-                notificacion: notificacionMapper.notificacionToDTO()
+                turno: turnoMapper.turnoToDTO(turno),
+                notificacion: notificacionMapper.notificacionToDTO(notificacion)
             }
 
             res.status(200).json(data)
@@ -184,8 +184,8 @@ export class TurnoController {
                 fecha: nuevaFecha })
 
             const data = {
-                turno: turnoMapper.turnoToDTO(),
-                notificacion: notificacionMapper.notificacionToDTO()
+                turno: turnoMapper.turnoToDTO(turno),
+                notificacion: notificacionMapper.notificacionToDTO(notificacion)
             }
 
             res.status(200).json(data)

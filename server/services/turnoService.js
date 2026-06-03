@@ -60,7 +60,7 @@ export class TurnoService{
             usuario, 
             motivo)
         
-        const notificacionCancelado = factoryNotificacion.crearSegunEstadoTurno(turnoSinCancelar)
+        const notificacionCancelado = factoryNotificacion.crearSegunEstadoTurno(turno)
 
         const [turnoGuardado, notificacionGuardada] =
             await Promise.all([
@@ -192,9 +192,8 @@ export class TurnoService{
             "Turno realizado"
         )
 
-        await this.turnoRepository.save(turno)
+        return this.turnoRepository.save(turno)
 
-        return turno
     }
 
     async generarTurnosDisponibles() {
@@ -275,20 +274,17 @@ export class TurnoService{
 
         const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
 
-        const [turnoModificado, notificacionModificada] =
+        const [turnoGuardado, notificacionGuardada] =
             await Promise.all([
                 this.turnoRepository.save(turno),
                 this.notificacionRepository.save(notificacion)
             ])
 
-        //const freshMongoTurno = await this.turnoRepository.findById(id)
-
         return {
-            turnoModificado,
-            notificacionModificada
+            turnoGuardado,
+            notificacionGuardada
         }
     }
-    
 
     async validarDisponibilidad(turno, fecha){
         return await this.turnoRepository.existeTurnoEnFecha({

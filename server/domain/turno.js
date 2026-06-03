@@ -1,10 +1,5 @@
-import { Medico } from "./medico.js";
-import { Paciente } from "./paciente.js"
-import { Sede } from "./sede.js"
-import { Practica } from "./practica.js"
 import { EstadoTurno } from "./estadoTurno.js"
 import { CambioEstadoTurno } from "./cambioEstadoTurno.js";
-import { factoryNotificacion } from "./factoryNotificacion.js";
 
 export class Turno {
     id
