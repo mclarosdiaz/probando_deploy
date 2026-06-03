@@ -1,0 +1,27 @@
+.listaDeBotones{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    flex-direction: column;
+    list-style: none;
+}
+
+.globoDeTexto{
+    font-size: 24px;
+    justify-content: space-around;
+    background-color: white;
+    border: 5px solid black;
+    border-radius: 5px;
+    padding: 15px;
+
+}
+
+.botonesDeOpcion{
+    font-size: 24px;
+    color: white;
+    justify-content: space-around;
+    background-color: #801813;
+    border-radius: 5px;
+    padding: 15px;
+}
