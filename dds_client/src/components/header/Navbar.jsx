@@ -11,7 +11,7 @@ const Navbar = () =>{
 
             <div className = "navbar-seccion centro">
                 <div className = "logo">
-                    <Link to = {'/'}> <img src = "/images/osecroacklogo.png" alt = "logo" className = "logoHeader"></img> </Link>
+                    <Link to = {'/'}> <img src = "/images/osecroackLogo.png" alt = "logo" className = "logoHeader"></img> </Link>
                 </div>
             </div>
 

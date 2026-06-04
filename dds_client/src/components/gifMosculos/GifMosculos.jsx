@@ -3,7 +3,7 @@ import './GifMosculos.css'
 const GifMosuclos = () => {
     return (
         <>
-            <div className="gif">
+            <div className="gifMosculos">
                 <img src="/images/MOSCULOS.gif" alt="Mosca Musculosa" />
             </div>
         </>

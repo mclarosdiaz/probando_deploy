@@ -1,7 +1,5 @@
 .home-body{
     display: flex;
-    position: relative;
-    top: -1.5rem;
     justify-content: space-around;
     align-items: center;
     width: 100%;

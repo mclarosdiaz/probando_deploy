@@ -19,15 +19,17 @@
     font-size: 24px;
     color: white;
     justify-content: space-around;
-    background-color: #418B18;
+    background-color: rgba(65,139,24,1.000);
     border-radius: 5px;
     padding: 15px;
 
 }
 
-.boton{
-    font-size: 24px;
+.boton {
+    font-weight: 600; /* Texto un poco más "gordito" */
+    font-size: 20px;
     color: white;
+
     justify-content: space-around;
     background-color: #418B18;
     border-radius: 5px;
@@ -42,6 +44,6 @@
 }
 
 .boton:hover {
-    background-color: #347013;
     transition: background 0.3s ease;
+    background-color:  #2e6112;
 }
