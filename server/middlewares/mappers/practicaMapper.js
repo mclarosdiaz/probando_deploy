@@ -4,11 +4,11 @@ class PracticaMapper{
 
     async mongoPracticaToDomain(data){
         const id = data.id
-        const codigo = data.practica
+        const codigo = data.codigo
         const nombre = data.nombre
         const duracionTurnoEnMins = data.duracionTurnoEnMins
         const costo = data.costo
-        
+        console.log("PRACTICA DATA:", JSON.stringify(data))
         const practica = new Practica(
             id,
             codigo,

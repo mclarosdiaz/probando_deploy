@@ -5,14 +5,15 @@ import { Especialidad } from "../../domain/especialidad.js"
 class EspecialidadMapper{
 
     mongoEspecialidadToDomain(data){
-
+         console.log("ESPECIALIDAD DATA:", JSON.stringify(data))
         const especialidad = new Especialidad(
+            data.id,
             data.nombre,
-            data.duracionEnMins,
+            data.duracionTurnoEnMins,
             data.costo
         )
 
-        especialidad.id = data._id.toString()
+      
 
         return especialidad
     }

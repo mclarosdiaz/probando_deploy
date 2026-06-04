@@ -1,99 +1,129 @@
-import { especialidadMapper } from "../middlewares/mappers/especialidadMapper"
-import { practicaMapper } from "../middlewares/mappers/practicaMapper"
-import { disponibilidadHorariaMapper } from "../middlewares/mappers/disponibilidadHorariaMapper"
-import { medicoMapper } from "../middlewares/mappers/medicoMapper"
+import { especialidadMapper } from "../middlewares/mappers/especialidadMapper";
+import { practicaMapper } from "../middlewares/mappers/practicaMapper";
+import { disponibilidadHorariaMapper } from "../middlewares/mappers/disponibilidadHorariaMapper";
+import { medicoMapper } from "../middlewares/mappers/medicoMapper";
+import { Practica } from "../domain/practica.js";
+import { Especialidad } from "../domain/especialidad.js";
 
-export class MedicoController{
-    //TODO Implementar biblioteca de Try-Catch de Gastón
+export class MedicoController {
+  //TODO Implementar biblioteca de Try-Catch de Gastón
+  constructor(medicoService) {
+    this.medicoService = medicoService;
+  }
+  consultarDisponibilidades = async (req, res, next) => {
+    try {
+      const { idMedico } = req.params;
+      const { tipoServicio, idServicio } = req.body;
 
-    consultarDisponibilidades = async (req,res,next)=>{
+      const disponibilidades =
+        await this.medicoService.consultarDisponibilidades({
+          idMedico,
+          tipoServicio,
+          idServicio,
+        });
 
-        try {
-            const { idMedico } = req.params
-            const { tipoServicio, idServicio } = req.body
+      const disponibilidadesDTO = disponibilidades.map((disponibilidad) =>
+        disponibilidadHorariaMapper.disponibilidadHorariaToDTO(disponibilidad),
+      );
 
-            const disponibilidades= await this.medicoService.consultarDisponibilidades({
-                idMedico,
-                tipoServicio,
-                idServicio
-            })
-
-            const disponibilidadesDTO = disponibilidades.map(disponibilidad => disponibilidadHorariaMapper.disponibilidadHorariaToDTO(disponibilidad)) 
-
-            res.status(200).json(disponibilidadesDTO)
-        } catch (error) {
-            next(error)
-        }
-        
+      res.status(200).json(disponibilidadesDTO);
+    } catch (error) {
+      next(error);
     }
+  };
 
-    modificarDisponibilidades = async(req,res,next)=>{
+  modificarDisponibilidades = async (req, res, next) => {
+    try {
+      const { idMedico } = req.params;
+      const { nuevasDisponibilidadesDTO } = req.body;
 
-        try{
-            const { idMedico } = req.params
-            const { nuevasDisponibilidadesDTO } = req.body
+      const nuevasDisponibilidades = nuevasDisponibilidadesDTO.map((dto) =>
+        disponibilidadHorariaMapper.dtoToDisponibilidadHoraria(dto),
+      );
 
-            const nuevasDisponibilidades = nuevasDisponibilidadesDTO.map(dto => disponibilidadHorariaMapper.dtoToDisponibilidadHoraria(dto))
+      const medicoActualizado =
+        await this.medicoService.modificarDisponibilidades({
+          idMedico,
+          nuevasDisponibilidades,
+        });
 
-            const medicoActualizado = await this.medicoService.modificarDisponibilidades({idMedico, nuevasDisponibilidades})
-            
-            const medicoDTO = medicoMapper.medicoToDTO(medicoActualizado)
+      const medicoDTO = medicoMapper.medicoToDTO(medicoActualizado);
 
-            res.status(200).json(medicoDTO)
-        } catch (error) {
-            next(error)
-        }
-
+      res.status(200).json(medicoDTO);
+    } catch (error) {
+      next(error);
     }
-    
-    agregarServicio = async(req,res,next)=>{
-        
-        try{
-            const { idMedico } = req.params
-            const { tipoServicio, nuevoServicioDTO } = req.body
+  };
 
-            let nuevoServicio = undefined
+  agregarServicio = async (req, res, next) => {
+    try {
+      const { idMedico } = req.params;
+      const { tipoServicio, nuevoServicioDTO } = req.body;
 
-            if (nuevoServicioDTO.codigo) {
-                nuevoServicio = practicaMapper.practicaToDto(nuevoServicioDTO)
-            } else {
-                nuevoServicio = especialidadMapper.especialidadToDTO(nuevoServicioDTO)
-            }
+      let nuevoServicio = undefined;
 
-            const medicoActualizado = await this.medicoService.agregarServicio({idMedico, tipoServicio, nuevoServicio})
+      if (tipoServicio === "practica") {
+        nuevoServicio = new Practica(
+          nuevoServicioDTO.id,
+          nuevoServicioDTO.codigo,
+          nuevoServicioDTO.nombre,
+          nuevoServicioDTO.duracionTurnoEnMins,
+          nuevoServicioDTO.costo,
+        );
+      } else {
+        nuevoServicio = new Especialidad(
+          nuevoServicioDTO.id,
+          nuevoServicioDTO.nombre,
+          nuevoServicioDTO.duracionTurnoEnMins,
+          nuevoServicioDTO.costo,
+        );
+      }
 
-            const medicoDTO = medicoMapper.medicoToDTO(medicoActualizado)
+      const medicoActualizado = await this.medicoService.agregarServicio({
+        idMedico,
+        tipoServicio,
+        nuevoServicio,
+      });
 
-            res.status(200).json(medicoDTO)
-        } catch(error){
-            next(error)
-        }
+      const medicoDTO = medicoMapper.medicoToDTO(medicoActualizado);
+
+      res.status(200).json(medicoDTO);
+    } catch (error) {
+      next(error);
     }
+  };
 
-    eliminarServicio = async(req,res,next)=>{
+  eliminarServicio = async (req, res, next) => {
+    try {
+      const { idMedico, tipo, idServicio } = req.params;
 
-        try{
-            const { idMedico, tipo, idServicio } = req.params
+      const medicoActualizado = await this.medicoService.eliminarServicio({
+        idMedico,
+        tipo,
+        idServicio,
+      });
+      const medicoDTO = medicoMapper.medicoToDTO(medicoActualizado);
 
-            const medicoActualizado = await this.medicoService.eliminarServicio({idMedico, tipo, idServicio})
-            const medicoDTO = medicoMapper.medicoToDTO(medicoActualizado)
-
-            res.status(200).json(medicoDTO)
-        } catch(error){
-            next(error)
-        }
+      res.status(200).json(medicoDTO);
+    } catch (error) {
+      next(error);
     }
+  };
 
-    modificarServicio = async(req,res,next)=>{
-        const { idMedico, tipo,idServicio } = req.params
-        const  servicioModificado  = req.body
+  modificarServicio = async (req, res, next) => {
+    const { idMedico, tipo, idServicio } = req.params;
+    const servicioModificado = req.body;
 
-        try{
-            const medicoActualizado = await this.medicoService.modificarServicio({idMedico, tipo, idServicio, servicioModificado})
-            res.status(200).json(medicoActualizado)
-        } catch(error){
-            next(error)
-        }
+    try {
+      const medicoActualizado = await this.medicoService.modificarServicio({
+        idMedico,
+        tipo,
+        idServicio,
+        servicioModificado,
+      });
+      res.status(200).json(medicoActualizado);
+    } catch (error) {
+      next(error);
     }
-    
+  };
 }

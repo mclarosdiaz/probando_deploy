@@ -37,19 +37,19 @@ router.patch(
 )
 
 router.post(
-    "/:id/servicios",
+    "/:idMedico/servicios",
     validate(agregarServicioSchema),
     controller.agregarServicio
 )
 
 router.delete(
-    "/:id/servicios/:tipo/:idServicio",
+    "/:idMedico/servicios/:tipo/:idServicio",
     validate(eliminarServicioSchema),
     controller.eliminarServicio
 )
 
 router.put(
-    "/:id/servicios/:tipo/:idServicio",
+    "/:idMedico/servicios/:tipo/:idServicio",
     validate(modificarServicioSchema),
     controller.modificarServicio
 )

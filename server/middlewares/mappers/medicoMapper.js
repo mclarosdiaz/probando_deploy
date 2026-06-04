@@ -33,11 +33,11 @@ class MedicoMapper{
             .map(especialidadMongo => 
                 this.especialidadMapper.mongoEspecialidadToDomain(especialidadMongo))
 
-        const practicas = data.practicas
-            .map(practicaMongo => 
-                this.practicaMapper.mongoPracticaToDomain(practicaMongo)
-            )
-
+       const practicas = await Promise.all(
+    data.practicas.map(practicaMongo => 
+        this.practicaMapper.mongoPracticaToDomain(practicaMongo)
+    )
+)
         const disponibilidades = data.disponibilidades ? 
             data.disponibilidades.map(disponibilidadMongo => 
             {
@@ -77,6 +77,33 @@ class MedicoMapper{
             disponibilidades: medico.disponibilidades
         }
     }
+    medicoToMongo(medico) {
+    return {
+        _id: medico.id,
+        usuario: medico.usuario.id,          // ← solo el ObjectId
+        matricula: medico.matricula,
+        nombre: medico.nombre,
+        especialidades: medico.especialidades.map(e => ({
+            id: e.id,
+            nombre: e.nombre,
+            duracionTurnoEnMins: e.duracionTurnoEnMins,
+            costo: e.costo
+        })),
+        practicas: medico.practicas.map(p => ({
+            id: p.id,
+            codigo: p.codigo,
+            nombre: p.nombre,
+            duracionTurnoEnMins: p.duracionTurnoEnMins,
+            costo: p.costo
+        })),
+        sedes: medico.sedes.map(s => s.id),  // ← solo los ObjectIds
+        disponibilidades: medico.disponibilidades?.map(d => ({
+            diaSemana: d.diaSemana,
+            horaDesde: d.horaDesde,
+            horaHasta: d.horaHasta
+        })) ?? []
+    }
+}
 }
 
 const usuarioRepository = new MongoUsuarioRepository()
