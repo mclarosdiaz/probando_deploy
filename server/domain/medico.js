@@ -81,7 +81,7 @@ export class Medico{
     }
 
     modificarServicio(servicioModificado, tipo) {
-        if (!this.puedeHacerServicio(servicioModificado.nombre)) {
+        if (!this.puedeHacerServicio(servicioModificado.id,tipo)) {
             throw new UnprocessableEntityError("El médico no realiza este servicio")
         }
 

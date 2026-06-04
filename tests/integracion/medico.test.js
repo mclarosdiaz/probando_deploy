@@ -90,18 +90,18 @@ describe("Medico API- Integracion", () => {
     //ELIMINAR SERVICIO
     test("Debería retornar 200 eliminando un servicio", async () => {
       const response = await request(app).delete(
-        `/medico/${medicoId}/eliminarServicio/${idServicio}`,
+        `/medico/${medicoId}/servicios/practica/${idServicio}`,
       );
 
       expect(response.status).toBe(200);
     });
   });
 
-  describe("PATCH /medicos/:id/modificarServicio", () => {
+  describe("PUT /medicos/:id/modificarServicio", () => {
     // MODIFICAR SERVICIO
     test("Debería retornar 200 modificando un servicio", async () => {
       const response = await request(app)
-        .patch(`/medico/${medicoId}/servicios`)
+        .put(`/medico/${medicoId}/servicios/especialidad/1235`)
         .send({
           id: "1235",
           nombre: "Diagnóstico",

@@ -95,11 +95,12 @@ export class MedicoController {
 
   eliminarServicio = async (req, res, next) => {
     try {
+      console.log("PARAMS:", req.params) 
       const { idMedico, tipo, idServicio } = req.params;
 
       const medicoActualizado = await this.medicoService.eliminarServicio({
         idMedico,
-        tipo,
+        tipoServicio: tipo,
         idServicio,
       });
       const medicoDTO = medicoMapper.medicoToDTO(medicoActualizado);
@@ -117,7 +118,7 @@ export class MedicoController {
     try {
       const medicoActualizado = await this.medicoService.modificarServicio({
         idMedico,
-        tipo,
+        tipoServicio: tipo,
         idServicio,
         servicioModificado,
       });
