@@ -6,13 +6,13 @@ const BotonesHome = () =>{
         <div>
             <ul className = "listaDeBotones">
                 <li className = "globoDeTexto">
-                    <u>¿Que buscas hoy?</u>
+                    ¿Que buscas hoy?
                 </li>
-                <li className = "botonesDeOpcion">
-                    <u>Buscar turnos nuevos</u>
+                <li>
+                    <button className = "boton">Buscar turnos nuevos</button>
                 </li>
-                <li className = "botonesDeOpcion">
-                    <u>Consultar historial de turnos</u>
+                <li>
+                    <button className = "boton">Consultar historial de turnos</button>
                 </li>
             </ul>
         </div>

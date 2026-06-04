@@ -11,8 +11,6 @@
     font-size: 24px;
     justify-content: space-around;
     background-color: white;
-    border: 5px solid black;
-    border-radius: 5px;
     padding: 15px;
 
 }
@@ -21,7 +19,29 @@
     font-size: 24px;
     color: white;
     justify-content: space-around;
-    background-color: #801813;
+    background-color: #418B18;
     border-radius: 5px;
     padding: 15px;
+
+}
+
+.boton{
+    font-size: 24px;
+    color: white;
+    justify-content: space-around;
+    background-color: #418B18;
+    border-radius: 5px;
+    padding: 15px;
+
+    border: none;           
+    outline: none;
+    cursor: pointer;
+    font-family: inherit;   
+    appearance: none;
+
+}
+
+.boton:hover {
+    background-color: #347013;
+    transition: background 0.3s ease;
 }

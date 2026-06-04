@@ -6,7 +6,7 @@
 }
 
 .navbar{ /*Esto aplica para cada elemento de navegacion*/
-    color: #801813;
+    color: #418B18;
     margin: 0 2rem;
     display: flex;
     align-items: center;
@@ -21,8 +21,10 @@
 }
 
 .menu-icon{
-    color: #801813;
+    color: #418B18;
     font-size: 1.5rem;
+    border: none;           
+    outline: none;
 }
 
 .logoHeader{
@@ -32,7 +34,9 @@
 }
 
 .user-icon{
-    color: #801813;
+    color: #418B18;
     font-size: 1.5rem;
+    border: none;           
+    outline: none;
 }
 
