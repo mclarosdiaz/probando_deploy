@@ -9,8 +9,17 @@ export class MongoNotificacionRepository{
         this.model = NotificacionModel
     }
 
+    
+
     async save(notificacion){
-        const nuevaNotificacion = new this.model(notificacion)
+        const nuevaNotificacion =
+            new this.model(
+                notificacionMapper
+                    .notificacionToMongo(
+                        notificacion
+                    )
+            )
+        
         const notificacionGuardada = await nuevaNotificacion.save()
         return notificacionMapper.mongoNotificacionToDomain(notificacionGuardada)
     }

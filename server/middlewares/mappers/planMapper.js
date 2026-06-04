@@ -11,7 +11,7 @@ class PlanMapper{
     }
     
     mongoPlanToDomain(data){
-        
+       
         const coberturaEspecialidad = data.coberturaEspecialidad ?
         data.coberturaEspecialidad.map(coberturaMongo => {
             return new CoberturaEspecialidad(
@@ -19,24 +19,25 @@ class PlanMapper{
                 coberturaMongo.nivel
             )
         }) 
-        :null
+        :[]
 
-        const coberturaPractica = data.coberturaPractica ?
-        data.coberturaPractica.map(coberturaMongo => {
+        const coberturaPractica = data.coberturasPractica ?
+        data.coberturasPractica.map(coberturaMongo => {
             return new CoberturaPractica(
                 this.practicaMapper.mongoPracticaToDomain(coberturaMongo.practica),
                 coberturaMongo.nivel,
                 coberturaMongo.porcentaje
             )
         }) 
-        :null
+        :[]
         
         const plan = new Plan(
-            data.id.toString(),
-            data.nombre.toString(),
+            data.nombre,
             coberturaEspecialidad,
             coberturaPractica
         )
+        plan.id = data._id
+
         return plan
     }
 

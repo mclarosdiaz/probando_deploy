@@ -34,15 +34,17 @@ export class TurnoController {
             const { motivo, idUsuario } = req.body
             
 
-            const {turno, notificacion} = await this.turnoService.cancelar({
+            const {turnoCancelado, notificacionGuardada} = await this.turnoService.cancelar({
                 id, 
                 motivo, 
                 idUsuario})
 
+
             const data = {
-                turno: turnoMapper.turnoToDTO(turno),
-                notificacion: notificacionMapper.notificacionToDTO(notificacion)
+                turno: turnoMapper.turnoToDTO(turnoCancelado),
+                notificacion: notificacionMapper.notificacionToDTO(notificacionGuardada)
             }
+
 
             res.status(200).json(data)
         } catch (error) {
@@ -71,7 +73,7 @@ export class TurnoController {
             })
 
             res.status(200).json({
-                turnos: turnos.map(turno => turnoMapper.turnoToDTO(turno)),
+                data: turnos.map(turno => turnoMapper.turnoToDTO(turno)),
                 paginacion: {
                     page,
                     limit,
@@ -89,7 +91,7 @@ export class TurnoController {
 
     buscarTurnosDisponibles = async(req, res, next) =>{
         try{
-            const{ idPaciente } = req.params
+            const{ idPaciente } = req.body
 
             const{ page, limit } = req.query;
 
@@ -178,14 +180,14 @@ export class TurnoController {
             const { id } = req.params
             const { idUsuario , nuevaFecha } = req.body
             
-            const {turno, notificacion} = await this.turnoService.modificarFechaTurno({ 
+            const {turnoGuardado, notificacionGuardada} = await this.turnoService.modificarFechaTurno({ 
                 id, 
                 idUsuario, 
                 fecha: nuevaFecha })
 
             const data = {
-                turno: turnoMapper.turnoToDTO(turno),
-                notificacion: notificacionMapper.notificacionToDTO(notificacion)
+                turno: turnoMapper.turnoToDTO(turnoGuardado),
+                notificacion: notificacionMapper.notificacionToDTO(notificacionGuardada)
             }
 
             res.status(200).json(data)

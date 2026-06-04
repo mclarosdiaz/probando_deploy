@@ -8,13 +8,11 @@ import { usuarioMapper } from "./usuarioMapper.js"
 class CambioEstadoTurnoMapper{
     constructor(turnoRepository, usuarioRepository, usuarioMapper)
     {
-        this.turnoRepository = turnoRepository
         this.usuarioRepository = usuarioRepository
         this.usuarioMapper = usuarioMapper
     }
-    async mongoCambioEstadoTurnoToDomain(data){
+    async mongoCambioEstadoTurnoToDomain(data, turno){
         const usuario = await this.usuarioRepository.findById(data.usuario)
-        const turno = await this.turnoRepository.findById(data.turno)
         const cambioEstadoTurno = new CambioEstadoTurno(
             data.fechaHoraIngreso,
             data.estado,
@@ -32,6 +30,15 @@ class CambioEstadoTurnoMapper{
             turno : cambio.turno.id,
             usuario : cambio.usuario.nombre,
             motivo : cambio.motivo
+        }
+    }
+
+    cambioEstadoTurnoToMongo(cambio){
+        return{
+            fechaHoraIngreso: cambio.fechaHoraIngreso,
+            estado: cambio.estado,
+            usuario: cambio.usuario.id,
+            motivo: cambio.motivo
         }
     }
 }

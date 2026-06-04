@@ -32,7 +32,7 @@ export class TurnoService{
 
         const notificacionReservado = factoryNotificacion.crearSegunEstadoTurno(turnoSinReservar)
 
-        const {turno, notificacion} = await Promise.all([
+        const [turno, notificacion] = await Promise.all([
                 this.turnoRepository.save(turnoSinReservar),
                 this.notificacionRepository.save(notificacionReservado)
         ])
@@ -62,13 +62,16 @@ export class TurnoService{
         
         const notificacionCancelado = factoryNotificacion.crearSegunEstadoTurno(turno)
 
-        const [turnoGuardado, notificacionGuardada] =
+
+        const [turnoCancelado, notificacionGuardada] =
             await Promise.all([
                 this.turnoRepository.save(turno),
                 this.notificacionRepository.save(notificacionCancelado)
         ])
 
-        return {turnoGuardado, notificacionGuardada}
+        console.log(turnoCancelado)
+
+        return {turnoCancelado, notificacionGuardada}
     }
 
     async confirmar({id,idUsuario})
@@ -129,10 +132,10 @@ export class TurnoService{
         
         const turnosConCobertura = turnos.map(
             (turno) => {
-                const servicio = turno.practica || turno.especialidad
+                const servicio = turno.servicio
                 const cobertura = 
-                    plan.obtenerCoberturaPractica(servicio)
-                    || plan.obtenerCoberturaEspecialidad(servicio) 
+                     plan.obtenerCoberturaPractica(servicio) ?? 
+                        plan.obtenerCoberturaEspecialidad(servicio)
                     
                     let costoFinal = servicio?.costo || 0
 
@@ -141,10 +144,10 @@ export class TurnoService{
                     } else if (cobertura?.nivel === "PARCIAL") {
                         costoFinal = costoFinal - (costoFinal * (cobertura.porcentaje / 100))
                     }
-                    
+               
                 return{
                     turno: turnoMapper.turnoToDTO(turno),
-                    nivelCobertura: cobertura.nivel,
+                    cobertura: cobertura?.nivel,
                     costo: costoFinal
                 }
             }
@@ -200,9 +203,9 @@ export class TurnoService{
 
         const medicos = await this.medicoRepository.findAll()
 
-        const todosLosNuevosTurnos = medicos.flatMap(medico =>
-            this.generarTurnosParaMedico(medico)
-        )
+        const todosLosNuevosTurnos = (
+        await Promise.all(medicos.map(medico => this.generarTurnosParaMedico(medico)))
+        ).flat()
 
         const turnosGuardados = await this.turnoRepository.saveAll(todosLosNuevosTurnos)
 
@@ -243,8 +246,8 @@ export class TurnoService{
 
         await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) 
         
-        const nuevosTurnosPosibles = this.generarTurnosParaMedico(medico)
-            .filter(nuevoTurno => this.validarDisponibilidad(nuevoTurno, nuevoTurno.fechaHora))
+        const nuevosTurnosPosibles = (await this.generarTurnosParaMedico(medico))
+        .filter(nuevoTurno => this.validarDisponibilidad(nuevoTurno, nuevoTurno.fechaHora))
 
         const turnosGuardados = await this.turnoRepository.saveAll(nuevosTurnosPosibles) 
 

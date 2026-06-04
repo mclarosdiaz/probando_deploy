@@ -36,6 +36,16 @@ const turnoService = new TurnoService(turnoRepository,
     
 const controller = new TurnoController(turnoService)
 
+router.post(
+    "/disponibles/busqueda", 
+    validate(busquedaDeTurnosDisponiblesSchema),
+    controller.buscarTurnosDisponibles
+)
+router.post(
+    "/disponibilidad",
+    validate(generarTurnosDisponiblesSchema),
+    controller.generarTurnosDisponibles
+)
 router.patch(
     "/:id/reservar",
     validate(reservarTurnoSchema),
@@ -61,22 +71,12 @@ router.patch(
 )
 
 router.post(
-    "/disponibilidad",
-    validate(generarTurnosDisponiblesSchema),
-    controller.generarTurnosDisponibles
-)
-
-router.post(
     "/:id/modificacionFecha",
     validate(modificarFechaTurnoSchema),
     controller.modificarFechaTurno
 )
 
-router.post(
-    "/disponibles/busqueda", 
-    validate(busquedaDeTurnosDisponiblesSchema),
-    controller.buscarTurnosDisponibles
-)
+
 
 
 export default router

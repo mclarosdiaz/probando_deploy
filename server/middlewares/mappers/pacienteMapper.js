@@ -1,13 +1,15 @@
 import { Paciente } from "../../domain/paciente"
 import { ObraSocial } from "../../domain/obraSocial.js"
 import { MongoUsuarioRepository } from "../../repositories/usuarioRepository.js"
+import { MongoPlanRepository } from "../../repositories/planRepository.js"
 import { planMapper } from "./planMapper.js"
 import { usuarioMapper } from "./usuarioMapper.js"
 
 class PacienteMapper{
-    constructor(usuarioRepository, usuarioMapper, planMapper){
+    constructor(usuarioRepository, usuarioMapper, planMapper,planRepository){
         this.usuarioRepository = usuarioRepository
-        this.usuarioMapper = usuarioMapper
+        this.usuarioMapper = usuarioMapper,
+        this.planRepository = planRepository
         this.planMapper = planMapper
     }
 
@@ -15,10 +17,11 @@ class PacienteMapper{
         const usuario = await this.usuarioRepository.findById(data.usuario)
 
         const planesObraSocial = data.obraSocial?.planes ? 
-            await Promise.all(data.obraSocial.planes.map(async (mongoPlan) => {
-                return await this.planMapper.mongoPlanToDomain(mongoPlan)
+            await Promise.all(data.obraSocial.planes.map(plan => {
+                return this.planRepository.findById(plan)
             })) 
             : []
+
 
         const obraSocial = new ObraSocial(
             data.obraSocial.id,
@@ -26,7 +29,7 @@ class PacienteMapper{
             planesObraSocial
         )
 
-        const plan = await this.planMapper.mongoPlanToDomain(data.plan)
+        const plan = await this.planRepository.findById(data.plan)
 
         const paciente = new Paciente(
             usuario,
@@ -52,5 +55,5 @@ class PacienteMapper{
     }
 }
 const usuarioRepository = new MongoUsuarioRepository()
-
-export const pacienteMapper = new PacienteMapper(usuarioRepository, usuarioMapper, planMapper)
+const planRepository = new MongoPlanRepository()
+export const pacienteMapper = new PacienteMapper(usuarioRepository, usuarioMapper, planMapper, planRepository)

@@ -202,21 +202,24 @@ const medico = await MedicoModel.create({
 
         paciente: paciente._id,
 
-        fechaHora: new Date("2026-06-01T10:00:00"),
+        fechaHora: new Date("2026-06-14T10:00:00"),
 
         sede: sede._id,
 
-        practica: {
-            id : "1236",
-            codigo: "ECG001",
-            nombre: "Electrocardiograma",
-            duracionTurnoEnMins: 20,
-            costo: 12000
+        servicio: {
+            tipo: "PRACTICA",
+            practica:{
+                id: "1236",
+                codigo: "ECG001",
+                nombre: "Electrocardiograma",
+                duracionTurnoEnMins: 20,
+                costo: 12000
+            }
         },
 
         estado: "RESERVADO",
 
-        historialEstado: [
+        historialEstados: [
             {
                 fechaHoraIngreso: new Date("2026-05-20T09:00:00"),
                 estado: "DISPONIBLE",
@@ -224,7 +227,7 @@ const medico = await MedicoModel.create({
                 motivo: "Creación del turno disponible"
             },
             {
-                fechaHoraIngreso: new Date("2026-05-28T14:30:00"),
+                fechaHoraIngreso: new Date("2026-06-10T14:30:00"),
                 estado: "RESERVADO",
                 usuario: usuarioPaciente._id,
                 motivo: "Reserva realizada por el paciente"
@@ -234,6 +237,42 @@ const medico = await MedicoModel.create({
         costo: 12000
     })
     
+    const turnoSinReservarId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439021")
+
+    const turnoSinReservar = await TurnoModel.create({
+        _id: turnoSinReservarId,
+
+        medico: medico._id,
+
+        fechaHora: new Date("2026-06-10T10:00:00"),
+
+        sede: sede._id,
+
+        servicio:{
+            tipo: "PRACTICA",
+            practica: {
+                id: "1236",
+                codigo: "ECG001",
+                nombre: "Electrocardiograma",
+                duracionTurnoEnMins: 20,
+                costo: 12000
+            },   
+        },
+
+        estado: "DISPONIBLE",
+
+        historialEstados: [
+            {
+                fechaHoraIngreso: new Date("2026-05-20T09:00:00"),
+                estado: "DISPONIBLE",
+                usuario: usuarioMedico._id,
+                motivo: "Creación del turno disponible"
+            }
+        ],
+
+        costo: 12000
+    })
+
     //Notificacion
     const notificacionId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439016")
 

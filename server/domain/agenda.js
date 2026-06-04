@@ -1,7 +1,4 @@
-import { Medico } from "./medico.js";
 import { Turno } from "./turno.js";
-import { Practica } from "./practica.js";
-import { Especialidad } from "./especialidad.js";
 import { EstadoTurno } from "./estadoTurno.js";
 import { horaAMinutos, fechaDesdeDisponibilidad } from "./fecha.js";
 
@@ -11,9 +8,7 @@ class Agenda {
         if (!medico) {
             throw new Error("medico undefined en agenda")
         }
-        if (!medico.puedeHacerServicio(servicio)) {
-            throw new Error("El médico no realiza esta especialidad");
-        }
+      
 
         const turnos = []
 
@@ -38,13 +33,17 @@ class Agenda {
                     )
 
                     medico.sedes.forEach(sede => {
-                        turnos.push(new Turno(
+                        const turno = new Turno(
                             medico,
                             fecha,
                             sede,
                             EstadoTurno.DISPONIBLE,
                             servicio.costo
-                        ))
+                        ) 
+                        
+                        turno.asignarServicio(servicio)
+                        turnos.push(turno)
+    
                     })
                 }
             }

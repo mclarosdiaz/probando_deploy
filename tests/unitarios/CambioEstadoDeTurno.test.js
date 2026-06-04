@@ -145,7 +145,7 @@ describe("CambioEstadoTurno", () => {
 
             expect(cambioEstadoTurno.fechaHoraIngreso).toBe(fechaDeHoy)
             expect(cambioEstadoTurno.estado).toBe(EstadoTurno.RESERVADO)
-            expect(cambioEstadoTurno.turno).toBe(turno)
+            expect(cambioEstadoTurno.turnoId).toBe(turno.id)
             expect(cambioEstadoTurno.usuario).toBe(usuario2)
             expect(cambioEstadoTurno.motivo).toBe(motivo)
             
@@ -153,7 +153,7 @@ describe("CambioEstadoTurno", () => {
             expect(cambioEstadoTurno).toMatchObject({
                 fechaHoraIngreso: fechaDeHoy, 
                 estado: EstadoTurno.RESERVADO,
-                turno: turno,
+                turno: turno.id,
                 usuario: usuario2,
                 motivo: motivo
                 

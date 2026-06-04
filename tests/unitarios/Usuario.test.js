@@ -115,7 +115,7 @@ describe("Agenda", () =>{
                 "DISPONIBLE",
                 5000
             )
-            const turnos = agenda.generarTurnosPara(revision, medico) // IDEA GPT
+            const turnos = agenda.generarTurnosPara("practica", medico) // IDEA GPT
             
             expect(turnos).toEqual(
                 expect.arrayContaining([

@@ -51,6 +51,10 @@ export class Turno {
     asignarEspecialidad(especialidad){
         this.servicio = especialidad
     }
+
+    asignarServicio(servicio){
+        this.servicio = servicio
+    }
     
 
     puedeModificar(usuarioId){
@@ -98,7 +102,7 @@ export class Turno {
         }
 
         const ahora = new Date()
-        const fechaTurno = this.fecha
+        const fechaTurno = this.fechaHora
 
         const diferenciaMs = fechaTurno - ahora
         const unaHoraMs = 60 * 60 * 1000
@@ -155,6 +159,6 @@ export class Turno {
         return (this.fechaHora - fecha) >= 3600000 //una hora en milisegundos
     }
     getServicio(){
-    return this.practica || this.especialidad
+        return this.servicio
     }
 }

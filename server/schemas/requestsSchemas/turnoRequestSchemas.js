@@ -20,9 +20,10 @@ export const cancelarTurnoRequestSchema = z.object({
 })
 
 export const obtenerHistorialTurnosSchema = z.object({
+    params: z.object({
+        pacienteId: z.string()
+    }), 
     query: z.object({
-        pacienteId: z.string(),
-
         estado: z.enum(["RESERVADO", "CONFIRMADO", "CANCELADO", "REALIZADO"]).optional(),
 
         fechaDesde: z.string().datetime().optional()

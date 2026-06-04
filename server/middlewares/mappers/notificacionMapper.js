@@ -27,12 +27,33 @@ class NotificacionMapper{
     return notificacion
 }
 
-    notificacionToDto(notificacion){
+    notificacionToDTO(notificacion){
         return{
             id: notificacion.id,
             destinatario : notificacion.destinatario.nombre,
             remitente : notificacion.remitente.nombre,
             mensaje : notificacion.mensaje,
+            leida: notificacion.leida
+        }
+    }
+
+    notificacionToMongo(notificacion) {
+        return {
+            destinatario:
+                notificacion.destinatario.id,
+
+            remitente:
+                notificacion.remitente.id,
+
+            mensaje:
+                notificacion.mensaje,
+
+            fechaHoraCreacion:
+                notificacion.fechaHoraCreacion,
+
+            fechaHoraLeida:
+                notificacion.fechaHoraLeida,
+
             leida: notificacion.leida
         }
     }

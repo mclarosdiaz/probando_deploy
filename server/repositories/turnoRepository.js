@@ -4,7 +4,7 @@ import {
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
-
+import { Mongoose } from "mongoose";
 
 export class MongoTurnoRepository {
 
@@ -18,12 +18,12 @@ export class MongoTurnoRepository {
         if (turno.id) {
             updated = await this.model.findOneAndUpdate(
                 { _id: turno.id },
-                turno,
+                turnoMapper.turnoToMongo(turno),
                 { returnDocument: 'after' }
             )
         } else {
             updated = await this.model.create(turno)
-        }
+        }        
 
         const mongoTurno = await this.model.findById(updated._id)
 
@@ -63,7 +63,8 @@ export class MongoTurnoRepository {
         const query = {}
 
         if (filtros.pacienteId) {
-            query.paciente = filtros.pacienteId
+            //query.paciente = filtros.pacienteId
+            query.paciente = new mongoose.Types.ObjectId(filtros.pacienteId)
         }
 
         if (filtros.estado) {
@@ -71,9 +72,9 @@ export class MongoTurnoRepository {
         }
 
         if (filtros.fechaDesde || filtros.fechaHasta) {
-            query.fecha = {}
-            if (filtros.fechaDesde) query.fecha.$gte = filtros.fechaDesde
-            if (filtros.fechaHasta) query.fecha.$lte = filtros.fechaHasta
+            query.fechaHora = {}
+            if (filtros.fechaDesde) query.fechaHora.$gte = new Date(filtros.fechaDesde)
+            if (filtros.fechaHasta) query.fechaHora.$lte = new Date(filtros.fechaHasta)
         }
 
         const offset = (page - 1) * limit
@@ -123,7 +124,7 @@ export class MongoTurnoRepository {
             query._id = { $ne: excluirTurnoId}
         }
 
-        const existe = this.model.exists(query)
+        const existe = await this.model.exists(query)
 
         return Boolean(existe)
 

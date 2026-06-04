@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { validate } from "../middlewares/validate.js";
 import { TurnoController } from "../controllers/turnoController.js";
 import { TurnoService } from "../services/turnoService.js";
 import { MongoTurnoRepository } from "../repositories/turnoRepository.js";
@@ -7,7 +8,7 @@ import { MongoMedicoRepository } from "../repositories/medicoRepository.js";
 import { MongoNotificacionRepository } from "../repositories/notificacionRepository.js"
 import { MongoSedeRepository } from "../repositories/sedeRepository.js";
 import { MongoUsuarioRepository } from "../repositories/usuarioRepository.js";
-
+import { obtenerHistorialTurnosSchema } from "../schemas/requestsSchemas/turnoRequestSchemas.js";
 const router = Router()
 
 const turnoRepository = new MongoTurnoRepository()
@@ -29,6 +30,7 @@ const controller = new TurnoController(turnoService)
 
 router.get(
     "/:pacienteId/turnos",
+    validate(obtenerHistorialTurnosSchema),
     controller.obtenerHistorialTurnos)
 
 export default router
