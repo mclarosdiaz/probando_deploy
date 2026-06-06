@@ -1,4 +1,4 @@
-const historialTurnos =[
+export const historialTurnos =[
     {
         id: 1234,
         fechaHora: "10/06/2025",

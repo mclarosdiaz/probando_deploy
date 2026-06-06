@@ -17,7 +17,7 @@
 .navbar-seccion{
     display: flex;
     align-items: center;
-    /*width: 100%;  Asegura que la sección ocupe el ancho disponible para poder centrar */
+   /* width: 100%;  /*Asegura que la sección ocupe el ancho disponible para poder centrar */
 }
 
 .menu-icon{

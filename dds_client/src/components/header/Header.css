@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+
 .header{
     text-align: center;
     color: whitesmoke;
     background-color: rgba(65,139,24,1.000);
+    font-family: "Sour Gummy", sans-serif;
 }

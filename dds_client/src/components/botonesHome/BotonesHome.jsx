@@ -1,5 +1,7 @@
 import './BotonesHome.css'
 import { IoSearchSharp } from "react-icons/io5";
+import { LuCalendarClock } from "react-icons/lu";
+import { Link } from 'react-router-dom';
 
 const BotonesHome = () =>{
     return (
@@ -7,19 +9,22 @@ const BotonesHome = () =>{
         <div>
             <ul className="listaDeBotones">
                 <li className="globoDeTexto">
-                     ¿Que buscas hoy?
+                     ¿Qué buscas hoy?
                 </li>
                 <li>
                     <button className="boton">
-                        {/* Reemplazá el span por tu <img src="..." /> cuando tengas el logo */}
+                       <Link to ={'/busquedaDeTurnos'} className = "link-boton"> 
                         <span className="icono-btn"><IoSearchSharp /></span> 
                          Buscar turnos nuevos
+                       </Link> 
                   </button>
                 </li>
                 <li>
                   <button className="boton">
-                      <span className="icono-btn">📅</span> 
+                     <Link to = {'/historialDeTurnos'} className = "link-boton">
+                      <span className="icono-btn"><LuCalendarClock /></span> 
                       Consultar historial de turnos
+                      </Link>
                   </button>
                 </li>
             </ul>

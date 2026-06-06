@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
 .listaDeBotones{
     display: flex;
     align-items: center;
@@ -10,9 +12,9 @@
 .globoDeTexto{
     font-size: 24px;
     justify-content: space-around;
+    font-family: "Sour Gummy", sans-serif;   
     background-color: white;
     padding: 15px;
-
 }
 
 .botonesDeOpcion{
@@ -25,7 +27,16 @@
 
 }
 
+.link-boton{
+    display: flex;
+    color: white;
+    text-decoration: none;
+    gap: 15px;
+    
+}
+
 .boton {
+    display: flex;
     font-weight: 600; /* Texto un poco más "gordito" */
     font-size: 20px;
     color: white;
@@ -34,13 +45,14 @@
     background-color: #418B18;
     border-radius: 5px;
     padding: 15px;
+    gap: 15px;
 
+    
     border: none;           
     outline: none;
     cursor: pointer;
-    font-family: inherit;   
+    font-family: "Sour Gummy", sans-serif;   
     appearance: none;
-
 }
 
 .boton:hover {
