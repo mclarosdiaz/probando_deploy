@@ -53,6 +53,7 @@ describe("Turno API- Integracion", () => {
             throw error
         }
     })
+    
     beforeEach(async () => {
 
         await seedTestData()

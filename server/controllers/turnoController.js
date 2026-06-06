@@ -3,7 +3,6 @@ import { BadRequestError } from "../errors/appError.js"
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js"
 import { notificacionMapper} from "../middlewares/mappers/notificacionMapper.js"
 
-//TODO Implementar Generación de Turnos de forma Asíncrona
 export class TurnoController {
     constructor(turnoService  =  new TurnoService()){
         this.turnoService = turnoService

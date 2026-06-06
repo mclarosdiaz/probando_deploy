@@ -4,7 +4,7 @@ import {
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
 import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
-import { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 
 export class MongoTurnoRepository {
 
