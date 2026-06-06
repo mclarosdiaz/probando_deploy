@@ -1,18 +1,12 @@
 import { buildTestApp } from "../utils/buildApp.js"
 import { seedTestData } from "../../scripts/seedTestData.js"
-import { MongoTurnoRepository } from "../../server/repositories/turnoRepository.js"
-import { MongoMedicoRepository } from "../../server/repositories/medicoRepository.js"
-import { MongoPacienteRepository } from "../../server/repositories/pacienteRepository.js"
 import {
     describe,
-    beforeAll,
     beforeEach,
-    afterAll,
     test,
     expect
 } from "@jest/globals"
 import request from "supertest"
-import mongoose from "mongoose"
 import dotenv from "dotenv"
 dotenv.config()
 
@@ -20,65 +14,34 @@ dotenv.config()
 
 describe("Turno API- Integracion", () => {
 
-
     let app
-    const turnoRepository = new MongoTurnoRepository()
-    const pacienteRepository = new MongoPacienteRepository()
-    const medicoRepository = new MongoMedicoRepository()
-
-    const medicoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439011")
-    const turnoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439012")
-    const turnoSinReservarId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439021")
-    const pacienteId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439013")
-    const idUsuarioMedico = new mongoose.Types.ObjectId("507f1f77bcf86cd799439014")
-    const idUsuarioPaciente = new mongoose.Types.ObjectId("507f1f77bcf86cd799439015")
-
-
-    beforeAll(async () => {
-        try {
-
-            await mongoose.connect(
-                `${process.env.MONGODB_URI}/${process.env.MONGODB_NAME}`,
-                {
-                    serverSelectionTimeoutMS: 3000
-                }
-            )
-
-            console.log("Conectado a Mongo")
-
-        } catch (error) {
-
-            console.error(error)
-
-            throw error
-        }
-    })
+    let seed
     
     beforeEach(async () => {
-
-        await seedTestData()
-        app = buildTestApp({ turnoRepository, pacienteRepository, medicoRepository })
-
+        app = buildTestApp()
+        seed = await seedTestData()
     })
 
-    afterAll(async () => {
-        // await mongoose.disconnect()
-    })
 
     describe("PATCH /turnos/:id/reservar", () => {
         test(`debería reservar un turno correctamente`, async () => {
+            const turnoSinReservar = seed.turnoSinReservar 
+            const paciente = seed.paciente
+
             const response = await request(app)
-                .patch(`/turnos/${turnoSinReservarId}/reservar`)
+                .patch(`/turnos/${turnoSinReservar._id}/reservar`)
                 .send({
-                    pacienteId: pacienteId.toString()
+                    pacienteId: paciente._id.toString()
                 })
 
             expect(response.status).toBe(200)
         })
 
         test("debería fallar si falta el id de paciente", async () => {
+            const turnoSinReservar = seed.turnoSinReservar
+            
             const response = await request(app)
-                .patch(`/turnos/${turnoSinReservarId}/reservar`)
+                .patch(`/turnos/${turnoSinReservar._id}/reservar`)
                 .send({})
 
 
@@ -90,8 +53,10 @@ describe("Turno API- Integracion", () => {
     describe("GET /paciente/:pacienteId/turnos", () => {
 
         test("debería aceptar una query válida", async () => {
+            const paciente = seed.paciente
+            
             const response = await request(app)
-                .get(`/paciente/${pacienteId}/turnos`)
+                .get(`/paciente/${paciente._id}/turnos`)
                 .query({
                     
                     estado: "CONFIRMADO",
@@ -105,8 +70,10 @@ describe("Turno API- Integracion", () => {
         })
 
         test("debería fallar si estado no pertenece al enum", async () => {
+            const paciente = seed.paciente
+
             const response = await request(app)
-                .get(`/paciente/${pacienteId}/turnos`)
+                .get(`/paciente/${paciente._id}/turnos`)
                 .query({
                     estado: "PENDIENTE"
                 })
@@ -118,9 +85,10 @@ describe("Turno API- Integracion", () => {
 
 
         test("debe retornar el historial de turnos", async () => {
+            const paciente = seed.paciente
 
             const response = await request(app)
-                .get(`/paciente/${pacienteId}/turnos`)
+                .get(`/paciente/${paciente._id}/turnos`)
                 .query({
                     estado: "RESERVADO",
                     fechaDesde: new Date().toISOString(),
@@ -142,13 +110,15 @@ describe("Turno API- Integracion", () => {
 
     describe("POST /turnos/123/cancelar", () => {
         test("deberia cancelar un turno correctamente", async () => {
+            const turnoReservado = seed.turno
+            const usuarioPaciente = seed.usuarioPaciente
+
             const response = await request(app)
-                .post(`/turnos/${turnoId}/cancelar`)
+                .post(`/turnos/${turnoReservado._id}/cancelar`)
                 .send({
                     motivo: "No puedo asistir",
-                    idUsuario: idUsuarioPaciente.toString()
+                    idUsuario: usuarioPaciente._id.toString()
                 })
-            //console.log(response.body)
 
             expect(response.status).toBe(200)
         })
@@ -167,10 +137,13 @@ describe("Turno API- Integracion", () => {
 
     describe("PATCH /turnos/:id/modificarFecha", () => {
         test("deberia modificar la fecha de un query valida", async () => {
+            const turnoReservado = seed.turno
+            const usuarioPaciente = seed.usuarioPaciente
+
             const response = await request(app)
-                .post(`/turnos/${turnoId}/modificacionFecha`)
+                .post(`/turnos/${turnoReservado._id}/modificacionFecha`)
                 .send({
-                    idUsuario: idUsuarioPaciente.toString(),
+                    idUsuario: usuarioPaciente._id.toString(),
                     nuevaFecha: new Date("2026-06-24T18:00:00.000Z")
                 })
 
@@ -180,10 +153,13 @@ describe("Turno API- Integracion", () => {
 
     describe("PATCH /turnos/:id/realizado", () => {
         test("deberia marcar como realizada una query valida", async () => {
+            const turnoReservado = seed.turno
+            const usuarioMedico = seed.usuarioMedico
+
             const response = await request(app)
-                .patch(`/turnos/${turnoId}/realizado`)
+                .patch(`/turnos/${turnoReservado._id}/realizado`)
                 .send({
-                    idUsuario: idUsuarioMedico.toString()
+                    idUsuario: usuarioMedico._id.toString()
                 })
 
 
@@ -192,13 +168,17 @@ describe("Turno API- Integracion", () => {
     })
 
     describe("POST /disponibles/busqueda", () => {
+
         test("debería retornar los turnos con la cobertura calculada correctamente", async () => {
+            const paciente = seed.paciente
+            const medico = seed.medico
+            
             const response = await request(app)
                 .post(`/turnos/disponibles/busqueda`)
                 .query({ page: 1, limit: 10 })
                 .send({
-                    idPaciente: pacienteId.toString(),
-                    idMedico: medicoId.toString(),
+                    idPaciente: paciente._id.toString(),
+                    idMedico: medico._id.toString(),
                     idPractica: "1236"
                 })
 
@@ -209,6 +189,5 @@ describe("Turno API- Integracion", () => {
             expect(response.body.turnosConCobertura[0].costo).toBe(0);
         })
     })
-    //fallas
 
 })

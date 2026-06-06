@@ -1,8 +1,5 @@
 // scripts/seedTestData.js
 
-import mongoose from "mongoose"
-import dotenv from "dotenv"
-
 import { UsuarioModel } from "../server/schemas/DBSchemas/usuarioSchema.js"
 import { MedicoModel } from "../server/schemas/DBSchemas/medicoSchema.js"
 import { PacienteModel } from "../server/schemas/DBSchemas/pacienteSchema.js"
@@ -11,35 +8,18 @@ import { TurnoModel } from "../server/schemas/DBSchemas/turnoSchema.js"
 import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js"
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js"
 import { NotificacionModel } from "../server/schemas/DBSchemas/notificacionSchema.js"
-dotenv.config()
+
 
 export async function seedTestData() {
     
-    // limpiar
-    await Promise.all([
-        UsuarioModel.deleteMany({}),
-        MedicoModel.deleteMany({}),
-        PacienteModel.deleteMany({}),
-        SedeModel.deleteMany({}),
-        TurnoModel.deleteMany({}),
-        ObraSocialModel.deleteMany({}),
-        PlanModel.deleteMany({}),
-        NotificacionModel.deleteMany({})
-    ])
 
     // usuarios
-
-    const idUsuarioMedico = new mongoose.Types.ObjectId("507f1f77bcf86cd799439014")
-    const idUsuarioPaciente = new mongoose.Types.ObjectId("507f1f77bcf86cd799439015")
-
     const usuarioMedico = await UsuarioModel.create({
-        _id: idUsuarioMedico,
         nombre: "Gregory_House",
         password: "1234"
     })
 
     const usuarioPaciente = await UsuarioModel.create({
-        _id: idUsuarioPaciente,
         nombre: "Juan_Perez",
         password: "1234",
     })
@@ -51,10 +31,8 @@ export async function seedTestData() {
     })
 
     // medico
-const medicoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439011")
 
 const medico = await MedicoModel.create({
-    _id: medicoId,
 
     usuario: usuarioMedico._id,
 
@@ -177,9 +155,7 @@ const medico = await MedicoModel.create({
 
     // PACIENTE
 
-    const pacienteId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439013")
     const paciente = await PacienteModel.create({
-        _id: pacienteId,
         
         usuario: usuarioPaciente._id,
 
@@ -193,10 +169,8 @@ const medico = await MedicoModel.create({
     })
 
     // turnos
-    const turnoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439012")
-
+   
     const turno = await TurnoModel.create({
-        _id: turnoId,
 
         medico: medico._id,
 
@@ -237,11 +211,9 @@ const medico = await MedicoModel.create({
         costo: 12000
     })
     
-    const turnoSinReservarId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439021")
-
+   
     const turnoSinReservar = await TurnoModel.create({
-        _id: turnoSinReservarId,
-
+   
         medico: medico._id,
 
         fechaHora: new Date("2026-06-10T10:00:00"),
@@ -274,14 +246,12 @@ const medico = await MedicoModel.create({
     })
 
     //Notificacion
-    const notificacionId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439016")
-
+ 
     const notificacion = await NotificacionModel.create({
-        _id : notificacionId,
         
-        destinatario: idUsuarioPaciente,
+        destinatario: usuarioPaciente._id,
 
-        remitente: idUsuarioPaciente,
+        remitente: usuarioPaciente._id,
 
         mensaje: "HOLA",
 
@@ -291,5 +261,17 @@ const medico = await MedicoModel.create({
 
     })
 
+    return {
+        usuarioMedico,
+        usuarioPaciente,
+        medico,
+        paciente,
+        sede,
+        plan,
+        obraSocial,
+        turno,
+        turnoSinReservar,
+        notificacion
+    }
     
 }
