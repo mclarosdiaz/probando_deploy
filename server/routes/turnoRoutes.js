@@ -36,6 +36,8 @@ const turnoService = new TurnoService(turnoRepository,
     
 const controller = new TurnoController(turnoService)
 
+//TODO Comenzar a usar asyncHandler
+
 router.post(
     "/disponibles/busqueda", 
     validate(busquedaDeTurnosDisponiblesSchema),

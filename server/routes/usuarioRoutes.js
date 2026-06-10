@@ -15,6 +15,7 @@ const notificacionRepository = new MongoNotificacionRepository()
 const notificacionService = new NotificacionService(notificacionRepository)
 const controller = new NotificacionController(notificacionService)
 
+//TODO Comenzar a usar asyncHandler
 
 router.get(
     "/:idUsuario/notificaciones",

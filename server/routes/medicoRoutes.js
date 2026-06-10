@@ -22,6 +22,7 @@ const turnoService = new TurnoService(turnoRepository)
 const service = new MedicoService(medicoRepository, turnoService)
 const controller = new MedicoController(service)
 
+//TODO Comenzar a usar asyncHandler
 
 router.get(
     "/:id/disponibilidades",
