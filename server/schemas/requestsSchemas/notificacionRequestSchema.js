@@ -1,15 +1,16 @@
 import { z } from "zod";
 
-export const mostrarNoLeidasSchema = z.object({
+export const mostrarNotificacionesSchema = z.object({
     params: z.object({
-        idUsuario: z.string()
+        idUsuario: z.string(),
+    }),
+    query: z.object({
+        leidas: z.enum(["true", "false"])
+            .transform(value => value === "true")
+            .optional()
     })
 })
-export const mostrarLeidasSchema = z.object({
-    params: z.object({
-        idUsuario: z.string()
-    })
-})
+
 export const marcarComoLeidaSchema = z.object({
     params: z.object({
         idUsuario: z.string(),

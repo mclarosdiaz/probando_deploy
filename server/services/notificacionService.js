@@ -1,56 +1,37 @@
-import { Turno } from "../domain/turno.js";
-import { Usuario } from "../domain/usuario.js";
-import { Notificacion } from "../domain/notificacion.js";
-import { MongoTurnoRepository } from "../repositories/turnoRepository.js";
-import { MongoPacienteRepository } from "../repositories/pacienteRepository.js"
-import { MongoMedicoRepository } from "../repositories/medicoRepository.js"
-import { 
-    BadRequestError, 
-    PacienteNotFoundError,
-    NotAllowedError, 
-    TurnoNotFoundError, 
-    MedicoNotFoundError, 
-    ConflictError, 
-    UnprocessableEntityError
-} from "../errors/appError.js";
-import { domainMapper } from "../middlewares/domainMapper.js";
-import { dtoMapper } from "../middlewares/dtoMapper.js";
+import { NotAllowedError } from "../errors/appError.js";
 
-export class NotificacionService{
-    constructor( notificacionesRepository){
-        this.notificacionesRepository = notificacionesRepository
+export class NotificacionService {
+  constructor(notificacionesRepository) {
+    this.notificacionesRepository = notificacionesRepository;
+  }
+
+  async mostrarNotificaciones({ idUsuario, leidas }) {
+    let leida;
+
+    if (leidas === undefined) {
+      leida = undefined;
+    } else {
+      leida = leidas === "true";
     }
-    async mostrarNoLeidas({idUsuario}){
-        
-        const mongoNotificaciones = await this.notificacionesRepository.obtenerNotificacionesDestinatario({idRemitente: idUsuario, leida: false})
-        const notificaciones = mongoNotificaciones.map(mongoNotificacion => domainMapper.mongoNotificacionesToDomain(mongoNotificacion)) 
-        
-        return notificaciones.map(notificacion => dtoMapper.notificacionToDTO(notificacion)) 
-    }
-    async mostrarLeidas({idUsuario}){
-        const mongoNotificaciones = await this.notificacionesRepository.obtenerNotificacionesDestinatario({idDestinatario: idUsuario, leida: true})
-        const notificaciones = mongoNotificaciones.map(mongoNotificacion => domainMapper.mongoNotificacionesToDomain(mongoNotificacion)) 
-        
-        return notificaciones.map(notificacion => dtoMapper.notificacionToDTO(notificacion)) 
+    return await this.notificacionesRepository.obtenerNotificacionesDestinatario(
+      { idDestinatario: idUsuario, leida: leidas },
+    );
+  }
+
+  async marcarComoLeida({ idUsuario, idNotificacion }) {
+    const notificacion =
+      await this.notificacionesRepository.findById(idNotificacion);
+
+    if (notificacion.destinatario.id !== idUsuario) {
+      throw new NotAllowedError("La notificación no pertenece al usuario");
     }
 
-    async marcarComoLeida({idUsuario ,idNotificacion}){
-        const mongoNotificacion = await this.notificacionesRepository.findById(idNotificacion)
-        const notificacion = domainMapper.mongoNotificacionToDomain(mongoNotificacion)
+    notificacion.marcarComoLeida();
 
-        if(notificacion.destinatario.id !== idUsuario){
-            throw new NotAllowedError("La notificación no pertenece al usuario")
-        }
+    const notificacionGuardada = await this.notificacionesRepository.update(
+      notificacion.id,
+    );
 
-        notificacion.marcarComoLeida()
-
-        const notificacionGuardada = await this.notificacionesRepository
-            .update(notificacion.id)
-
-
-
-        return dtoMapper.notificacionToDTO(notificacionGuardada)
-    }
-    
-
+    return notificacionGuardada;
+  }
 }

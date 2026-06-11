@@ -1,10 +1,5 @@
-import { Medico } from "./medico.js";
-import { Paciente } from "./paciente.js"
-import { Sede } from "./sede.js"
-import { Practica } from "./practica.js"
 import { EstadoTurno } from "./estadoTurno.js"
 import { CambioEstadoTurno } from "./cambioEstadoTurno.js";
-import { factoryNotificacion } from "./factoryNotificacion.js";
 
 export class Turno {
     id
@@ -32,10 +27,11 @@ export class Turno {
         
         const cambioEstado = new CambioEstadoTurno(new Date()
         , nuevoEstado
-        , this
+        , this.id
         , usuario
         , motivo) 
-        
+
+        this.historialEstados.push(cambioEstado) 
     }
 
     asignarPaciente(paciente){
@@ -45,6 +41,7 @@ export class Turno {
             paciente.usuario,
             `El paciente ${paciente.id} reservó el turno`
         )
+        
     }
 
     asignarPractica(practica){
@@ -53,6 +50,10 @@ export class Turno {
 
     asignarEspecialidad(especialidad){
         this.servicio = especialidad
+    }
+
+    asignarServicio(servicio){
+        this.servicio = servicio
     }
     
 
@@ -75,11 +76,12 @@ export class Turno {
         const ultimo = historial.at(-1)
 
         if(!ultimo){
-            return this.medico
+            return this.medico.usuario
         }
 
         return ultimo.usuario
     }
+    
 
      destinatarioUltimoCambioEstado(){
         const id = this.remitenteUltimoCambioEstado().id
@@ -100,7 +102,7 @@ export class Turno {
         }
 
         const ahora = new Date()
-        const fechaTurno = this.fecha
+        const fechaTurno = this.fechaHora
 
         const diferenciaMs = fechaTurno - ahora
         const unaHoraMs = 60 * 60 * 1000
@@ -157,6 +159,6 @@ export class Turno {
         return (this.fechaHora - fecha) >= 3600000 //una hora en milisegundos
     }
     getServicio(){
-    return this.practica || this.especialidad
+        return this.servicio
     }
 }

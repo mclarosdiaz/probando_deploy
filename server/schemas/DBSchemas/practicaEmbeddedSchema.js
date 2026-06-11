@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { required } from "zod/mini";
 
 export const practicaEmbeddedSchema = new mongoose.Schema({ 
         id: {

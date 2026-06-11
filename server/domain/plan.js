@@ -1,7 +1,3 @@
-import { CoberturaEspecialidad } from "./coberturaEspecialidad.js";
-import { CoberturaPractica } from "./coberturaPractica.js";
-import { NivelCobertura } from "./nivelCobertura.js"
-
 export class Plan{
     id
     nombre
@@ -11,8 +7,8 @@ export class Plan{
     
     constructor(nombre, coberturasEspecialidad, coberturasPractica){
         this.nombre = nombre;
-        this.coberturasEspecialidad = coberturasEspecialidad;
-        this.coberturasPractica = coberturasPractica;
+        this.coberturasEspecialidad = coberturasEspecialidad ?? [];
+        this.coberturasPractica = coberturasPractica ?? [];
     }
 
     obtenerCoberturaEspecialidad(especialidad){
@@ -23,6 +19,7 @@ export class Plan{
     }
 
     obtenerCoberturaPractica(practica){
+    
         const cobertura = this.coberturasPractica
             .find(c => c.practica.id === practica.id)
 

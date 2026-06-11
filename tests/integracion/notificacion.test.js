@@ -1,184 +1,73 @@
-import request from "supertest"
-import { describe, expect, jest, test, beforeEach } from "@jest/globals"
-import { buildTestApp } from "../utils/buildApp.js"
-import { Turno } from "../../server/domain/turno.js"
-import { Paciente } from "../../server/domain/paciente.js"
-import { Medico } from "../../server/domain/medico.js"
-import { Sede } from "../../server/domain/sede.js"
-import { EstadoTurno } from "../../server/domain/estadoTurno.js"
-import { Usuario } from "../../server/domain/usuario.js"
-import { Practica } from "../../server/domain/practica.js"
-import { Especialidad } from "../../server/domain/especialidad.js"
-import { DiaSemana } from "../../server/domain/diaSemana.js"
-import { DisponibilidadHoraria } from "../../server/domain/disponibilidadHoraria.js"
-import { Notificacion } from "../../server/domain/notificacion.js"
+import {
+  describe,
+  expect,
+  test,
+  beforeEach
+} from "@jest/globals";
+import { buildTestApp } from "../utils/buildApp.js";
+import { seedTestData } from "../../scripts/seedTestData.js";
+import request from "supertest";
+import dotenv from "dotenv";
+dotenv.config();
 
-//import { ObraSocial } from "../../server/domain/obraSocial.js"
+describe("Notificacion API- Integracion", () => {
+  
+  let app;
+  let seed;
 
-describe("Turno API- Integracion",()=>{
-    let app
-    let turnoRepository
-    let medicoRepository
-    let pacienteRepository
-    let notificacionRepository
-    let fechaHora
-    let medico
-    let paciente
-    let revision
-    let sedeChacarita
-    let usuarioMedico
-    let usuarioPaciente
-    let practicas
-    let especialidades
-    let sedes
-    let disponibilidades
-    let sedeItaliano
-    let turnosMock
-    let notificacion
+  beforeEach(async () => {
+    app = buildTestApp();
 
-    beforeEach(()=>{
-        
-        fechaHora = new Date()
+    seed = await seedTestData();
+  });
+  
+  describe(`GET /usuarios/{idUsuarioPaciente}/notificaciones`, () => {
+    
+    test("Deberia retornar 200 mostrando las no leidas", async () => {
+      const usuarioPaciente = seed.usuarioPaciente
+      
+      const response = await request(app)
+        .get(`/usuario/${usuarioPaciente._id}/notificaciones`)
+        .query({leidas: "false"});
 
-        usuarioMedico = new Usuario("1234", "Roberto", "1234")
-        usuarioPaciente = new Usuario("1234", "pedroGimeenez", "Contraseña")
+      expect(response.status).toBe(200);
+      expect(response.body.every((n) => n.leida === false)).toBe(true);
+    });
+  });
 
-        revision = new Practica(
-            "4679",
-            "456789",
-            "Revisión",
-            30,
-            5000
-        )
+  describe("PATCH /usuarios/:idUsuario/:idNotificacion", () => {
+    test("Deberia retornar 200 marcando como leida una notificacion", async () => {
+      const usuarioPaciente = seed.usuarioPaciente
+      const notificacion = seed.notificacion
 
-        especialidades = [
-            new Especialidad("5645",
-                "Traumatología",
-                60,
-                10000
-            ),
-            new Especialidad("4568",
-                "Oftalmología",
-                45,
-                75000
-            )
-        ]
+      const response = await request(app).patch(
+        `/usuario/${usuarioPaciente._id}/notificaciones/${notificacion._id}`,
+      );
+      expect(response.status).toBe(200);
+    });
+  });
 
-        practicas = [
-            revision,
-            new Practica(
-                "6598",
-                "456745",
-                "Ecografía",
-                45,
-                10000
-            )
-        ]
+  describe(`GET /usuarios/{idUsuarioPaciente}/notificaciones`, () => {
+    test("Deberia retornar 200 mostrando las leidas", async () => {
+      
+      const usuarioPaciente = seed.usuarioPaciente
+      const notificacion = seed.notificacion
+      // Primero marcar como leída
+      
+       const patchResponse = await request(app).patch(
+        `/usuario/${usuarioPaciente._id}/notificaciones/${notificacion._id}`,
+      );
+          
+    console.log("PATCH status:", patchResponse.status)
+    console.log("PATCH body:", JSON.stringify(patchResponse.body, null, 2))
+      // Luego verificar que aparece como leída
+      const response = await request(app)
+        .get(`/usuario/${usuarioPaciente._id}/notificaciones`)
+        .query({ leidas: "true" });
+      console.log("Body recibido:", JSON.stringify(response.body, null, 2)) // ← agregar esto
 
-        sedeChacarita = new Sede("222", "Chacarita jr", "Gutierrez 351")
-        sedeItaliano = new Sede("555", "Hospital Italiano", "Alto Pelado, San Luis")
-
-        sedes = [
-            new Sede("222", "Chacarita jr", "Gutierrez 351"),
-            new Sede("555", "Hospital Italiano", "Alto Pelado, San Luis")
-        ]
-
-        disponibilidades = [
-            new DisponibilidadHoraria(DiaSemana.VIERNES,
-                "14:30",
-                "17:00"
-            ),
-            new DisponibilidadHoraria(DiaSemana.MARTES,
-                "12:00",
-                "15:00"
-            )
-        ]
-        medico = new Medico(
-            "1234",
-            usuarioMedico,
-            "1234",
-            "Roberto Gimenez",
-            especialidades,
-            practicas,
-            sedes,
-            disponibilidades
-        )
-
-        paciente = new Paciente(
-            "1234",
-            usuarioPaciente,
-            "46254978",
-            "Pedro Gimenez",
-
-        )
-        
-        const turno = new Turno(medico, 
-                new Date(Date.now() + 1000 * 60 * 60 * 24), 
-                sedeChacarita, 
-                EstadoTurno.RESERVADO, 
-                revision.costo)
-        
-        turno.asignarPaciente(paciente)
-        turno.actualizarEstado(EstadoTurno.CONFIRMADO, usuarioPaciente, "Turno confirmado")
-
-        turnosMock = [turno]
-        
-        notificacion = new Notificacion("123",usuarioMedico,usuarioPaciente,"HOLA")
-
-        turnoRepository = {
-            findAll: jest.fn().mockResolvedValue({
-                data: turnosMock,
-                total: 1
-            }),
-            findById: 
-                jest.fn().mockImplementation(async(id) => {
-                    return id === "123"? turno: null
-                }),
-            save: jest.fn().mockImplementation(async (entidad) => entidad),
-            saveAll: jest.fn().mockImplementation(async (entidades) => entidades)
-        }
-
-        medicoRepository = {
-            save: jest.fn().mockImplementation(async(entidad) => entidad),
-            findById: jest.fn().mockResolvedValue(medico),
-            findAll: jest.fn().mockResolvedValue([medico])
-        }
-
-        pacienteRepository = {
-            findById: jest.fn().mockResolvedValue(paciente)
-        }
-        notificacionRepository =  {
-            save: jest.fn().mockImplementation(async(entidad) => entidad),
-            findById: jest.fn().mockResolvedValue(notificacion),
-            obtenerTodasLasNotificaciones : jest.fn().mockResolvedValue([notificacion])
-        }
-
-        app = buildTestApp({notificacionRepository})
-    })
-    describe("GET /usuarios/:idUsuario/mostrarNoLeidas",()=>{
-        test("Deberia retornar 200 mostrando las no leidas",async()=>{
-            const response = await request(app)
-            .get("/usuarios/1234/mostrarNoLeidas")
-            
-            expect(response.status).toBe(200)
-            expect(response.body.every(n => n.leida === false)).toBe(true)
-        })
-    })
-    describe("GET /usuarios/:idUsuario/mostrarLeidas",()=>{
-        test("Deberia retornar 200 mostrando las leidas",async()=>{
-            const response = await request(app)
-            .get("/usuarios/1234/mostrarLeidas")
-
-            expect(response.status).toBe(200)
-            expect(response.body.every(n => n.leida === true)).toBe(true)
-        })
-    })
-    describe("PATCH /usuarios/:idUsuario/:idNotificacion/mostrarNoLeidas",()=>{
-        test("Deberia retornar 200 modificando un servicio",async()=>{
-            const response = await request(app)
-            .patch("/usuarios/1234/123/marcarComoLeida")
-            expect(response.status).toBe(200)
-        })
-    })
-
-})
+      expect(response.status).toBe(200);
+      expect(response.body.every((n) => n.leida === true)).toBe(true);
+    });
+  });
+});

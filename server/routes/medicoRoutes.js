@@ -3,7 +3,7 @@ import { MedicoController } from '../controllers/medicoController.js'
 import { MedicoService } from "../services/medicoService.js"
 import { MongoMedicoRepository } from '../repositories/medicoRepository.js'
 import { MongoTurnoRepository } from '../repositories/turnoRepository.js'
-import { validate, validateQuery } from '../middlewares/validate.js'
+import { validate} from '../middlewares/validate.js'
 import { consultarDisponibilidadSchema, 
         modificarDisponibilidadSchema,
         agregarServicioSchema,
@@ -11,6 +11,7 @@ import { consultarDisponibilidadSchema,
         modificarServicioSchema
 } from '../schemas/requestsSchemas/medicoRequestSchema.js'
 import { TurnoService } from '../services/turnoService.js'
+import { asyncHandler } from '../middlewares/asyncHandler.js'
 
 const router = Router()
 
@@ -24,36 +25,34 @@ const controller = new MedicoController(service)
 
 
 router.get(
-    "/disponibilidades",
+    "/:id/disponibilidades",
     validate(consultarDisponibilidadSchema),
-    controller.consultarDisponibilidades
+    asyncHandler(controller.consultarDisponibilidades)
 )
 
-//TODO  Es un PUT a DISPONIBILIDADES
+
 router.patch(
-    "/:id/modificarDisponibilidad",
+    "/:id/disponibilidades",
     validate(modificarDisponibilidadSchema),
-    controller.modificarDisponibilidades
+    asyncHandler(controller.modificarDisponibilidades)
 )
 
-//TODO POST /:id/SERVICIOS
 router.post(
-    "/:id/agregarServicio",
+    "/:idMedico/servicios",
     validate(agregarServicioSchema),
-    controller.agregarServicio
+    asyncHandler(controller.agregarServicio)
 )
 
-//TODO DELETE /:id/SERVICIOS/:idServicio
 router.delete(
-    "/:id/eliminarServicio",
+    "/:idMedico/servicios/:tipo/:idServicio",
     validate(eliminarServicioSchema),
-    controller.eliminarServicio
+    asyncHandler(controller.eliminarServicio)
 )
 
-router.patch(
-    "/:id/modificarServicio",
+router.put(
+    "/:idMedico/servicios/:tipo/:idServicio",
     validate(modificarServicioSchema),
-    controller.modificarServicio
+    asyncHandler(controller.modificarServicio)
 )
 
 export default router

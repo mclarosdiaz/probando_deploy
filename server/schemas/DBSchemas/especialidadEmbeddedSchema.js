@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import { required } from "zod/mini";
-import { Especialidad } from "../../domain/especialidad.js";
 
 export const especialidadEmbeddedSchema = new mongoose.Schema({
     id:{

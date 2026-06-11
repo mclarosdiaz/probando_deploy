@@ -1,43 +1,38 @@
-import { Turno } from "../domain/turno.js";
 import { EstadoTurno } from "../domain/estadoTurno.js"
 import {
-    BadRequestError,
     TurnoNotFoundError,
-    UnprocessableEntityError
 } from "../errors/appError.js"
 import { TurnoModel } from "../schemas/DBSchemas/turnoSchema.js";
-import { reservarTurnoSchema } from "../schemas/requestsSchemas/turnoRequestSchemas.js";
-import { domainMapper } from "../middlewares/domainMapper.js";
-
+import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
+import mongoose from "mongoose";
 
 export class MongoTurnoRepository {
+
     constructor() {
         this.model = TurnoModel 
     }
 
-            async save(turno) {
+    async save(turno) {
+        let updated
+
+        if (turno.id) {
+            updated = await this.model.findOneAndUpdate(
+                { _id: turno.id },
+                turnoMapper.turnoToMongo(turno),
+                { returnDocument: 'after' }
+            )
+        } else {
+            updated = await this.model.create(turno)
+        }        
+
+        const mongoTurno = await this.model.findById(updated._id)
+
+        return turnoMapper.mongoTurnoToDomain(mongoTurno)
+            
+    }
 
 
-            let updated
-
-            if (turno.id) {
-                updated = await this.model.findOneAndUpdate(
-                    { _id: turno.id },
-                    dto,
-                    { returnDocument: 'after' }
-                )
-            } else {
-                updated = await this.model.create(dto)
-            }
-
-            return this.model.findById(updated._id)
-                .populate("medico")
-                .populate("paciente")
-                .populate("sede")
-        }
-
-
-   async saveAll(turnos) {
+    async saveAll(turnos) {
 
         if (!Array.isArray(turnos)) {
             throw new Error("saveAll esperaba un array de turnos")
@@ -45,61 +40,31 @@ export class MongoTurnoRepository {
 
         const limpios = turnos.filter(t => t != null)
 
-        return await Promise.all(
+        const guardados = await Promise.all(
             limpios.map(turno => this.save(turno))
         )
+
+        return guardados
     }
 
     async findById(id){
         const mongoTurno = await this.model
             .findById(id)
-            .populate({
-                path: "medico",
-                populate:
-            [ 
-                {
-                    path: "usuario"
-                },
-                {
-                    path: "sedes"
-                }
-            ]
-            })
-            .populate({
-                path: "paciente",
-                populate: 
-                [
-                    {
-                        path: "usuario"
-                    },
-                    {
-                        path: "obraSocial",
-                        populate: {
-                            path: "planes"
-                        }
-                    },
-                    {
-                        path: "plan"
-                    }
-                ]
-            })
-            .populate("sede")
-
+        
         if(!mongoTurno){
             throw new TurnoNotFoundError(`El turno ${id} no fue encontrado`)
         }
 
-        //console.dir(mongoTurno.toObject(), { depth: null })
-      
-        return mongoTurno
+        return turnoMapper.mongoTurnoToDomain(mongoTurno)
     }
 
-    async findAll({ filtros = {}, paginacion = {} } = {}) {
+    async findAll({ filtros = {}, page, limit } = {}) {
 
         const query = {}
 
         if (filtros.pacienteId) {
-            query.paciente = filtros.pacienteId
+            //query.paciente = filtros.pacienteId
+            query.paciente = new mongoose.Types.ObjectId(filtros.pacienteId)
         }
 
         if (filtros.estado) {
@@ -107,34 +72,23 @@ export class MongoTurnoRepository {
         }
 
         if (filtros.fechaDesde || filtros.fechaHasta) {
-            query.fecha = {}
-            if (filtros.fechaDesde) query.fecha.$gte = filtros.fechaDesde
-            if (filtros.fechaHasta) query.fecha.$lte = filtros.fechaHasta
+            query.fechaHora = {}
+            if (filtros.fechaDesde) query.fechaHora.$gte = new Date(filtros.fechaDesde)
+            if (filtros.fechaHasta) query.fechaHora.$lte = new Date(filtros.fechaHasta)
         }
 
-        const page = paginacion.page ?? 1
-        const limit = paginacion.limit ?? 10
         const offset = (page - 1) * limit
 
         const documents = await this.model
             .find(query)
-            .populate({
-                path: "medico",
-                populate: ["usuario", "sedes"]
-            })
-            .populate({
-                path: "paciente",
-                populate: ["usuario", "obraSocial", "plan"]
-            })
-            .populate("sede")
             .skip(offset)
             .limit(limit)
 
+        const turnos = await Promise.all(documents.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno)))
+
         const total = await this.model.countDocuments(query)
-            //TODO devolver count en el service. 
-            //TODO
         return {
-            documents,
+            turnos,
             total
         }
     }
@@ -147,8 +101,10 @@ export class MongoTurnoRepository {
                 $gte: fechaHora
             }}
 
-        
-        return await this.model.deleteMany(query)
+       // const borrados = await this.model.deleteMany(query)     
+        const borrados = await this.model.find(query)
+        await this.model.deleteMany(query)
+        return Promise.all(borrados.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno)))
     }
 
     async existeTurnoEnFecha({

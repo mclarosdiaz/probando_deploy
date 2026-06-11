@@ -1,5 +1,4 @@
 import express from "express"
-import { validate } from "../../server/middlewares/validate.js"
 import { errorHandler } from "../../server/errors/errorHandler.js"
 import { notFoundHandler } from "../../server/errors/notFoundHandler.js"
 import router from "../../server/routes/router.js"

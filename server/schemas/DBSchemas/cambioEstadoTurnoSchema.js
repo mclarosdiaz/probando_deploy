@@ -1,8 +1,5 @@
 import mongoose from "mongoose";
-import { Schema } from "zod/v3";
 import { EstadoTurno } from "../../domain/estadoTurno.js";
-import { UsuarioModel } from "./usuarioSchema.js";
-import { CambioEstadoTurno } from "../../domain/cambioEstadoTurno.js";
 
 
 export const cambioEstadoTurnoEmbeddedSchema = new mongoose.Schema({

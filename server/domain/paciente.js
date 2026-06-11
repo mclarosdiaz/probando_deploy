@@ -1,6 +1,3 @@
-import { Usuario } from "./usuario.js";
-import { ObraSocial } from "./obraSocial.js";
-import { Plan } from "./plan.js";
 
 export class Paciente{
     id

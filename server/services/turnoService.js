@@ -1,25 +1,11 @@
-import{ Turno } from "../domain/turno.js"
-import { Paciente } from "../domain/paciente.js";
-import { Medico } from "../domain/medico.js";
 import { factoryNotificacion } from "../domain/factoryNotificacion.js";
 import { agenda } from "../domain/agenda.js";
 import { EstadoTurno } from "../domain/estadoTurno.js";
 import { 
-    BadRequestError, 
-    PacienteNotFoundError,
-    NotAllowedError, 
-    TurnoNotFoundError, 
-    MedicoNotFoundError, 
-    ConflictError, 
-    UnprocessableEntityError,
+    NotAllowedError,  
     ValidationError
 } from "../errors/appError.js";
-import { Sede } from "../domain/sede.js";
-import { Usuario } from "../domain/usuario.js";
-import { ObraSocial } from "../domain/obraSocial.js";
-import { Plan } from "../domain/plan.js";
-import { domainMapper } from "../middlewares/domainMapper.js";
-import { dtoMapper } from "../middlewares/dtoMapper.js";
+import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
 
 export class TurnoService{
     constructor(
@@ -38,37 +24,25 @@ export class TurnoService{
     }
 
     async reservar({id, pacienteId}){
-        const mongoTurno = await this.findById(id)
-        const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
+        const turnoSinReservar = await this.turnoRepository.findById(id)
         
-        const mongoPaciente = await this.obtenerPacientePorId(pacienteId)
-        const paciente = domainMapper.mongoPacienteToDomain(mongoPaciente)
+        const paciente = await this.pacienteRepository.findById(pacienteId)
 
-        turno.asignarPaciente(paciente)
+        turnoSinReservar.asignarPaciente(paciente)
 
-        const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
+        const notificacionReservado = factoryNotificacion.crearSegunEstadoTurno(turnoSinReservar)
 
-        const [mongoTurnoGuardado, mongoNotificacionGuardada] =
-            await Promise.all([
-                this.turnoRepository.save(turno),
-                this.notificacionRepository.save(notificacion)
+        const [turno, notificacion] = await Promise.all([
+                this.turnoRepository.save(turnoSinReservar),
+                this.notificacionRepository.save(notificacionReservado)
         ])
 
-        return {
-            turno: dtoMapper.turnoToDTO(
-                domainMapper.mongoTurnoToDomain(mongoTurnoGuardado)
-            ),
-            notificacion: dtoMapper.notificacionToDTO(
-                domainMapper.mongoNotificacionToDomain(
-                    mongoNotificacionGuardada
-                )
-            )
-        }
+        return {turno, notificacion}
+        
     }
 
     async cancelar({id, motivo, idUsuario}){
-        const mongoTurno = await this.findById(id)
-        const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
+        const turno = await this.turnoRepository.findById(id)
 
         const ahora = new Date()
 
@@ -86,107 +60,83 @@ export class TurnoService{
             usuario, 
             motivo)
         
-        const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
+        const notificacionCancelado = factoryNotificacion.crearSegunEstadoTurno(turno)
 
-        const [mongoTurnoGuardado, mongoNotificacionGuardada] =
+
+        const [turnoCancelado, notificacionGuardada] =
             await Promise.all([
                 this.turnoRepository.save(turno),
-                this.notificacionRepository.save(notificacion)
+                this.notificacionRepository.save(notificacionCancelado)
         ])
 
-        return {
-            turno: dtoMapper.turnoToDTO(
-                domainMapper.mongoTurnoToDomain(mongoTurnoGuardado)
-            ),
-            notificacion: dtoMapper.notificacionToDTO(
-                domainMapper.mongoNotificacionToDomain(
-                    mongoNotificacionGuardada
-                )
-            )
-        }
+        console.log(turnoCancelado)
+
+        return {turnoCancelado, notificacionGuardada}
     }
 
     async confirmar({id,idUsuario})
     {
-        const mongoTurno = await this.findById(id)
-        const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
+        const turnoSinConfirmar = await this.turnoRepository.findById(id)
 
         const motivo="El turno fue confirmado"
 
         const usuario = turno.obtenerUsuario(idUsuario)
         
-        if(!usuario || turno.remitenteUltimoCambioEstado().id !== idUsuario){
+        if(!usuario || turnoSinConfirmar.remitenteUltimoCambioEstado().id !== idUsuario){
             throw new NotAllowedError("El usuario no puede confirmar este turno")
         }
 
-        turno.actualizarEstado(
+        turnoSinConfirmar.actualizarEstado(
             EstadoTurno.CONFIRMADO,
             usuario,
             motivo
         )
 
-        const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
+        const notificacionConfirmado = factoryNotificacion.crearSegunEstadoTurno(turno)
 
-        const [mongoTurnoGuardado, mongoNotificacionGuardada] =
+        const {turno, notificacion} =
             await Promise.all([
-                this.turnoRepository.save(turno),
-                this.notificacionRepository.save(notificacion)
+                this.turnoRepository.save(turnoSinConfirmar),
+                this.notificacionRepository.save(notificacionConfirmado)
             ])
 
-        return {
-            turno: dtoMapper.turnoToDTO(
-                domainMapper.mongoTurnoToDomain(mongoTurnoGuardado)
-            ),
-            notificacion: dtoMapper.notificacionToDTO(
-                domainMapper.mongoNotificacionToDomain(
-                    mongoNotificacionGuardada
-                )
-            )
-        }
+        return {turno, notificacion}
     }
 
-    async obtenerHistorial({ filtros, paginacion}){
+    async obtenerHistorial({ filtros, page, limit}){
         
-        const { documents, total } = await this.turnoRepository.findAll({
-            filtros, 
-            paginacion
+        const { turnos, total } = await this.turnoRepository.findAll({
+            filtros: filtros, 
+            page: page, 
+            limit: limit
         })
 
-        const data = documents.map(
-            document => dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(document)))
-
-        const { page, limit } = paginacion
 
         const totalPages = Math.ceil(total / limit)
 
         return {
-            data,
-            paginacion:{
-                page,
-                totalPages, 
-                total
-            }
+            turnos,
+            totalPages,
+            total
         }
 
     }
 
     async buscarTurnosDisponibles({idPaciente, filtros, paginacion}) {
+        
         const paciente = await this.pacienteRepository.findById(idPaciente)
 
         const plan = paciente.plan
 
-        const coberturasPractica = plan.coberturasPractica
-        const coberturasEspecialidad = plan.coberturasEspecialidad
-
-        const { documents: turnos, total } = await this.turnoRepository.findAll({filtros, paginacion})
-      
+        const { turnos, total } = await this.turnoRepository.findAll({filtros, paginacion})
         
         const turnosConCobertura = turnos.map(
             (turno) => {
-                const servicio = turno.practica || turno.especialidad
+                const servicio = turno.servicio
                 const cobertura = 
-                    plan.obtenerCoberturaPractica(servicio)
-                    || plan.obtenerCoberturaEspecialidad(servicio) 
+                     plan.obtenerCoberturaPractica(servicio) ?? 
+                        plan.obtenerCoberturaEspecialidad(servicio)
+                    
                     let costoFinal = servicio?.costo || 0
 
                     if (cobertura?.nivel === "TOTAL") {
@@ -194,9 +144,10 @@ export class TurnoService{
                     } else if (cobertura?.nivel === "PARCIAL") {
                         costoFinal = costoFinal - (costoFinal * (cobertura.porcentaje / 100))
                     }
+               
                 return{
-                    turno,
-                    cobertura: cobertura.nivel,
+                    turno: turnoMapper.turnoToDTO(turno),
+                    cobertura: cobertura?.nivel,
                     costo: costoFinal
                 }
             }
@@ -221,15 +172,16 @@ export class TurnoService{
 
         return{
             turnosConCobertura,
-            page,
-            totalPages,
-            total
+            paginacion:{
+                page,
+                totalPages,
+                total
+            }
         }
     }
 
     async marcarComoRealizado({id, idUsuario}) {
-        const mongoTurno = await this.findById(id)
-        const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
+        const turno = await this.turnoRepository.findById(id)
 
         const usuario = turno.obtenerUsuarioMedico()
 
@@ -243,48 +195,24 @@ export class TurnoService{
             "Turno realizado"
         )
 
-        await this.turnoRepository.save(turno)
+        return this.turnoRepository.save(turno)
 
-        const updatedMongo = await this.findById(id)
-
-        return dtoMapper.turnoToDTO(updatedMongo) // 👈 SIN reconvertir a domain otra vez
     }
 
     async generarTurnosDisponibles() {
 
-        // 1. Traer médicos
-        const mongoMedicos = await this.medicoRepository.findAll()
+        const medicos = await this.medicoRepository.findAll()
 
-        if (!Array.isArray(mongoMedicos)) {
-            throw new Error("medicoRepository.findAll debe devolver un array")
-        }
+        const todosLosNuevosTurnos = (
+        await Promise.all(medicos.map(medico => this.generarTurnosParaMedico(medico)))
+        ).flat()
 
-        // 2. Mapear a dominio
-        const medicos = mongoMedicos.map(m =>
-            domainMapper.mongoMedicoToDomain(m)
-        )
-
-        // 3. Generar turnos (sin mutación rara)
-        const todosLosNuevosTurnos = medicos.flatMap(medico =>
-            this.generarTurnosParaMedico(medico)
-        )
-
-        // 4. Guardar
         const turnosGuardados = await this.turnoRepository.saveAll(todosLosNuevosTurnos)
 
-        // 5. DTO final
-        return turnosGuardados.map(turno =>
-            dtoMapper.turnoToDTO(
-                domainMapper.mongoTurnoToDomain(turno)
-            )
-        )
+        return turnosGuardados
     }
 
-   async generarTurnosParaMedico(medico) {
-
-        if (!medico) {
-            throw new Error("medico undefined en generarTurnosParaMedico")
-        }
+    async generarTurnosParaMedico(medico) {
 
         const especialidades = medico.especialidades ?? []
         const practicas = medico.practicas ?? []
@@ -309,28 +237,25 @@ export class TurnoService{
         return turnosDelMedico
     }
 
-    async sincronizarTurnosDisponibles(idMedico, nuevaDisponibilidades){
+    async sincronizarTurnosDisponibles({idMedico, nuevaDisponibilidades}){
         const ahora = new Date()
 
-        const mongoMedico = await this.obtenerMedicoPorId(idMedico) 
-        const medico = domainMapper.mongoMedicoToDomain(mongoMedico) 
+        const medico = await this.medicoRepository.findById(idMedico)
 
         medico.disponibilidades = nuevaDisponibilidades
 
         await this.turnoRepository.eliminarDisponiblesFuturos(idMedico, ahora) 
         
-        const nuevosTurnosPosibles = this.generarTurnosParaMedico(medico)
-            .filter(nuevoTurno => this.validarDisponibilidad(nuevoTurno, nuevoTurno.fechaHora))
+        const nuevosTurnosPosibles = (await this.generarTurnosParaMedico(medico))
+        .filter(nuevoTurno => this.validarDisponibilidad(nuevoTurno, nuevoTurno.fechaHora))
 
         const turnosGuardados = await this.turnoRepository.saveAll(nuevosTurnosPosibles) 
 
-        return turnosGuardados.map(turnoGuardado => dtoMapper.turnoToDTO(domainMapper.mongoTurnoToDomain(turnoGuardado))) 
-            
+        return turnosGuardados
     }
 
     async modificarFechaTurno({ id, idUsuario , fecha }){
-        const mongoTurno = await this.turnoRepository.findById(id)
-        const turno = domainMapper.mongoTurnoToDomain(mongoTurno)
+        const turno = await this.turnoRepository.findById(id)
 
         if(!turno.puedeModificar(idUsuario)){
             throw new NotAllowedError("El usuario no puede solicitar cambio de fecha de este turno")
@@ -341,7 +266,6 @@ export class TurnoService{
         if (existeConflicto) {
             throw new ValidationError("El médico no tiene disponibilidad en este horario")
         }
-
             
         const usuario = turno.obtenerUsuario(idUsuario)  
         
@@ -353,22 +277,17 @@ export class TurnoService{
 
         const notificacion = factoryNotificacion.crearSegunEstadoTurno(turno)
 
-        const [mongoTurnoGuardado, mongoNotificacionGuardada] =
+        const [turnoGuardado, notificacionGuardada] =
             await Promise.all([
                 this.turnoRepository.save(turno),
                 this.notificacionRepository.save(notificacion)
             ])
 
-        const freshMongoTurno = await this.turnoRepository.findById(id)
-
         return {
-            turno: dtoMapper.turnoToDTO(freshMongoTurno),
-            notificacion: dtoMapper.notificacionToDTO(
-                domainMapper.mongoNotificacionToDomain(mongoNotificacionGuardada)
-            )
+            turnoGuardado,
+            notificacionGuardada
         }
-        }
-    
+    }
 
     async validarDisponibilidad(turno, fecha){
         return await this.turnoRepository.existeTurnoEnFecha({
@@ -378,36 +297,4 @@ export class TurnoService{
             })
 
     }
-
-    
-    async findById(id){
-        const turno = await this.turnoRepository.findById(id)
-
-        return turno
-    }
-
-    async obtenerPacientePorId(id){
-        const paciente = await this.pacienteRepository.findById(id)
-
-        return paciente
-    }
-
-    async obtenerMedicoPorId(id){
-        const medico = await this.medicoRepository.findById(id)
-
-        return medico
-    }
-
-    async obtenerMedicos(){
-        const medicos = await this.medicoRepository.findAll()
-
-        if(medicos.length === 0){
-            throw new MedicoNotFoundError("No hay médicos disponibles")
-        }
-
-        return medicos
-    }
-
-
-    
 }
