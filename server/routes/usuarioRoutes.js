@@ -7,6 +7,7 @@ import {
     mostrarNotificacionesSchema
 } from "../schemas/requestsSchemas/notificacionRequestSchema.js"
 import { MongoNotificacionRepository } from '../repositories/notificacionRepository.js'
+import { asyncHandler } from "../middlewares/asyncHandler.js";
 
 const router=Router()
 
@@ -15,18 +16,16 @@ const notificacionRepository = new MongoNotificacionRepository()
 const notificacionService = new NotificacionService(notificacionRepository)
 const controller = new NotificacionController(notificacionService)
 
-//TODO Comenzar a usar asyncHandler
-
 router.get(
     "/:idUsuario/notificaciones",
     validate(mostrarNotificacionesSchema),
-    controller.mostrarNotificaciones
+    asyncHandler(controller.mostrarNotificaciones)
 )
 
 router.patch(
     "/:idUsuario/notificaciones/:idNotificacion",
     validate(marcarComoLeidaSchema),
-    controller.marcarComoLeida
+    asyncHandler(controller.marcarComoLeida)
 )
 
 export default router

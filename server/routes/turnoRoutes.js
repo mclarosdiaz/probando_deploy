@@ -16,6 +16,7 @@ import { MongoNotificacionRepository } from '../repositories/notificacionReposit
 import { MongoSedeRepository } from '../repositories/sedeRepository.js'
 import { MongoUsuarioRepository } from '../repositories/usuarioRepository.js'
 import { MongoPacienteRepository } from '../repositories/pacienteRepository.js'
+import { asyncHandler } from '../middlewares/asyncHandler.js'
 
 
 const router = Router()
@@ -36,46 +37,45 @@ const turnoService = new TurnoService(turnoRepository,
     
 const controller = new TurnoController(turnoService)
 
-//TODO Comenzar a usar asyncHandler
 
 router.post(
     "/disponibles/busqueda", 
     validate(busquedaDeTurnosDisponiblesSchema),
-    controller.buscarTurnosDisponibles
+    asyncHandler(controller.buscarTurnosDisponibles)
 )
 router.post(
     "/disponibilidad",
     validate(generarTurnosDisponiblesSchema),
-    controller.generarTurnosDisponibles
+    asyncHandler(controller.generarTurnosDisponibles)
 )
 router.patch(
     "/:id/reservar",
     validate(reservarTurnoSchema),
-    controller.reservar
+    asyncHandler(controller.reservar)
 )
 
 router.post(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
-    controller.cancelarTurno
+    asyncHandler(controller.cancelarTurno)
 )
 
 router.post(
     "/:id/confirmar",
     validate(modificarEstadoTurnoSchema),
-    controller.marcarComoConfirmado
+    asyncHandler(controller.marcarComoConfirmado)
 )
 
 router.patch(
     "/:id/realizado",
     validate(modificarEstadoTurnoSchema),
-    controller.marcarComoRealizado
+    asyncHandler(controller.marcarComoRealizado)
 )
 
 router.post(
     "/:id/modificacionFecha",
     validate(modificarFechaTurnoSchema),
-    controller.modificarFechaTurno
+    asyncHandler(controller.modificarFechaTurno)
 )
 
 

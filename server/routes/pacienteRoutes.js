@@ -9,6 +9,8 @@ import { MongoNotificacionRepository } from "../repositories/notificacionReposit
 import { MongoSedeRepository } from "../repositories/sedeRepository.js";
 import { MongoUsuarioRepository } from "../repositories/usuarioRepository.js";
 import { obtenerHistorialTurnosSchema } from "../schemas/requestsSchemas/turnoRequestSchemas.js";
+import { asyncHandler } from "../middlewares/asyncHandler.js";
+
 const router = Router()
 
 const turnoRepository = new MongoTurnoRepository()
@@ -27,11 +29,9 @@ const turnoService = new TurnoService(turnoRepository,
     
 const controller = new TurnoController(turnoService)
 
-//TODO Comenzar a usar asyncHandler
-
 router.get(
     "/:pacienteId/turnos",
     validate(obtenerHistorialTurnosSchema),
-    controller.obtenerHistorialTurnos)
+    asyncHandler(controller.obtenerHistorialTurnos))
 
 export default router

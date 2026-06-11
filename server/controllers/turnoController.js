@@ -9,204 +9,177 @@ export class TurnoController {
     }
 
     //  Paciente
-    reservar = async(req, res, next) =>{
-        try {
-            const { id } = req.params
-            const{ pacienteId } = req.body
+    reservar = async(req, res) =>{
 
-            const {turno, notificacion} = await this.turnoService.reservar({id, pacienteId})
+        const { id } = req.params
+        const { pacienteId } = req.body
 
-            const data = {
-                turno: turnoMapper.turnoToDTO(turno),
-                notificacion: notificacionMapper.notificacionToDTO(notificacion)
-            }
+        const { turno, notificacion } = await this.turnoService.reservar({ id, pacienteId })
 
-            res.status(200).json(data)
-        } catch (error) {
-            next(error)
+        const data = {
+            turno: turnoMapper.turnoToDTO(turno),
+            notificacion: notificacionMapper.notificacionToDTO(notificacion)
         }
+
+        res.status(200).json(data)
+
     }
 
-    cancelarTurno = async(req, res, next) =>{
-        try {
-            const { id } = req.params
-            const { motivo, idUsuario } = req.body
-            
-
-            const {turnoCancelado, notificacionGuardada} = await this.turnoService.cancelar({
-                id, 
-                motivo, 
-                idUsuario})
+    cancelarTurno = async(req, res) =>{
+        const { id } = req.params
+        const { motivo, idUsuario } = req.body
 
 
-            const data = {
-                turno: turnoMapper.turnoToDTO(turnoCancelado),
-                notificacion: notificacionMapper.notificacionToDTO(notificacionGuardada)
-            }
+        const { turnoCancelado, notificacionGuardada } = await this.turnoService.cancelar({
+            id,
+            motivo,
+            idUsuario
+        })
 
 
-            res.status(200).json(data)
-        } catch (error) {
-            next(error)
+        const data = {
+            turno: turnoMapper.turnoToDTO(turnoCancelado),
+            notificacion: notificacionMapper.notificacionToDTO(notificacionGuardada)
         }
+
+
+        res.status(200).json(data)
     }
 
-    obtenerHistorialTurnos = async(req, res, next) =>{
-        try {
-            const { pacienteId,
+    obtenerHistorialTurnos = async (req, res) => {
+        const { pacienteId,
+            estado,
+            fechaDesde,
+            fechaHasta,
+            page,
+            limit } = req.query
+
+        const { turnos, totalPages, total } = await this.turnoService.obtenerHistorial({
+            filtros: {
+                pacienteId,
                 estado,
                 fechaDesde,
-                fechaHasta,
+                fechaHasta
+            },
+            page,
+            limit
+        })
+
+        res.status(200).json({
+            data: turnos.map(turno => turnoMapper.turnoToDTO(turno)),
+            paginacion: {
                 page,
-                limit } = req.query
+                limit,
+                total: total,
+                totalPages: totalPages,
 
-            const {turnos, totalPages, total} = await this.turnoService.obtenerHistorial({
-                filtros: {
-                    pacienteId,
-                    estado,
-                    fechaDesde,
-                    fechaHasta
-                },
-                page, 
-                limit
-            })
+            }
+        })
 
-            res.status(200).json({
-                data: turnos.map(turno => turnoMapper.turnoToDTO(turno)),
-                paginacion: {
-                    page,
-                    limit,
-                    total: total,
-                    totalPages: totalPages,
-
-                }
-            })
-
-            
-        } catch (error) {
-            next(error)
-        }
     }
 
-    buscarTurnosDisponibles = async(req, res, next) =>{
-        try{
-            const{ idPaciente } = req.body
+    buscarTurnosDisponibles = async (req, res) => {
 
-            const{ page, limit } = req.query;
+        const { idPaciente } = req.body
 
-            const{ 
+        const { page, limit } = req.query;
+
+        const {
+            idMedico,
+            idEspecialidad,
+            idPractica,
+            idSede,
+            fechaDesde,
+            fechaHasta } = req.body
+
+        const { turnosConCobertura, paginacion } = await this.turnoService.buscarTurnosDisponibles({
+            idPaciente: idPaciente,
+            filtros: {
                 idMedico,
                 idEspecialidad,
                 idPractica,
                 idSede,
                 fechaDesde,
-                fechaHasta } = req.body
-
-            const {turnosConCobertura, paginacion} = await this.turnoService.buscarTurnosDisponibles({
-                idPaciente: idPaciente,
-                filtros:{
-                    idMedico,
-                    idEspecialidad,
-                    idPractica,
-                    idSede,
-                    fechaDesde,
-                    fechaHasta
-                },
-                paginacion:{
-                    page,
-                    limit
-                }
-            })
-
-            const data = {
-                turnosConCobertura : turnosConCobertura, 
-                paginacion: paginacion}
-
-            res.status(200).json(data)
-        }catch(error){
-            next(error);
-        }
-    }
-    
-    marcarComoRealizado = async(req, res, next) =>{
-        try {
-            const { id } = req.params
-            const { idUsuario } = req.body
-
-            const turno = await this.turnoService.marcarComoRealizado({id, idUsuario})
-
-            const data = turnoMapper.turnoToDTO(turno)
-
-            res.status(200).json(data)
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    marcarComoConfirmado = async(req,res,next) =>{
-        try{
-            const { id } = req.params
-            const { idUsuario } = req.body
-
-            const {turno, notificacion} = await this.turnoService.marcarComoConfirmado({id, idUsuario})
-
-            const data = {
-                turno: turnoMapper.turnoToDTO(turno),
-                notificacion: notificacionMapper.notificacionToDTO(notificacion)
+                fechaHasta
+            },
+            paginacion: {
+                page,
+                limit
             }
+        })
 
-            res.status(200).json(data)
-        } catch(error) {
-            next(error)
+        const data = {
+            turnosConCobertura: turnosConCobertura,
+            paginacion: paginacion
         }
+
+        res.status(200).json(data)
     }
 
-    generarTurnosDisponibles = async(req, res, next) =>{
-        try {
+    marcarComoRealizado = async (req, res) => {
+        const { id } = req.params
+        const { idUsuario } = req.body
 
-            const turnosGuardados = await this.turnoService.generarTurnosDisponibles()
+        const turno = await this.turnoService.marcarComoRealizado({ id, idUsuario })
 
-            const data = turnosGuardados.map(turno => turnoMapper.turnoToDTO(turno))
-            
-            res.status(200).json(data)
-        } catch (error) {
-            next(error)
-        }
-    }
-    
-    modificarFechaTurno = async(req, res, next) =>{
-        try{
-            const { id } = req.params
-            const { idUsuario , nuevaFecha } = req.body
-            
-            const {turnoGuardado, notificacionGuardada} = await this.turnoService.modificarFechaTurno({ 
-                id, 
-                idUsuario, 
-                fecha: nuevaFecha })
+        const data = turnoMapper.turnoToDTO(turno)
 
-            const data = {
-                turno: turnoMapper.turnoToDTO(turnoGuardado),
-                notificacion: notificacionMapper.notificacionToDTO(notificacionGuardada)
-            }
-
-            res.status(200).json(data)
-        }catch(error){
-            next(error)
-        }
+        res.status(200).json(data)
     }
 
-    extraerPaginacion(query){
+    marcarComoConfirmado = async (req, res) => {
+        const { id } = req.params
+        const { idUsuario } = req.body
+
+        const { turno, notificacion } = await this.turnoService.marcarComoConfirmado({ id, idUsuario })
+
+        const data = {
+            turno: turnoMapper.turnoToDTO(turno),
+            notificacion: notificacionMapper.notificacionToDTO(notificacion)
+        }
+
+        res.status(200).json(data)
+    }
+
+    generarTurnosDisponibles = async (req, res) => {
+        const turnosGuardados = await this.turnoService.generarTurnosDisponibles()
+
+        const data = turnosGuardados.map(turno => turnoMapper.turnoToDTO(turno))
+
+        res.status(200).json(data)
+
+    }
+
+    modificarFechaTurno = async (req, res) => {
+        const { id } = req.params
+        const { idUsuario, nuevaFecha } = req.body
+
+        const { turnoGuardado, notificacionGuardada } = await this.turnoService.modificarFechaTurno({
+            id,
+            idUsuario,
+            fecha: nuevaFecha
+        })
+
+        const data = {
+            turno: turnoMapper.turnoToDTO(turnoGuardado),
+            notificacion: notificacionMapper.notificacionToDTO(notificacionGuardada)
+        }
+
+        res.status(200).json(data)
+    }
+
+    extraerPaginacion(query) {
         const numPag = query?.page === undefined ? 1 : Number(query.page)
         const limPag = query?.limit === undefined ? 10 : Number(query.limit)
-        
+
         this.validarEnteroPositivo(numPag, "page")
         this.validarEnteroPositivo(limPag, "limit")
 
         return { numPag, limPag }
     }
 
-    validarEnteroPositivo(numero, parametro){
-        if(!Number.isInteger(numero) || numero <= 0){
+    validarEnteroPositivo(numero, parametro) {
+        if (!Number.isInteger(numero) || numero <= 0) {
             throw new BadRequestError(`El parámetro ${parametro} debe ser un entero positivo`)
         }
     }

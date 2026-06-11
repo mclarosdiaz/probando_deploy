@@ -1,32 +1,24 @@
 export class NotificacionController{
     
-    constructor(notificacionService){
-        this.notificacionService= notificacionService
-    }
-    
-    mostrarNotificaciones = async(req, res, next) =>{
-        try {
-            const { idUsuario } = req.params
-            const { leidas } = req.query
-
-            const notificaciones = await this.notificacionService.mostrarNotificaciones({ idUsuario, leidas })
-            res.status(200).json(notificaciones)
-        }
-        catch (error) {
-            next(error)
-        }
+    constructor(notificacionService) {
+        this.notificacionService = notificacionService
     }
 
-    marcarComoLeida = async(req,res,next)=>{
-        try{
-            const { idUsuario, idNotificacion } = req.params
+    mostrarNotificaciones = async (req, res) => {
+        const { idUsuario } = req.params
+        const { leidas } = req.query
 
-            const data = await this.notificacionService.marcarComoLeida({idUsuario, idNotificacion})
-            res.status(200).json(data)
-        }
-        catch(error)
-        {
-            next(error)
-        }
+        const notificaciones = await this.notificacionService.mostrarNotificaciones({ idUsuario, leidas })
+        res.status(200).json(notificaciones)
+    }
+
+
+    marcarComoLeida = async (req, res) => {
+
+        const { idUsuario, idNotificacion } = req.params
+
+        const data = await this.notificacionService.marcarComoLeida({ idUsuario, idNotificacion })
+        res.status(200).json(data)
+
     }
 }

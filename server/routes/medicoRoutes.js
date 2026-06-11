@@ -11,6 +11,7 @@ import { consultarDisponibilidadSchema,
         modificarServicioSchema
 } from '../schemas/requestsSchemas/medicoRequestSchema.js'
 import { TurnoService } from '../services/turnoService.js'
+import { asyncHandler } from '../middlewares/asyncHandler.js'
 
 const router = Router()
 
@@ -22,37 +23,36 @@ const turnoService = new TurnoService(turnoRepository)
 const service = new MedicoService(medicoRepository, turnoService)
 const controller = new MedicoController(service)
 
-//TODO Comenzar a usar asyncHandler
 
 router.get(
     "/:id/disponibilidades",
     validate(consultarDisponibilidadSchema),
-    controller.consultarDisponibilidades
+    asyncHandler(controller.consultarDisponibilidades)
 )
 
 
 router.patch(
     "/:id/disponibilidades",
     validate(modificarDisponibilidadSchema),
-    controller.modificarDisponibilidades
+    asyncHandler(controller.modificarDisponibilidades)
 )
 
 router.post(
     "/:idMedico/servicios",
     validate(agregarServicioSchema),
-    controller.agregarServicio
+    asyncHandler(controller.agregarServicio)
 )
 
 router.delete(
     "/:idMedico/servicios/:tipo/:idServicio",
     validate(eliminarServicioSchema),
-    controller.eliminarServicio
+    asyncHandler(controller.eliminarServicio)
 )
 
 router.put(
     "/:idMedico/servicios/:tipo/:idServicio",
     validate(modificarServicioSchema),
-    controller.modificarServicio
+    asyncHandler(controller.modificarServicio)
 )
 
 export default router
