@@ -1,8 +1,64 @@
-.home-body{
+/* 🖥️ ESTILOS PARA COMPUTADORA */
+.home-body {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto; 
+    padding: 3rem 0; 
+    overflow-x: hidden;
+}
 
-    justify-content: space-around;
+.contenedor-gif, .contenedor-botones {
+    flex: 1; 
+    display: flex;
+    justify-content: center;
     align-items: center;
     width: 100%;
+}
 
+.contenedor-gif.sapo {
+    justify-content: flex-start;
+    padding-left: 3rem;
+}
+
+.contenedor-botones {
+    justify-content: center;
+}
+
+.contenedor-gif.bicho {
+    justify-content: flex-end;
+    padding-right: 3rem;
+}
+
+
+/* 📱 DISEÑO RESPONSIVO: Para celulares */
+@media (max-width: 768px) {
+    
+    .home-body {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding: 2rem 1rem !important;
+    }
+
+    .contenedor-gif {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+    }
+
+    .contenedor-botones {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 auto !important;
+    }
 }

@@ -9,23 +9,23 @@ const BotonesHome = () =>{
         <div>
             <ul className="listaDeBotones">
                 <li className="globoDeTexto">
-                     ¿Qué buscas hoy?
+                    ¿Qué buscas hoy?
                 </li>
                 <li>
-                    <button className="boton">
-                       <Link to ={'/busquedaDeTurnos'} className = "link-boton"> 
-                        <span className="icono-btn"><IoSearchSharp /></span> 
-                         Buscar turnos nuevos
-                       </Link> 
-                  </button>
+                    <Link to ={'/busquedaDeTurnos'} className = "link-boton"> 
+                        <button className="boton">
+                            <span className="icono-btn"><IoSearchSharp /></span> 
+                            Buscar turnos nuevos
+                        </button>
+                    </Link> 
                 </li>
                 <li>
-                  <button className="boton">
-                     <Link to = {'/historialDeTurnos'} className = "link-boton">
-                      <span className="icono-btn"><LuCalendarClock /></span> 
-                      Consultar historial de turnos
-                      </Link>
-                  </button>
+                    <Link to = {'/historialDeTurnos'} className = "link-boton">
+                        <button className="boton">
+                            <span className="icono-btn"><LuCalendarClock /></span> 
+                            Consultar historial de turnos
+                        </button>
+                    </Link>
                 </li>
             </ul>
         </div>

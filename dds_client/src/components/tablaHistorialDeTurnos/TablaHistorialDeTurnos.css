@@ -1,5 +1,127 @@
-table, th, td{
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+.contenedor-tabla {
+    display: flex;
+    justify-content: center;
     padding: 15px;
-    border-collapse: collapse;
-    border: 5px solid rgba(65,139,24,1.000);
+    width: 100%;
+}
+
+.tablaHistorial {
+    width: 100%;
+    max-width: 1200px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 2px solid rgba(65,139,24,1.000);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); /* Bajamos un toque la opacidad para que sea más sutil */
+}
+
+.cabecerasTablaHistorial {
+    background-color: rgba(65,139,24,1.000);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-family: "Sour Gummy", sans-serif;
+    font-weight: 600;
+}
+
+/* Estilos para las celdas del cuerpo (PC) */
+.tablaHistorial tbody td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+.filtro {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+    padding-right: 20px;
+    font-family: "Sour Gummy", sans-serif;
+}
+
+.filtro input {
+    padding: 8px 12px;
+    width: 250px;
+    border: 2px solid rgba(65,139,24,1);
+    border-radius: 5px;
+}
+
+/* 📱 TRANSFIGURACIÓN PARA CELULARES (Pantallas menores a 768px) */
+@media (max-width: 768px) {
+
+    /* Hacemos que el input de filtro ocupe todo el ancho en mobile */
+    .filtro {
+        justify-content: center;
+        padding: 0 15px;
+    }
+    .filtro input {
+        width: 100%;
+    }
+
+    /* 🎯 Destruimos la estructura rígida de la tabla para que sea flexible */
+    .tablaHistorial, 
+    .tablaHistorial thead, 
+    .tablaHistorial tbody, 
+    .tablaHistorial th, 
+    .tablaHistorial td, 
+    .tablaHistorial tr { 
+        display: block; 
+    }
+    
+    /* Escondemos las cabeceras originales arriba de todo */
+    .tablaHistorial thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    /* Quitamos el borde general de la tabla para dárselo a cada fila */
+    .tablaHistorial {
+        border: none;
+        box-shadow: none;
+    }
+
+    /* 🔥 Cada fila (tr) ahora se convierte en una hermosa TARJETA visual */
+    .tablaHistorial tr { 
+        background: #ffffff;
+        border: 2px solid rgba(65,139,24,1);
+        border-radius: 8px;
+        margin-bottom: 15px;
+        padding: 10px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.0.6);
+    }
+    
+    /* Cada celda (td) se comporta como un renglón dentro de la tarjeta */
+    .tablaHistorial tbody td { 
+        border: none;
+        border-bottom: 1px solid #f1f5f9;
+        position: relative;
+        padding-left: 50% !important; /* Deja la mitad izquierda libre para el título */
+        text-align: right !important;  /* Tira el dato real a la derecha */
+        font-size: 14px;
+    }
+
+    /* Quitamos la línea divisoria a la última celda de la tarjeta */
+    .tablaHistorial tbody td:last-child {
+        border-bottom: none;
+    }
+    
+    /* 🪄 MAGIA: Usamos el data-label para inventar subtítulos pegados a la izquierda */
+    .tablaHistorial tbody td::before { 
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        width: 45%; 
+        padding-right: 10px; 
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: rgba(65,139,24,1); /* El verde de OSECROACK */
+        content: attr(data-label); /* Agarra el texto del atributo html */
+    }
 }

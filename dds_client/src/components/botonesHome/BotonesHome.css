@@ -59,3 +59,38 @@
     transition: background 0.3s ease;
     background-color:  #2e6112;
 }
+
+/* 📱 CORRECCIÓN PARA CELULARES (Pantallas menores a 768px) */
+@media (max-width: 768px) {
+    
+    .listaDeBotones {
+        padding: 0; /* 🎯 ¡LA CLAVE! Eliminamos los 40px invisibles que venían por defecto */
+        margin: 0;  /* Limpiamos márgenes que puedan empujar */
+        width: 100%;
+        gap: 2.5rem; /* Achicamos un poco el espacio vertical entre botones */
+    }
+
+    .globoDeTexto {
+        font-size: 20px; /* Achicamos un toque el "¿Qué buscas hoy?" */
+        padding: 10px;
+    }
+
+    /* Forzamos a que los links y botones no midan más que el celular */
+    .link-boton {
+        width: 100%;
+        max-width: 290px; /* Un tamaño seguro para que entre en cualquier celular */
+        justify-content: center;
+    }
+
+    .boton {
+        width: 100%;       /* Ocupa todo el ancho de su contenedor link */
+        font-size: 16px;   /* Reducimos el texto para que no desborde horizontalmente */
+        padding: 12px 10px; /* Un padding más compacto para pantallas chicas */
+        justify-content: center; /* Centra el texto y el ícono adentro del botón */
+        gap: 10px;
+        
+        /* 💡 REQUERIMIENTO NO FUNCIONAL ACCESIBILIDAD: 
+           Aseguramos que la caja del botón sea cómoda para tocar con el pulgar */
+        min-height: 48px; 
+    }
+}

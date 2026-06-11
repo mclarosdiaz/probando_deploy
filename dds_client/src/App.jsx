@@ -1,25 +1,35 @@
-//import logo from './logo.svg';
 //import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-//import { createTheme, ThemeProvider } from '@mui/material';
 import React, { useState } from 'react';
 import Layout from './features/layout/Layout';
 import Home from './features/home/Home.jsx';
 import HistorialTurnosPage from './features/historialTurnos/HistorialTurnosPage.jsx';
-import BusquedaTurnos from './features/busquedaTurnos/BusquedaTurnos.jsx';
-//import ProductDetailPage from './features/products/ProductDetailPage.jsx';
-//import Checkout from './features/checkout/Checkout.jsx'; NO SE PARA QUE ES
+import BusquedaDeTurnosPage from './features/busquedaTurnos/BusquedaTurnosPage.jsx';
+import { TurnoCartProvider } from './context/carritoTurnosContext.jsx';
+import PreseleccionTurnosPage from './features/preseleccionTurnos/PreseleccionTurnosPage.jsx'
 
 function App() {
   return (
+
+    
+    //TODO Pantallas de Disponibilidad de Médicos
+    //TODO Pantallas de Gestión de Servicios
+    //TODO Terminar pantallas de Búsqueda de Turnos
+    //TODO Pantallas de Visualización de Notificaciones
+    //TODO Iniciar Sesión Card
+    <TurnoCartProvider>
+
     <Routes>
       <Route path="/" element={<Layout/>}>
         <Route index element={<Home/>} />
         <Route path="/historialDeTurnos" element={<HistorialTurnosPage />} />
-        <Route path="/busquedaDeTurnos" element={<BusquedaTurnos />} />
+        <Route path="/busquedaDeTurnos" element={<BusquedaDeTurnosPage />} />
+        <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />}/>
       </Route>
     </Routes>
+
+    </TurnoCartProvider>
   );
 }
 

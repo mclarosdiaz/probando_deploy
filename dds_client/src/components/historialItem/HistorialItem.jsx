@@ -3,13 +3,13 @@ import './HistorialItem.css'
 const HistorialItem = ({turno}) =>{
     return (
         <tr>
-            <th scope="row">{turno.fechaHora}</th>
-            <td>{turno.id}</td>
-            <td>{turno.medico}</td>
-            <td>{turno.servicio}</td>
-            <td>{turno.sede}</td>
-            <td>{turno.estado}</td>
-            <td>{turno.costo}</td>
+            <td data-label="Dia y horario">{turno.fechaHora}</td>
+            <td data-label="ID">{turno.id}</td>
+            <td data-label="Medico">{turno.medico}</td>
+            <td data-label="Servicio">{turno.servicio}</td>
+            <td data-label="Sede">{turno.sede}</td>
+            <td data-label="Estado">{turno.estado}</td>
+            <td data-label="Costo">${turno.costo.toLocaleString('es-AR')}</td>
         </tr>
     );
 };

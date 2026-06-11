@@ -1,7 +1,13 @@
 import './Navbar.css'
 import { Link } from 'react-router-dom';
+import CarritoIndicador from './CarritoIndicador';
+import { useState } from 'react'
+import LoginCard from '../loginCard/LoginCard.jsx'
 
 const Navbar = () =>{
+
+    const [mostrarLogin, setMostrarLogin] = useState(false)
+
     return(
        <header className = "navbar-bg">
         <nav className = "navbar">
@@ -16,7 +22,23 @@ const Navbar = () =>{
             </div>
 
             <div className="navbar-seccon right">
-                <button className="user-icon">👤</button>
+                <CarritoIndicador />
+
+                  <div className="user-container">
+
+                        <button className="user-icon" onClick={() => setMostrarLogin(!mostrarLogin)}>
+                            👤
+                        </button>
+
+                        {mostrarLogin && (
+                            <LoginCard
+                                onClose={() =>
+                                    setMostrarLogin(false)
+                                }
+                            />
+                        )}
+
+                    </div>
             </div>
         </nav>
        </header> 
