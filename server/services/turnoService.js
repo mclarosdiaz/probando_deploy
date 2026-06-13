@@ -67,8 +67,6 @@ export class TurnoService{
                 this.notificacionRepository.save(notificacionCancelado)
         ])
 
-        console.log(turnoCancelado)
-
         return {turnoCancelado, notificacionGuardada}
     }
 
@@ -130,12 +128,13 @@ export class TurnoService{
             this.turnoRepository
                 .buscarTurnosDisponibles(filtros)
         
+
         const turnosConCobertura = turnos.map( turno => 
             {
                 const servicio = turno.servicio
                 const cobertura = 
-                     plan.obtenerCoberturaPractica(servicio) ?? 
-                        plan.obtenerCoberturaEspecialidad(servicio)
+                     plan.obtenerCoberturaPractica(servicio.practica) ?? 
+                        plan.obtenerCoberturaEspecialidad(servicio.servicio)
                     
                 let costoFinal = turno.costo || 0
 

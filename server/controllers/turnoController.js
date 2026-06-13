@@ -110,13 +110,17 @@ export class TurnoController {
 
         const data = {
             turnosConCobertura: turnosConCobertura.map(item => ({
+
                 turno: 
                     turnoMapper.turnoToDTO(item.turno),
                     cobertura: item.cobertura,
                     costo: item.costo
-            })),
+            }
+        )),
             paginacion: paginacion
         }
+
+
 
         res.status(200).json(data)
     }
