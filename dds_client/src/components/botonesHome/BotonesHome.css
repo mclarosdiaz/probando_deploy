@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+.listaDeBotones{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5rem;
+    flex-direction: column;
+    list-style: none;
+}
+
+.globoDeTexto{
+    font-size: 24px;
+    justify-content: space-around;
+    font-family: "Sour Gummy", sans-serif;   
+    background-color: white;
+    padding: 15px;
+}
+
+.botonesDeOpcion{
+    font-size: 24px;
+    color: white;
+    justify-content: space-around;
+    background-color: rgba(65,139,24,1.000);
+    border-radius: 5px;
+    padding: 15px;
+
+}
+
+.link-boton{
+    display: flex;
+    color: white;
+    text-decoration: none;
+    gap: 15px;
+    
+}
+
+.boton {
+    display: flex;
+    font-weight: 600; /* Texto un poco más "gordito" */
+    font-size: 20px;
+    color: white;
+
+    justify-content: space-around;
+    background-color: #418B18;
+    border-radius: 5px;
+    padding: 15px;
+    gap: 15px;
+
+    
+    border: none;           
+    outline: none;
+    cursor: pointer;
+    font-family: "Sour Gummy", sans-serif;   
+    appearance: none;
+}
+
+.boton:hover {
+    transition: background 0.3s ease;
+    background-color:  #2e6112;
+}
+
+/* 📱 CORRECCIÓN PARA CELULARES (Pantallas menores a 768px) */
+@media (max-width: 768px) {
+    
+    .listaDeBotones {
+        padding: 0; /* 🎯 ¡LA CLAVE! Eliminamos los 40px invisibles que venían por defecto */
+        margin: 0;  /* Limpiamos márgenes que puedan empujar */
+        width: 100%;
+        gap: 2.5rem; /* Achicamos un poco el espacio vertical entre botones */
+    }
+
+    .globoDeTexto {
+        font-size: 20px; /* Achicamos un toque el "¿Qué buscas hoy?" */
+        padding: 10px;
+    }
+
+    /* Forzamos a que los links y botones no midan más que el celular */
+    .link-boton {
+        width: 100%;
+        max-width: 290px; /* Un tamaño seguro para que entre en cualquier celular */
+        justify-content: center;
+    }
+
+    .boton {
+        width: 100%;       /* Ocupa todo el ancho de su contenedor link */
+        font-size: 16px;   /* Reducimos el texto para que no desborde horizontalmente */
+        padding: 12px 10px; /* Un padding más compacto para pantallas chicas */
+        justify-content: center; /* Centra el texto y el ícono adentro del botón */
+        gap: 10px;
+        
+        /* 💡 REQUERIMIENTO NO FUNCIONAL ACCESIBILIDAD: 
+           Aseguramos que la caja del botón sea cómoda para tocar con el pulgar */
+        min-height: 48px; 
+    }
+}

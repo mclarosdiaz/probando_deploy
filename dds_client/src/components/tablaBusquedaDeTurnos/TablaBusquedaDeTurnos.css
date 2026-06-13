@@ -1,0 +1,11 @@
+.busquedaDeTurnos-Container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+}
+
+.busqueda{
+    display: flex;
+    flex-direction: row;
+}

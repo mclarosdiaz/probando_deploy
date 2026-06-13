@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+.elementosTablaHistorial{
+    padding: 15px;
+    text-align: center;
+    border: 2px solid rgba(65,139,24,1.000);
+    font-family: "Sour Gummy", sans-serif;
+}
+
+.cabecerasTablaHistorial{
+    background-color: rgba(65,139,24,1.000);
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-family: "Sour Gummy", sans-serif;
+}

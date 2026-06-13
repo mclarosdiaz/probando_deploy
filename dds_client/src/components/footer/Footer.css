@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+footer{
+    width: 100%;
+    background-color:  rgba(65,139,24,1.000);
+    color: white;
+    text-align: center;
+    font-family: "Sour Gummy", sans-serif;
+}

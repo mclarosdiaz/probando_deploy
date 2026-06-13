@@ -1,0 +1,93 @@
+/* Quitamos el subrayado azul que le pone el <Link> por defecto a los textos */
+.carrito-link {
+    text-decoration: none;
+    color: inherit;
+    display: inline-block;
+}
+
+/* El contenedor principal con forma de píldora */
+.carrito-contenedor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0; /* Un gris clarito */
+    border-radius: 9999px; /* Bordes totalmente redondeados */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out; /* Animación suave para el hover */
+}
+
+/* FEEDBACK VISUAL: Cambia el borde a azul cuando el usuario pasa el mouse */
+.carrito-contenedor:hover {
+    border-color: #3b82f6; /* Azul e-commerce */
+    background-color: #f8fafc;
+}
+
+/* Envoltura del ícono para poder posicionar la burbuja encima */
+.icono-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* El ícono de calendario de react-icons */
+.carrito-icono {
+    font-size: 22px;
+    color: #1e293b; /* Gris oscuro para buen contraste */
+}
+
+/* La burbuja roja con el número de turnos (Badge) */
+.carrito-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #ef4444; /* Rojo llamativo de alerta/carrito */
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 9999px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+/* Contenedor del bloque de texto */
+.carrito-info-texto {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+/* Título superior */
+.carrito-titulo {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+/* Subtítulo con el precio acumulado */
+.carrito-subtitulo {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* 📱 DISEÑO RESPONSIVO: Si la pantalla es menor a 640px (Celulares) */
+@media (max-width: 640px) {
+    /* Escondemos el texto por completo */
+    .carrito-info-texto {
+        display: none; 
+    }
+    
+    /* El contenedor deja de ser una píldora larga y se transforma en un círculo perfecto */
+    .carrito-contenedor {
+        padding: 8px;
+        border-radius: 50%; 
+    }
+}
