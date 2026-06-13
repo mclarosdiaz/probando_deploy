@@ -1,5 +1,5 @@
 import './PreseleccionTurnos.css'
-import { useTurnoCart } from '../../hooks/useTurnoCart'
+import { useTurnoCart } from '../../hooks/useTurnoCart.js'
 import TurnoPreseleccionadoCard from "./TurnoPreseleccionadoCard.jsx"
 
 const PreseleccionTurnosPage = () => {
