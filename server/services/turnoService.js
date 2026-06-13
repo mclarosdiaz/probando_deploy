@@ -5,8 +5,6 @@ import {
     NotAllowedError,  
     ValidationError
 } from "../errors/appError.js";
-import { turnoMapper } from "../middlewares/mappers/turnoMapper.js";
-
 export class TurnoService{
     constructor(
         turnoRepository, 
@@ -128,57 +126,74 @@ export class TurnoService{
 
         const plan = paciente.plan
 
-        const { turnos, total } = await this.turnoRepository.findAll({filtros, paginacion})
+        const turnos = await 
+            this.turnoRepository
+                .buscarTurnosDisponibles(filtros)
         
-        const turnosConCobertura = turnos.map(
-            (turno) => {
+        const turnosConCobertura = turnos.map( turno => 
+            {
                 const servicio = turno.servicio
                 const cobertura = 
                      plan.obtenerCoberturaPractica(servicio) ?? 
                         plan.obtenerCoberturaEspecialidad(servicio)
                     
-                    let costoFinal = servicio?.costo || 0
+                let costoFinal = turno.costo || 0
 
-                    if (cobertura?.nivel === "TOTAL") {
-                        costoFinal = 0
-                    } else if (cobertura?.nivel === "PARCIAL") {
-                        costoFinal = costoFinal - (costoFinal * (cobertura.porcentaje / 100))
-                    }
-               
-                return{
-                    turno: turnoMapper.turnoToDTO(turno),
+                if (cobertura?.nivel === "TOTAL") {
+                    costoFinal = 0
+                } 
+                else if (cobertura?.nivel === "PARCIAL") {
+                    costoFinal = costoFinal - (costoFinal * (cobertura.porcentaje / 100))
+                }
+
+                return {
+                    turno: turno,
                     cobertura: cobertura?.nivel,
                     costo: costoFinal
                 }
             }
         )
 
-        turnosConCobertura.sort((turnoA, turnoB) => {
-            if(turnoA.costo <= turnoB.costo){
-                return -1
-            }else if(turnoA.costo == turnoB.costo){
-                if(turnoA.turno.fechaHora >= turnoB.turno.fechaHora){
-                    return -1
-                }else{
-                    return 1
-                }
-            }else{
-                return 1
-            }  
+        turnosConCobertura.sort((a, b) => {
+            if(a.costo !== b.costo){
+                return a.costo - b.costo
+            }
+            
+            return new Date(a.turno.fechaHora) - new Date(b.turno.fechaHora)  
         })
 
-        const {page, limit} = paginacion
+        const page = Number(paginacion?.page) || 1
+        
+        const limit = Number(paginacion?.limit) || 10
+
+        const total = turnosConCobertura.length
+
         const totalPages = Math.ceil(total / limit)
 
+        const inicio = (page - 1) * limit
+
+        const fin = inicio + limit
+
+        const pagina = turnosConCobertura.slice(
+            inicio,
+            fin
+        )
+
         return{
-            turnosConCobertura,
-            paginacion:{
+            turnosConCobertura: pagina,
+            paginacion: {
                 page,
+                limit,
+                total,
                 totalPages,
-                total
+                hasNextPage: 
+                    page < totalPages,
+                hasPrevPage: 
+                    page > 1
             }
         }
     }
+    
 
     async marcarComoRealizado({id, idUsuario}) {
         const turno = await this.turnoRepository.findById(id)

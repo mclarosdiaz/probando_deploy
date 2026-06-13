@@ -79,10 +79,11 @@ export class MongoTurnoRepository {
 
         const offset = (page - 1) * limit
 
-        const documents = await this.model
+        let documents = await this.model
             .find(query)
             .skip(offset)
             .limit(limit)
+        
 
         const turnos = await Promise.all(documents.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno)))
 
@@ -91,6 +92,105 @@ export class MongoTurnoRepository {
             turnos,
             total
         }
+    }
+
+    async buscarTurnosDisponibles( filtros = {} ){
+        
+        const {
+            nombreMedico,
+            nombreEspecialidad,
+            nombrePractica,
+            nombreSede,
+            fechaDesde,
+            fechaHasta
+        } = filtros
+
+        const matchTurno = {
+            estado: "DISPONIBLE"
+        }
+
+        if(fechaDesde || fechaHasta){
+            matchTurno.fechaHora = {}
+
+            if(fechaDesde){
+                matchTurno.fechaHora.$gte = new Date(fechaDesde)
+            }
+
+            if(fechaHasta){
+                matchTurno.fechaHora.$lte = new Date(fechaHasta)
+            }
+        }
+
+        if(nombrePractica){
+            matchTurno["servicio.practica.nombre"] = {
+                $regex: nombrePractica,
+                $options: "i"
+            }
+        }
+
+        if(nombreEspecialidad){
+            matchTurno["servicio.especialidad.nombre"] = {
+                $regex: nombreEspecialidad,
+                $options: "i"
+            }
+        }
+
+        const pipeline = [
+
+            {
+                $match: matchTurno
+            },
+
+            {
+                $lookup: {
+                    from: "medicos",
+                    localField: "medico",
+                    foreignField: "_id",
+                    as: "medico"
+                }
+            },
+            {
+                $unwind: "$medico"
+            },
+
+            {
+                $lookup: {
+                    from: "sedes",
+                    localField: "sede",
+                    foreignField: "_id",
+                    as: "sede"
+                }
+            }, 
+            {
+                $unwind: "$sede"
+            }
+
+        ]
+
+        if(nombreMedico){
+            pipeline.push({
+                $match: {
+                    "medico.nombre": {
+                        $regex: nombreMedico,
+                        $options: "i"
+                    }
+                }
+            })
+        }
+
+        if(nombreSede){
+            pipeline.push({
+                $match: {
+                    "sede.nombre": {
+                        $regex: nombreSede,
+                        $options: "i"
+                    }
+                }
+            })
+        }
+
+        return await this.model.aggregate(pipeline)
+
     }
 
     async eliminarDisponiblesFuturos(idMedico, fechaHora){

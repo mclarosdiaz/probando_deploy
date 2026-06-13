@@ -85,20 +85,20 @@ export class TurnoController {
         const { page, limit } = req.query;
 
         const {
-            idMedico,
-            idEspecialidad,
-            idPractica,
-            idSede,
+            nombreMedico,
+            nombreEspecialidad,
+            nombrePractica,
+            nombreSede,
             fechaDesde,
             fechaHasta } = req.body
 
         const { turnosConCobertura, paginacion } = await this.turnoService.buscarTurnosDisponibles({
             idPaciente: idPaciente,
             filtros: {
-                idMedico,
-                idEspecialidad,
-                idPractica,
-                idSede,
+                nombreMedico,
+                nombreEspecialidad,
+                nombrePractica,
+                nombreSede,
                 fechaDesde,
                 fechaHasta
             },
@@ -109,7 +109,12 @@ export class TurnoController {
         })
 
         const data = {
-            turnosConCobertura: turnosConCobertura,
+            turnosConCobertura: turnosConCobertura.map(item => ({
+                turno: 
+                    turnoMapper.turnoToDTO(item.turno),
+                    cobertura: item.cobertura,
+                    costo: item.costo
+            })),
             paginacion: paginacion
         }
 
