@@ -8,6 +8,7 @@ function parseFecha(fechaStr) {
     const [dia, mes, anio] = fechaStr.split("/");
     return new Date(`${anio}-${mes}-${dia}`);
 }
+
 const TablaBusquedaDeTurnos = () =>{
     const { agregarTurno } = useTurnoCart()
     const [filtroServicio,setFiltroServicio] = useState("")
