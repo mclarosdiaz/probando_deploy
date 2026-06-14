@@ -1,4 +1,3 @@
-import { Turno } from "./turno.js";
 import { Notificacion } from "./notificacion.js";
 
 export const estrategiasNotificacion = {
@@ -7,7 +6,7 @@ export const estrategiasNotificacion = {
             turno.id,
             turno.destinatarioUltimoCambioEstado(), 
             turno.remitenteUltimoCambioEstado(), 
-            `Se reservó un turno para ${turno.servicio}`
+            `Se reservó un turno para ${turno.servicio.nombre}`
         ),
 
         // CONFIRMADO (ID: 3)

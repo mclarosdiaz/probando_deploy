@@ -1,47 +1,25 @@
 // scripts/seedTestData.js
 
-import mongoose from "mongoose"
-import dotenv from "dotenv"
-
 import { UsuarioModel } from "../server/schemas/DBSchemas/usuarioSchema.js"
 import { MedicoModel } from "../server/schemas/DBSchemas/medicoSchema.js"
 import { PacienteModel } from "../server/schemas/DBSchemas/pacienteSchema.js"
 import { SedeModel } from "../server/schemas/DBSchemas/sedeSchema.js"
 import { TurnoModel } from "../server/schemas/DBSchemas/turnoSchema.js"
-import { practicaEmbeddedSchema } from "../server/schemas/DBSchemas/practicaEmbeddedSchema.js"
-import { especialidadEmbeddedSchema } from "../server/schemas/DBSchemas/especialidadEmbeddedSchema.js"
 import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js"
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js"
-import { ObraSocial } from "../server/domain/obraSocial.js"
+import { NotificacionModel } from "../server/schemas/DBSchemas/notificacionSchema.js"
 
-dotenv.config()
 
 export async function seedTestData() {
-   
-    // limpiar
-    await Promise.all([
-        UsuarioModel.deleteMany({}),
-        MedicoModel.deleteMany({}),
-        PacienteModel.deleteMany({}),
-        SedeModel.deleteMany({}),
-        TurnoModel.deleteMany({}),
-        ObraSocialModel.deleteMany({}),
-        PlanModel.deleteMany({})
-    ])
+    
 
     // usuarios
-
-    const idUsuarioMedico = new mongoose.Types.ObjectId("507f1f77bcf86cd799439014")
-    const idUsuarioPaciente = new mongoose.Types.ObjectId("507f1f77bcf86cd799439015")
-
     const usuarioMedico = await UsuarioModel.create({
-        _id: idUsuarioMedico,
         nombre: "Gregory_House",
         password: "1234"
     })
 
     const usuarioPaciente = await UsuarioModel.create({
-        _id: idUsuarioPaciente,
         nombre: "Juan_Perez",
         password: "1234",
     })
@@ -53,10 +31,8 @@ export async function seedTestData() {
     })
 
     // medico
-const medicoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439011")
 
 const medico = await MedicoModel.create({
-    _id: medicoId,
 
     usuario: usuarioMedico._id,
 
@@ -179,9 +155,7 @@ const medico = await MedicoModel.create({
 
     // PACIENTE
 
-    const pacienteId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439013")
     const paciente = await PacienteModel.create({
-        _id: pacienteId,
         
         usuario: usuarioPaciente._id,
 
@@ -195,30 +169,31 @@ const medico = await MedicoModel.create({
     })
 
     // turnos
-    const turnoId = new mongoose.Types.ObjectId("507f1f77bcf86cd799439012")
-
+   
     const turno = await TurnoModel.create({
-        _id: turnoId,
 
         medico: medico._id,
 
         paciente: paciente._id,
 
-        fechaHora: new Date("2026-06-01T10:00:00"),
+        fechaHora: new Date("2026-06-14T10:00:00"),
 
         sede: sede._id,
 
-        practica: {
-            id : "1236",
-            codigo: "ECG001",
-            nombre: "Electrocardiograma",
-            duracionTurnoEnMins: 20,
-            costo: 12000
+        servicio: {
+            tipo: "PRACTICA",
+            practica:{
+                id: "1236",
+                codigo: "ECG001",
+                nombre: "Electrocardiograma",
+                duracionTurnoEnMins: 20,
+                costo: 12000
+            }
         },
 
         estado: "RESERVADO",
 
-        historialEstado: [
+        historialEstados: [
             {
                 fechaHoraIngreso: new Date("2026-05-20T09:00:00"),
                 estado: "DISPONIBLE",
@@ -226,7 +201,7 @@ const medico = await MedicoModel.create({
                 motivo: "Creación del turno disponible"
             },
             {
-                fechaHoraIngreso: new Date("2026-05-28T14:30:00"),
+                fechaHoraIngreso: new Date("2026-06-10T14:30:00"),
                 estado: "RESERVADO",
                 usuario: usuarioPaciente._id,
                 motivo: "Reserva realizada por el paciente"
@@ -235,6 +210,68 @@ const medico = await MedicoModel.create({
 
         costo: 12000
     })
+    
+   
+    const turnoSinReservar = await TurnoModel.create({
+   
+        medico: medico._id,
 
-    //console.log("Seed completado")
+        fechaHora: new Date("2026-06-10T10:00:00"),
+
+        sede: sede._id,
+
+        servicio:{
+            tipo: "PRACTICA",
+            practica: {
+                id: "1236",
+                codigo: "ECG001",
+                nombre: "Electrocardiograma",
+                duracionTurnoEnMins: 20,
+                costo: 12000
+            },   
+        },
+
+        estado: "DISPONIBLE",
+
+        historialEstados: [
+            {
+                fechaHoraIngreso: new Date("2026-05-20T09:00:00"),
+                estado: "DISPONIBLE",
+                usuario: usuarioMedico._id,
+                motivo: "Creación del turno disponible"
+            }
+        ],
+
+        costo: 12000
+    })
+
+    //Notificacion
+ 
+    const notificacion = await NotificacionModel.create({
+        
+        destinatario: usuarioPaciente._id,
+
+        remitente: usuarioPaciente._id,
+
+        mensaje: "HOLA",
+
+        fechaHoraCreacion: new Date(),
+
+        fechaHoraLeida: new Date(),
+
+    })
+
+    return {
+        usuarioMedico,
+        usuarioPaciente,
+        medico,
+        paciente,
+        sede,
+        plan,
+        obraSocial,
+        turno,
+        turnoSinReservar,
+        notificacion
+    }
+    
 }

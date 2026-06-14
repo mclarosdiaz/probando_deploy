@@ -8,4 +8,9 @@
 .busqueda{
     display: flex;
     flex-direction: row;
+    padding: 15px;
+}
+
+.tablaDeTurnosDisponibles{
+   padding: 15px; 
 }

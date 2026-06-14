@@ -3,7 +3,6 @@ import { Turno } from "../../domain/turno.js";
 import { EstadoTurno } from "../../domain/estadoTurno.js";
 import { practicaEmbeddedSchema } from "./practicaEmbeddedSchema.js";
 import { especialidadEmbeddedSchema } from "./especialidadEmbeddedSchema.js";
-import { reservarTurnoSchema } from "../requestsSchemas/turnoRequestSchemas.js";
 import { cambioEstadoTurnoEmbeddedSchema } from "./cambioEstadoTurnoSchema.js";
 
 const turnoSchema = new mongoose.Schema({
@@ -15,7 +14,7 @@ const turnoSchema = new mongoose.Schema({
     paciente:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Paciente', 
-        required: true
+        required: false
     }, 
     fechaHora:{
         type: Date,
@@ -26,21 +25,33 @@ const turnoSchema = new mongoose.Schema({
         ref: 'Sede',
         required: true
     },
-    practica:{
-        type: practicaEmbeddedSchema, 
-        required: false
-    }, 
-    especialidad:{
-        type: especialidadEmbeddedSchema, 
-        required: false
-    }, 
+
+    servicio: {
+        tipo: {
+            type: String,
+            enum: ["PRACTICA", "ESPECIALIDAD"],
+            required: true
+        }, 
+
+        practica:{
+            type: practicaEmbeddedSchema,
+            required: false
+        }, 
+
+        especialidad:{
+            type: especialidadEmbeddedSchema,
+            required: false
+        } 
+
+    },
+   
     estado:{
         type: String,
         enum: Object.values(EstadoTurno),
         required: true, 
         default: EstadoTurno.DISPONIBLE
     },
-    historialEstado:[cambioEstadoTurnoEmbeddedSchema],
+    historialEstados:[cambioEstadoTurnoEmbeddedSchema],
     
     costo:{
         type: Number,

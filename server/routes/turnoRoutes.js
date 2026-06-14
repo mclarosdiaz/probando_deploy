@@ -1,11 +1,10 @@
 import { Router } from 'express'
 import { TurnoController } from '../controllers/turnoController.js'
 import { TurnoService } from "../services/turnoService.js"
-import { validate, validateQuery } from '../middlewares/validate.js'
+import { validate } from '../middlewares/validate.js'
 import { 
     reservarTurnoSchema,
     cancelarTurnoRequestSchema,
-    obtenerHistorialTurnosSchema,
     modificarEstadoTurnoSchema,
     generarTurnosDisponiblesSchema,
     modificarFechaTurnoSchema,
@@ -17,6 +16,7 @@ import { MongoNotificacionRepository } from '../repositories/notificacionReposit
 import { MongoSedeRepository } from '../repositories/sedeRepository.js'
 import { MongoUsuarioRepository } from '../repositories/usuarioRepository.js'
 import { MongoPacienteRepository } from '../repositories/pacienteRepository.js'
+import { asyncHandler } from '../middlewares/asyncHandler.js'
 
 
 const router = Router()
@@ -37,60 +37,48 @@ const turnoService = new TurnoService(turnoRepository,
     
 const controller = new TurnoController(turnoService)
 
+
+router.post(
+    "/disponibles/busqueda", 
+    validate(busquedaDeTurnosDisponiblesSchema),
+    asyncHandler(controller.buscarTurnosDisponibles)
+)
+router.post(
+    "/disponibilidad",
+    validate(generarTurnosDisponiblesSchema),
+    asyncHandler(controller.generarTurnosDisponibles)
+)
 router.patch(
     "/:id/reservar",
     validate(reservarTurnoSchema),
-    controller.reservar
+    asyncHandler(controller.reservar)
 )
 
-router.get(
-    "/",
-    validate(obtenerHistorialTurnosSchema),
-    //TODO mover pacienteId a PATH param
-    //mover a rutas de paciente
-    controller.obtenerHistorialTurnos
-)
-
-router.patch(
+router.post(
     "/:id/cancelar",
     validate(cancelarTurnoRequestSchema),
-    controller.cancelarTurno
+    asyncHandler(controller.cancelarTurno)
 )
 
-router.patch(
-    "/:id/confirmado",
+router.post(
+    "/:id/confirmar",
     validate(modificarEstadoTurnoSchema),
-    controller.marcarComoConfirmado
+    asyncHandler(controller.marcarComoConfirmado)
 )
-
-//TODO patch sobre confirmado/cancelado es incorrecto
 
 router.patch(
     "/:id/realizado",
     validate(modificarEstadoTurnoSchema),
-    controller.marcarComoRealizado
+    asyncHandler(controller.marcarComoRealizado)
 )
 
-//TODO nombre de ruta debería ser sustantivo/adjetivo ("/TURNOS/disponibilidad")
 router.post(
-    "/generarTurnosDisponibles",
-    validate(generarTurnosDisponiblesSchema),
-    controller.generarTurnosDisponibles
-)
-
-//(PATCH contra Turno. Quitar modificarFecha) / PUT contra fecha
-router.patch(
-    "/:id/modificarFecha",
+    "/:id/modificacionFecha",
     validate(modificarFechaTurnoSchema),
-    controller.modificarFechaTurno
+    asyncHandler(controller.modificarFechaTurno)
 )
 
-//Mover a Body de Request o mover ENDPOINT a gestión de pacientes
-router.get(
-    "/:idPaciente/turnosDisponibles", //TEMPORAL
-    validate(busquedaDeTurnosDisponiblesSchema),
-    controller.buscarTurnosDisponibles
-)
+
 
 
 export default router

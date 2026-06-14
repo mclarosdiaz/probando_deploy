@@ -1,4 +1,3 @@
-import { Plan } from "./plan.js";
 
 export class ObraSocial{
     id
