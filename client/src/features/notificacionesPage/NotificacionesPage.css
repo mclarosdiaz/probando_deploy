@@ -2,12 +2,13 @@
     max-width: 800px;
     margin: 2rem auto;
     padding: 0 1rem;
-    /* Esto asegura que el footer no se suba si hay pocas notificaciones */
+      font-family: "Sour Gummy", sans-serif;
     min-height: 70vh; 
 }
 
 .notificaciones-seccion {
     margin-bottom: 2rem;
+      font-family: "Sour Gummy", sans-serif;
 }
 
 .notificaciones-lista {
