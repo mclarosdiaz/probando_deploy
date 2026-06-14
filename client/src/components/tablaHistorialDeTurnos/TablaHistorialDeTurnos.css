@@ -49,6 +49,10 @@
     border: 2px solid rgba(65,139,24,1);
     border-radius: 5px;
 }
+.clickable {
+    cursor: pointer;
+    user-select: none;
+}
 
 /* 📱 TRANSFIGURACIÓN PARA CELULARES (Pantallas menores a 768px) */
 @media (max-width: 768px) {

@@ -2,6 +2,12 @@ import './TablaBusquedaDeTurnos.css'
 import { useTurnoCart } from "../../hooks/useTurnoCart.js"
 import { useState } from "react"
 import { turnosDisponibles } from '../../mockdata/Turnos.js';
+import  BusquedaItem  from '../busquedaItem/BusquedaItem.jsx';
+
+function parseFecha(fechaStr) {
+    const [dia, mes, anio] = fechaStr.split("/");
+    return new Date(`${anio}-${mes}-${dia}`);
+}
 
 const TablaBusquedaDeTurnos = () =>{
     const { agregarTurno } = useTurnoCart()
@@ -10,7 +16,43 @@ const TablaBusquedaDeTurnos = () =>{
     const [filtroSede,setFiltroSede] = useState("")
     const [fechaDesde, setFechaDesde] = useState("");
     const [fechaHasta, setFechaHasta] = useState("");
-    const turnosAMostrar = turnosDisponibles;
+    
+    const turnosFiltrados = turnosDisponibles.filter((turno) => {
+        const coincideServicio = turno.servicio
+            ?.toLowerCase()
+            .includes(filtroServicio.toLowerCase())
+
+        const coincideMedico = turno.medico
+            ?.toLowerCase()
+            .includes(filtroMedico.toLowerCase())
+
+        const coincideSede = turno.sede
+            ?.toLowerCase()
+            .includes(filtroSede.toLowerCase())
+
+        const fechaTurno = parseFecha(turno.fechaHora)
+
+        const coincideDesde = fechaDesde
+            ? fechaTurno >= parseFecha(fechaDesde)
+            : true
+
+        const coincideHasta = fechaHasta
+            ? fechaTurno <= parseFecha(fechaHasta)
+            : true
+
+        return (
+            coincideServicio &&
+            coincideMedico &&
+            coincideSede &&
+            coincideDesde &&
+            coincideHasta
+        )
+    })
+
+    const turnosOrdenados = [...turnosFiltrados].sort((a, b) =>
+        parseFecha(a.fechaHora) - parseFecha(b.fechaHora)
+    )
+
     return (
         <>
         <div className = "busquedaDeTurnos-Container">
@@ -62,7 +104,13 @@ const TablaBusquedaDeTurnos = () =>{
                         </tr>
                     </thead>
                     <tbody>
-                        {/*{turnosAMostrar.filter((turno)=>turno.servicio?.toLowerCase().includes(filtroServicio.toLowerCase())).map((turno)=>(<HistorialItem key={turno.id} turno={turno}/>))}*/}
+                         {turnosOrdenados.map((turno) => (
+                            <BusquedaItem
+                                key={turno.id}
+                                turno={turno}
+                                onAgregar={() => agregarTurno(turno)}
+                            />
+                          ))}
                     </tbody>
                 </table>
             </div>
@@ -74,11 +122,3 @@ const TablaBusquedaDeTurnos = () =>{
 
 
 export default TablaBusquedaDeTurnos;
-
-/*          <button
-            onClick={() =>agregarTurno({
-                id: Date.now(),
-                precio: 5000
-            })}> Agregar turno fake
-        </button>
-*/

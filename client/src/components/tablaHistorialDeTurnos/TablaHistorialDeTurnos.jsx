@@ -3,9 +3,27 @@ import { historialTurnos } from '../../mockdata/Turnos.js';
 import HistorialItem from '../historialItem/HistorialItem.jsx';
 import { useState } from "react"
 
-
+function parseFecha(fechaStr) {
+    const [dia, mes, anio] = fechaStr.split("/");
+    return new Date(`${anio}-${mes}-${dia}`);
+}
 const TablaHistorialDeTurnos = () =>{
     const [filtroServicio,setFiltroServicio] = useState("")
+    const [ordenAsc, setOrdenAsc] = useState(true)
+    const handleOrdenFecha = () => {
+        setOrdenAsc(!ordenAsc)
+    }
+    const turnosFiltrados = historialTurnos.filter((turno) =>
+        turno.servicio?.toLowerCase().includes(filtroServicio.toLowerCase())
+    )
+    const turnosOrdenados = [...turnosFiltrados].sort((a, b) => {
+        const fechaA = parseFecha(a.fechaHora)
+        const fechaB = parseFecha(b.fechaHora)
+
+        return ordenAsc
+            ? fechaA - fechaB   
+            : fechaB - fechaA  
+    })
     return (
         <>
             <div className="filtro">
@@ -20,6 +38,10 @@ const TablaHistorialDeTurnos = () =>{
                 <table className = "tablaHistorial">
                     <thead>
                         <tr>
+                             <th className="cabecerasTablaHistorial clickable" 
+                             onClick={handleOrdenFecha}>
+                                Dia y horario {ordenAsc ? "↑" : "↓"}
+                            </th>
                             <th scope="col" data-label="Dia y horario" className="cabecerasTablaHistorial">Dia y horario</th>
                             <th scope="col" data-label="ID" className="cabecerasTablaHistorial">ID</th>
                             <th scope="col" data-label="Medico" className="cabecerasTablaHistorial">Medico</th>
@@ -30,7 +52,9 @@ const TablaHistorialDeTurnos = () =>{
                         </tr>
                     </thead>
                     <tbody>
-                        {historialTurnos.filter((turno)=>turno.servicio?.toLowerCase().includes(filtroServicio.toLowerCase())).map((turno)=>(<HistorialItem key={turno.id} turno={turno}/>))}
+                       {turnosOrdenados.map((turno) => (
+                            <HistorialItem key={turno.id} turno={turno} />
+                        ))}
                     </tbody>
                 </table>
             </div>
