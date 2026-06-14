@@ -8,6 +8,7 @@ import HistorialTurnosPage from './features/historialTurnos/HistorialTurnosPage.
 import BusquedaDeTurnosPage from './features/busquedaTurnos/BusquedaTurnosPage.jsx';
 import { TurnoCartProvider } from './context/carritoTurnosContext.jsx';
 import PreseleccionTurnosPage from './features/preseleccionTurnos/PreseleccionTurnosPage.jsx'
+import Registrar from './components/registrar/Registrar.jsx';
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
           <Route path="/historialDeTurnos" element={<HistorialTurnosPage />} />
           <Route path="/busquedaDeTurnos" element={<BusquedaDeTurnosPage />} />
           <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />} />
+          <Route path="/registrar" element={<Registrar />} />
+    
         </Route>
       </Routes>
 

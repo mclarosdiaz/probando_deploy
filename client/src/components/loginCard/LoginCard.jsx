@@ -1,56 +1,127 @@
 // components/LoginCard.jsx
-import './loginCard.css'
+import {
+    Box,
+    Card,
+    Typography,
+    TextField,
+    Button,
+    IconButton,
+    Stack
+} from '@mui/material'
 
-//TODO Im
+import { Link } from 'react-router-dom'
+
+
 
 const LoginCard = ({ onClose }) => {
-    return (
-        <div className="login-card">
-            <div className="login-header">
-                <h3>Iniciar sesión</h3>
 
-                <button
-                    className="close-btn"
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        //TODO: login backend
+    }
+
+    return(
+        <Card
+            sx={{
+                position: 'absolute',
+                top: '60px',
+                right: 0,
+
+                width: 340, 
+
+                borderRadius: 4,
+                boxShadow: 8,
+
+                p: 3,
+                zIndex: 1000
+            }}
+        >
+
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={2}
+            >
+                <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                >
+                    Iniciar sesión
+                </Typography>
+
+                <IconButton
+                    size="small"
                     onClick={onClose}
                 >
                     ✕
-                </button>
-            </div>
+                </IconButton>
 
-            <form className="login-form">
-                <div className="input-group">
-                    <label>Email</label>
-                    <input
-                        type="text"
-                        placeholder="Usuario"
-                    />
-                </div>
-
-                <div className="input-group">
-                    <label>Contraseña</label>
-                    <input
-                        type="password"
-                        placeholder="********"
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    className="login-btn"
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit}
                 >
-                    Iniciar sesión
-                </button>
-            </form>
+                    <Stack spacing={2}>
+                        <TextField
+                            label = "Usuario"
+                            type='text'
+                            fullWidth
+                            required
+                        />
+                        
+                        <TextField
+                            label="Contraseña"
+                            type='password'
+                            fullWidth
+                            required
+                        />
 
-            <div className="login-footer">
-                <a href="/">¿Olvidaste tu contraseña?</a>
+                        <Button
+                            type="submit"
+                            variant='contained'
+                            fullWidth
+                            size="large"
+                            sx={{
+                                borderRadius: 3,
+                                textTransform: 'none'
+                            }}
+                        >
+                            Iniciar sesión
+                        </Button>
 
-                <span>
-                    ¿No tenés cuenta? <a href="/">Registrarse</a>
-                </span>
-            </div>
-        </div>
+                    </Stack>
+
+                </Box>
+
+                <Box
+                    mt={3}
+                    display = "flex"
+                    flexDirection="column"
+                    gap={1}
+                >
+                    <Link to= "/recuperar-password">
+                            ¿Olvidaste tu contraseña?
+                    </Link>
+
+                    <Typography variant='body2'>
+                        ¿No tenés cuenta? {' '}
+                        <Link
+                            to="/registrar"
+                            onClick={onClose}
+                        >
+                            Registrarse
+                        </Link>
+                    </Typography>
+
+                </Box>
+
+            </Box>
+
+        </Card>
     )
+
+
 }
 
 export default LoginCard
