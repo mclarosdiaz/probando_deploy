@@ -15,7 +15,7 @@
 }
 
 
-.navbar-seccon, .navbar-seccion {
+.navbar-seccion {
     display: flex;
     align-items: center;
     flex: 1; /* Ocupan 1/3 del total cada una */
