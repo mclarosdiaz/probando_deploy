@@ -3,14 +3,15 @@ import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import Layout from './features/layout/Layout.jsx';
-import Home from './features/home/Home.jsx';
+import HomePacientePage from './features/homePacientePage/HomePacientePage.jsx';
 import HistorialTurnosPage from './features/historialTurnos/HistorialTurnosPage.jsx';
+import NotificacionesPage from './features/notificacionesPage/NotificacionesPage.jsx';
 import BusquedaDeTurnosPage from './features/busquedaTurnos/BusquedaTurnosPage.jsx';
 import { TurnoCartProvider } from './context/carritoTurnosContext.jsx';
 import PreseleccionTurnosPage from './features/preseleccionTurnos/PreseleccionTurnosPage.jsx'
 import Registrar from './components/registrar/Registrar.jsx';
 import MedicoAgendaPage from './features/pages/medico/MedicoAgendaPage.jsx';
-
+import GestionServicios from './components/gestionServicios/GestionServicios.jsx'
 function App() {
   return (
 
@@ -24,12 +25,14 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index element={<HomePacientePage />} />
           <Route path="/historialDeTurnos" element={<HistorialTurnosPage />} />
           <Route path="/busquedaDeTurnos" element={<BusquedaDeTurnosPage />} />
           <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />} />
+          <Route path="/notificaciones" element={<NotificacionesPage/>}/>
           <Route path="/registrar" element={<Registrar />} />
           <Route path="/medico" element={<MedicoAgendaPage />} />
+          <Route path="/gs" element={<GestionServicios />} />
         </Route>
       </Routes>
 

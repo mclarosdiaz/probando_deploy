@@ -1,6 +1,7 @@
 import './Navbar.css'
 import { Link } from 'react-router-dom';
 import CarritoIndicador from './CarritoIndicador.jsx';
+import NotificacionesIndicador from './NotificacionesIndicador';
 import logo from '../../assets/osecroacklogo.png'
 import { useState } from 'react'
 import LoginCard from '../loginCard/LoginCard.jsx'
@@ -14,7 +15,7 @@ const Navbar = () => {
         <header className="navbar-bg">
             <nav className="navbar">
                 <div className="navbar-seccion left">
-                    <button className="menu-icon">☰</button>
+                    <NotificacionesIndicador />
                 </div>
 
                 <div className="navbar-seccion centro">
@@ -24,8 +25,9 @@ const Navbar = () => {
                 </div>
 
                 <div className="navbar-seccion right">
-                    <CarritoIndicador />
 
+                    <CarritoIndicador />
+                    
                     <div className="user-container">
 
                         <button className="user-icon" onClick={() => setMostrarLogin(!mostrarLogin)}>
@@ -46,5 +48,4 @@ const Navbar = () => {
         </header>
     );
 };
-
 export default Navbar;

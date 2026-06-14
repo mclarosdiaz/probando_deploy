@@ -1,9 +1,9 @@
-import './Home.css'
+import './HomePacientePage.css'
 import GifSapo from "../../components/gifSapo/GifSapo.jsx";
 import BotonesHome from "../../components/botonesHome/BotonesHome.jsx";
 import GifMosuclos from '../../components/gifMosculos/GifMosculos.jsx';
 
-const Home = () => {
+const HomePacientePage = () => {
     return (
         <div className="home-body">
             <div className="contenedor-gif sapo">
@@ -21,4 +21,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HomePacientePage;

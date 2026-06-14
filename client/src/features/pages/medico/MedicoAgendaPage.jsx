@@ -1,32 +1,32 @@
 import {
     Box,
-    Typography,
-    Paper
+    Typography
 } from '@mui/material'
 
-import AgendaCalendar from '../../../components/medico/AgendaCalendar'
+import AgendaCalendar
+from '../../../components/medico/AgendaCalendar'
+
+import useTurnosMedico
+from '../../../hooks/useTurnosMedico'
 
 export default function MedicoAgendaPage() {
+
+    const { turnos } =
+        useTurnosMedico()
 
     return (
         <Box p={4}>
 
             <Typography
                 variant="h4"
-                gutterBottom
+                mb={3}
             >
                 Agenda médica
             </Typography>
 
-            <Paper
-                elevation={3}
-                sx={{
-                    p: 2,
-                    borderRadius: 4
-                }}
-            >
-                <AgendaCalendar />
-            </Paper>
+            <AgendaCalendar
+                turnos={turnos}
+            />
 
         </Box>
     )

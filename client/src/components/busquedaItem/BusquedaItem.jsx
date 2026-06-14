@@ -1,21 +1,57 @@
 import './BusquedaItem.css'
 import { useTurnoCart } from "../../hooks/useTurnoCart.js"
-const BusquedaItem = ({turno}) =>{
+
+const BusquedaItem = ({ turno: itemConCobertura }) => {
     const { agregarTurno } = useTurnoCart()
-    const handleAgregar = () =>
-    {
-        agregarTurno(turno)
+
+    const { turno, costo, cobertura } = itemConCobertura
+    
+    const medicoNombre = turno?.medico?.nombre || "Médico no asignado"
+    const sedeNombre = turno?.sede?.nombre || "Sede no asignada"
+    
+    const servicioNombre = turno?.servicio?.practica?.nombre || turno?.servicio?.especialidad?.nombre || "Consulta General"
+
+    const formatearFecha = (fechaStr) => {
+        if (!fechaStr) return "Sin fecha";
+        const fecha = new Date(fechaStr);
+        return fecha.toLocaleString('es-AR', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+        }) + " hs";
     }
+
+    const handleAgregar = () => {
+        
+        agregarTurno({
+            id: turno.id || turno._id,
+            fechaHora: formatearFecha(turno.fechaHora),
+            servicio: servicioNombre,
+            sede: sedeNombre,
+            medico: medicoNombre,
+            costo: costo,
+            cobertura: cobertura
+        })
+    }
+
     return (
         <tr>
-            <td data-label="Dia y horario">{turno.fechaHora}</td>
-            <td data-label="Servicio">{turno.servicio}</td>
-            <td data-label="Sede">{turno.sede}</td>
-            <td data-label="Medico">{turno.medico}</td>
-            <td data-label="Costo">${turno.costo.toLocaleString('es-AR')}</td>
+            <td data-label="Dia y horario"><strong>{formatearFecha(turno?.fechaHora)}</strong></td>
+            <td data-label="Servicio">{servicioNombre}</td>
+            <td data-label="Sede">{sedeNombre}</td>
+            <td data-label="Medico">{medicoNombre}</td>
+            <td data-label="Costo">
+                <span className={`badge-cobertura ${cobertura}`}>
+                    {costo === 0 ? "Cubierto 100%" : `$${costo.toLocaleString('es-AR')}`}
+                </span>
+            </td>
             <td>
-                <button className = "botonAgregarAlCarrito"
-                onClick={handleAgregar}> 
+                <button 
+                    className="botonAgregarAlCarrito"
+                    onClick={handleAgregar}
+                > 
                     Agregar al Carrito 
                 </button>
             </td>

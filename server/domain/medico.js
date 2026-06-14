@@ -1,4 +1,4 @@
-import { UnprocessableEntityError } from "../errors/appError"
+import { UnprocessableEntityError } from "../errors/appError.js"
 
 export class Medico{
     id 
