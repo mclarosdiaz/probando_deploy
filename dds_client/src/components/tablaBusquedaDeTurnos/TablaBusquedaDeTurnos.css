@@ -14,3 +14,21 @@
 .tablaDeTurnosDisponibles{
    padding: 15px; 
 }
+
+.filtrosDeBusqueda {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+    padding-right: 20px;
+    font-family: "Sour Gummy", sans-serif;
+}
+
+.filtrosDeBusqueda input {
+    padding: 8px 12px;
+    margin-right: 5px;
+    margin-left: 5px;
+    width: 250px;
+    border: 2px solid rgba(65,139,24,1);
+    border-radius: 5px;
+    
+}

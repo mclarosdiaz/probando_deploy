@@ -42,7 +42,6 @@ const TablaHistorialDeTurnos = () =>{
                              onClick={handleOrdenFecha}>
                                 Dia y horario {ordenAsc ? "↑" : "↓"}
                             </th>
-                            <th scope="col" data-label="Dia y horario" className="cabecerasTablaHistorial">Dia y horario</th>
                             <th scope="col" data-label="ID" className="cabecerasTablaHistorial">ID</th>
                             <th scope="col" data-label="Medico" className="cabecerasTablaHistorial">Medico</th>
                             <th scope="col" data-label="Servicio" className="cabecerasTablaHistorial">Servicio</th>
