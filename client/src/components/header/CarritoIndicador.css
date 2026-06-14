@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* Quitamos el subrayado azul que le pone el <Link> por defecto a los textos */
 .carrito-link {
     text-decoration: none;
@@ -65,6 +67,7 @@
 
 /* Título superior */
 .carrito-titulo {
+    font-family: "Sour Gummy", sans-serif;
     font-size: 13px;
     font-weight: 600;
     color: #0f172a;
@@ -73,6 +76,7 @@
 
 /* Subtítulo con el precio acumulado */
 .carrito-subtitulo {
+    font-family: "Sour Gummy", sans-serif;
     font-size: 11px;
     color: #64748b;
     font-weight: 500;

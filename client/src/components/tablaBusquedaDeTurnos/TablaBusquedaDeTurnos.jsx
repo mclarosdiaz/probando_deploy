@@ -101,6 +101,7 @@ const TablaBusquedaDeTurnos = () =>{
                             <th scope="col" data-label="Sede" className="cabecerasTablaHistorial">Sede</th>
                             <th scope="col" data-label="Medico" className="cabecerasTablaHistorial">Medico</th>
                             <th scope="col" data-label="Costo" className="cabecerasTablaHistorial">Costo</th>
+                            <th scope="col" data-label="" className="cabecerasTablaHistorial"></th>
                         </tr>
                     </thead>
                     <tbody>

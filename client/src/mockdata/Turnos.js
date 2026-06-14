@@ -33,6 +33,7 @@ export const historialTurnos =[
 
 export const turnosDisponibles =[
     {
+        id: 100,
         fechaHora: "11/11/2025",
         costo: "60000",
         medico: "John",
@@ -40,6 +41,7 @@ export const turnosDisponibles =[
         servicio: "Podologia"
     },
         {
+        id: 101,
         fechaHora: "03/06/2026",
         costo: "10000",
         medico: "Micah",
@@ -47,6 +49,7 @@ export const turnosDisponibles =[
         servicio: "Fisioterapia"
     },
         {
+        id: 102,
         fechaHora: "18/10/2026",
         costo: "2000",
         medico: "Dutch",
@@ -54,6 +57,7 @@ export const turnosDisponibles =[
         servicio: "Oftalmologia"
     },
         {
+        id: 103,
         fechaHora: "21/07/2026",
         costo: "90000",
         medico: "Abigail",
@@ -61,6 +65,7 @@ export const turnosDisponibles =[
         servicio: "Kinesiologia"
     },
         {
+        id: 104,
         fechaHora: "28/07/2026",
         costo: "70000",
         medico: "Charles",

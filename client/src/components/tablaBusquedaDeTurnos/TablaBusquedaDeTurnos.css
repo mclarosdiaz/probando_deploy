@@ -12,6 +12,7 @@
 }
 
 .tablaDeTurnosDisponibles{
+    font-family: "Sour Gummy", sans-serif;
    padding: 15px; 
 }
 
@@ -31,4 +32,70 @@
     border: 2px solid rgba(65,139,24,1);
     border-radius: 5px;
     
+}
+
+/* 📱 TRANSFIGURACIÓN DE TABLA A TARJETAS (Dentro de la media query de la tabla) */
+@media (max-width: 768px) {
+
+    .tablaHistorial, 
+    .tablaHistorial thead, 
+    .tablaHistorial tbody, 
+    .tablaHistorial th, 
+    .tablaHistorial td, 
+    .tablaHistorial tr { 
+        display: block; 
+    }
+    
+    .tablaHistorial thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    
+    .tablaHistorial {
+        border: none;
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .tablaHistorial tr { 
+        background: #ffffff;
+        border: 2px solid rgba(65,139,24,1);
+        border-radius: 10px;
+        margin-bottom: 20px; 
+        padding: 15px; 
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    }
+    
+    .tablaHistorial tbody td { 
+        border: none;
+        border-bottom: 1px solid #f1f5f9;
+        position: relative;
+        
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        
+        padding: 12px 5px !important; 
+        padding-left: 0 !important;  
+        text-align: right !important;
+        font-size: 15px;
+        min-height: 45px;
+    }
+
+    .tablaHistorial tbody td:last-child {
+        border-bottom: none;
+        justify-content: center !important; 
+        padding-top: 15px !important;
+    }
+    
+    .tablaHistorial tbody td::before { 
+        position: static !important; 
+        transform: none !important; 
+        width: auto !important; 
+        font-weight: bold;
+        color: rgba(65,139,24,1); 
+        content: attr(data-label); 
+        text-align: left;
+    }
 }

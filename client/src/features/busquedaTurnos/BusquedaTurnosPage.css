@@ -1,13 +1,40 @@
-.busquedaDeTurnos-Container{
+.busquedaDeTurnos-Container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 15px;
+    width: 100%;
 }
 
-.busqueda{
+.busqueda {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    justify-content: center;
 }
 
+/* 📱 CORRECCIÓN RESPONSIVA PARA LOS FILTROS (Celulares) */
+@media (max-width: 768px) {
+    .busqueda {
+        flex-direction: column !important; /* Pasamos de fila a columna */
+        align-items: center;
+        width: 100%;
+        padding: 0 10px;
+    }
 
+    .filtrosDeBusqueda {
+        display: flex !important;
+        flex-direction: column !important; 
+        width: 100%;
+        gap: 12px; 
+        padding-right: 0 !important; 
+    }
+
+    .filtrosDeBusqueda input {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+        padding: 10px 12px;
+    }
+}

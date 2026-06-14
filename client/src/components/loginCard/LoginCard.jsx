@@ -1,4 +1,5 @@
-// components/LoginCard.jsx
+import { Link } from 'react-router-dom'
+
 import {
     Box,
     Card,
@@ -9,26 +10,23 @@ import {
     Stack
 } from '@mui/material'
 
-import { Link } from 'react-router-dom'
-
-
-
 const LoginCard = ({ onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        //TODO: login backend
+        // TODO:
+        // login backend
     }
 
-    return(
+    return (
         <Card
             sx={{
                 position: 'absolute',
                 top: '60px',
                 right: 0,
 
-                width: 340, 
+                width: 340,
 
                 borderRadius: 4,
                 boxShadow: 8,
@@ -37,7 +35,7 @@ const LoginCard = ({ onClose }) => {
                 zIndex: 1000
             }}
         >
-
+            {/* Header */}
             <Box
                 display="flex"
                 justifyContent="space-between"
@@ -57,71 +55,68 @@ const LoginCard = ({ onClose }) => {
                 >
                     ✕
                 </IconButton>
-
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                >
-                    <Stack spacing={2}>
-                        <TextField
-                            label = "Usuario"
-                            type='text'
-                            fullWidth
-                            required
-                        />
-                        
-                        <TextField
-                            label="Contraseña"
-                            type='password'
-                            fullWidth
-                            required
-                        />
-
-                        <Button
-                            type="submit"
-                            variant='contained'
-                            fullWidth
-                            size="large"
-                            sx={{
-                                borderRadius: 3,
-                                textTransform: 'none'
-                            }}
-                        >
-                            Iniciar sesión
-                        </Button>
-
-                    </Stack>
-
-                </Box>
-
-                <Box
-                    mt={3}
-                    display = "flex"
-                    flexDirection="column"
-                    gap={1}
-                >
-                    <Link to= "/recuperar-password">
-                            ¿Olvidaste tu contraseña?
-                    </Link>
-
-                    <Typography variant='body2'>
-                        ¿No tenés cuenta? {' '}
-                        <Link
-                            to="/registrar"
-                            onClick={onClose}
-                        >
-                            Registrarse
-                        </Link>
-                    </Typography>
-
-                </Box>
-
             </Box>
 
+            {/* Form */}
+            <Box
+                component="form"
+                onSubmit={handleSubmit}
+            >
+                <Stack spacing={2}>
+
+                    <TextField
+                        label="Usuario"
+                        type="text"
+                        fullWidth
+                        required
+                    />
+
+                    <TextField
+                        label="Contraseña"
+                        type="password"
+                        fullWidth
+                        required
+                    />
+
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        sx={{
+                            borderRadius: 3,
+                            textTransform: 'none'
+                        }}
+                    >
+                        Iniciar sesión
+                    </Button>
+
+                </Stack>
+            </Box>
+
+            {/* Footer */}
+            <Box
+                mt={3}
+                display="flex"
+                flexDirection="column"
+                gap={1}
+            >
+                <Link to="/recuperar-password">
+                    ¿Olvidaste tu contraseña?
+                </Link>
+
+                <Typography variant="body2">
+                    ¿No tenés cuenta?{' '}
+                    <Link
+                        to="/registrar"
+                        onClick={onClose}
+                    >
+                        Registrarse
+                    </Link>
+                </Typography>
+            </Box>
         </Card>
     )
-
-
 }
 
 export default LoginCard

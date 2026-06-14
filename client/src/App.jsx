@@ -9,6 +9,7 @@ import BusquedaDeTurnosPage from './features/busquedaTurnos/BusquedaTurnosPage.j
 import { TurnoCartProvider } from './context/carritoTurnosContext.jsx';
 import PreseleccionTurnosPage from './features/preseleccionTurnos/PreseleccionTurnosPage.jsx'
 import Registrar from './components/registrar/Registrar.jsx';
+import MedicoAgendaPage from './features/pages/medico/MedicoAgendaPage.jsx';
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
           <Route path="/busquedaDeTurnos" element={<BusquedaDeTurnosPage />} />
           <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />} />
           <Route path="/registrar" element={<Registrar />} />
-    
+          <Route path="/medico" element={<MedicoAgendaPage />} />
         </Route>
       </Routes>
 
