@@ -8,7 +8,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "seed:test": "node ./scripts/seedTestData.js",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "dev": "npx nodemon --exec npx tsx --env-file=.env server/server.js",
+    "seed": "npx tsx --env-file=.env scripts/seed.js"
   },
   "keywords": [],
   "author": "",
