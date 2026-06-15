@@ -11,9 +11,9 @@ class PlanMapper{
     }
     
     mongoPlanToDomain(data){
-       
-        const coberturaEspecialidad = data.coberturaEspecialidad ?
-        data.coberturaEspecialidad.map(coberturaMongo => {
+
+        const coberturaEspecialidad = data.coberturasEspecialidad ?
+        data.coberturasEspecialidad.map(coberturaMongo => {
             return new CoberturaEspecialidad(
                 this.especialidadMapper.mongoEspecialidadToDomain(coberturaMongo.especialidad),
                 coberturaMongo.nivel

@@ -132,9 +132,10 @@ export class TurnoService{
         const turnosConCobertura = turnos.map( turno => 
             {
                 const servicio = turno.servicio
+                
                 const cobertura = 
-                     plan.obtenerCoberturaPractica(servicio.practica) ?? 
-                        plan.obtenerCoberturaEspecialidad(servicio.servicio)
+                    plan.obtenerCoberturaPractica(servicio.practica) ?? 
+                        plan.obtenerCoberturaEspecialidad(servicio.especialidad)
                     
                 let costoFinal = turno.costo || 0
 

@@ -11,23 +11,27 @@ function turnoCartReducer(state, action) {
     switch (action.type) {
 
         case "ADD_TURNO": {
+            console.log("=== INTENTANDO AGREGAR TURNO ===");
+            console.log("Turno que querés meter (Payload):", action.payload);
+            console.log("Turnos que ya están en el carrito:", state.turnos);
 
-            const turnoYaExiste =
-                state.turnos.some(
-                    turno =>
-                        turno.id === action.payload.id
-                )
+            const turnoYaExiste = state.turnos.some(
+                turno => {
+                    const idExistente = turno.id || turno._id;
+                    const idNuevo = action.payload.id || action.payload._id;
+                    return idExistente === idNuevo;
+                }
+            )
+
+            console.log("¿El sistema cree que ya existe?:", turnoYaExiste);
 
             if (turnoYaExiste) {
-                return state
+                return state;
             }
 
             return {
                 ...state,
-                turnos: [
-                    ...state.turnos,
-                    action.payload
-                ]
+                turnos: [...state.turnos, action.payload]
             }
         }
 

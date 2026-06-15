@@ -1,13 +1,8 @@
 import './TablaBusquedaDeTurnos.css'
 import { useTurnoCart } from "../../hooks/useTurnoCart.js"
 import { useState, useEffect } from "react"
-import { turnosService } from '../../services/api.js' // 👈 1. IMPORTÁS EL SERVICIO ACÁ
+import { turnosService } from '../../services/api.js' 
 import BusquedaItem from '../busquedaItem/BusquedaItem.jsx';
-
-function parseFecha(fechaStr) {
-    const [dia, mes, anio] = fechaStr.split("/");
-    return new Date(`${anio}-${mes}-${dia}`);
-}
 
 const TablaBusquedaDeTurnos = () => {
     const { agregarTurno } = useTurnoCart()
@@ -16,7 +11,7 @@ const TablaBusquedaDeTurnos = () => {
     const [filtroSede, setFiltroSede] = useState("")
     const [fechaDesde, setFechaDesde] = useState("")
     const [fechaHasta, setFechaHasta] = useState("")
-    const [filtroMedico, setFiltroMedico] = useState("")
+    const [filtroMedico] = useState("")
 
     const [turnos, setTurnos] = useState([]);
     const [paginacion, setPaginacion] = useState({ page: 1, totalPages: 1 });
@@ -37,7 +32,7 @@ const TablaBusquedaDeTurnos = () => {
                 };
 
                 const resultado = await turnosService.buscarDisponibles(filtros, paginacion.page, 10);
-                
+
                 setTurnos(resultado.turnosConCobertura || []);
                 if (resultado.paginacion) {
                     setPaginacion(resultado.paginacion);
@@ -109,9 +104,9 @@ const TablaBusquedaDeTurnos = () => {
                                     </td>
                                 </tr>
                             ) : (
-                                turnos.map((turno) => (
+                                turnos.map((turno, index) => (
                                     <BusquedaItem
-                                        key={turno.id || turno._id}
+                                        key={`turno-tabla-${index}`}
                                         turno={turno}
                                         onAgregar={() => agregarTurno(turno)}
                                     />
