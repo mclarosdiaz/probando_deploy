@@ -14,6 +14,7 @@ const Navbar = () => {
     const [mostrarLogin, setMostrarLogin] = useState(false)
 
     // TODO Arreglar botón de Iniciara Sesión
+    // TODO Agregar links 
     return (
         <header className="navbar-bg">
             <nav className="navbar">
@@ -45,7 +46,7 @@ const Navbar = () => {
                     <div className="quick-actions">
 
                         <Link
-                            to="/buscar-turnos"
+                            to="/busquedaDeTurnos"
                             className="action-button"
                         >
 
@@ -58,7 +59,7 @@ const Navbar = () => {
                         </Link>
 
                         <Link
-                            to="/historial-turnos"
+                            to="/historialDeTurnos"
                             className="action-button secondary"
                         >
 
