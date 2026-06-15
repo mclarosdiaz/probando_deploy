@@ -1,0 +1,26 @@
+.hero-swiper {
+    width: 100%;
+    max-width: 650px;
+}
+
+.hero-slide {
+    min-height: 350px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dff0d8,
+            #eef7ea
+        );
+
+    border-radius: 24px;
+
+    padding: 3rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+}

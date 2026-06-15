@@ -5,29 +5,87 @@ import NotificacionesIndicador from './NotificacionesIndicador';
 import logo from '../../assets/osecroacklogo.png'
 import { useState } from 'react'
 import LoginCard from '../loginCard/LoginCard.jsx'
+import SearchIcon from '@mui/icons-material/Search';
 
+import HistoryIcon from '@mui/icons-material/History';
 
 const Navbar = () => {
 
     const [mostrarLogin, setMostrarLogin] = useState(false)
 
+    // TODO Arreglar botón de Iniciara Sesión
     return (
         <header className="navbar-bg">
             <nav className="navbar">
+
+                 
+
                 <div className="navbar-seccion left">
-                    <NotificacionesIndicador />
-                </div>
 
-                <div className="navbar-seccion centro">
                     <div className="logo">
-                        <Link to={'/'}> <img src= {logo} className="logoHeader"></img> </Link>
+                        <Link to={'/'}> <img src={logo} className="logoHeader" alt="Logo OSECROACK"></img> </Link>
                     </div>
+
+                    <Link to="/especialidades" className='nav-link'>
+                        Especialidades
+                    </Link>
+
+                    <Link to="/medicos" className='nav-link'>
+                        Medicos
+                    </Link>
+
+                    <Link to='/como-funciona' className='nav-link optional-link'>
+                        Cómo funciona
+                    </Link>
+
+
                 </div>
 
+                <div className='navbar-seccion centro'>
+                    <div className="quick-actions">
+
+                        <Link
+                            to="/buscar-turnos"
+                            className="action-button"
+                        >
+
+                            <SearchIcon className="action-icon" />
+
+                            <span className="action-text">
+                                Buscar Turnos
+                            </span>
+
+                        </Link>
+
+                        <Link
+                            to="/historial-turnos"
+                            className="action-button secondary"
+                        >
+
+                            <HistoryIcon className="action-icon" />
+
+                            <span className="action-text">
+                                Historial
+                            </span>
+
+                        </Link>
+
+                    </div>
+
+                </div>
+                
                 <div className="navbar-seccion right">
 
                     <CarritoIndicador />
                     
+                    <div className='search-container'>
+                        <input 
+                            type="text"
+                            placeholder='Buscar médico o especialidad...'
+                            className='search-input'
+                        />
+                    </div>
+
                     <div className="user-container">
 
                         <button className="user-icon" onClick={() => setMostrarLogin(!mostrarLogin)}>
@@ -43,6 +101,8 @@ const Navbar = () => {
                         )}
 
                     </div>
+
+                    <NotificacionesIndicador />
                 </div>
             </nav>
         </header>

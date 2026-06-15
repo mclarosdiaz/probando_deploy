@@ -1,9 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+.top-header {
+    background-color: #2f7dbd;
+    color: white;
 
+    height: 36px;
+    padding: 0 1.5rem;
 
-.header{
-    text-align: center;
-    color: whitesmoke;
-    background-color: rgba(65,139,24,1.000);
-    font-family: "Sour Gummy", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    overflow: hidden;
+}
+
+.top-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    white-space: nowrap;
+}
+
+.header-item {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.emergency {
+    color: #ffdddd;
+}
+
+.divider {
+    opacity: 0.6;
+}
+
+.header-user {
+    font-size: 0.9rem;
+    font-weight: bold;
 }
