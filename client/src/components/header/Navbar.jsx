@@ -13,8 +13,7 @@ const Navbar = () => {
 
     const [mostrarLogin, setMostrarLogin] = useState(false)
 
-    // TODO Arreglar botón de Iniciara Sesión
-    // TODO Agregar links 
+ 
     return (
         <header className="navbar-bg">
             <nav className="navbar">
@@ -89,13 +88,18 @@ const Navbar = () => {
 
                     <div className="user-container">
 
-                        <button className="user-icon" onClick={() => setMostrarLogin(!mostrarLogin)}>
+                    <button className="user-icon" onClick={() =>{ 
+                            console.log('click');
+                            console.log(mostrarLogin)
+                            setMostrarLogin(prev => !prev)}
+                    }
+                        >
                             👤
                         </button>
 
                         {mostrarLogin && (
                             <LoginCard
-                                onClose={() =>
+                                onClick={() =>
                                     setMostrarLogin(false)
                                 }
                             />
