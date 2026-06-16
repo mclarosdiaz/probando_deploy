@@ -17,11 +17,66 @@ from './TurnoDialog'
 import
 'react-big-calendar/lib/css/react-big-calendar.css'
 
+import { turnosAgenda } from '../../mockdata/Turnos'
+
+function convertirTurnosAgenda(turnosDisponibles) {
+    return turnosDisponibles.map((turno) => {
+
+        const [dia, mes, anio] =
+            turno.fechaHora.split('/')
+
+        const fecha =
+            new Date(anio, mes - 1, dia)
+
+        // agrego hora mock para que se vea en el día
+        fecha.setHours(
+            Math.floor(Math.random() * 8) + 8,
+            0
+        )
+
+        const fin = new Date(fecha)
+        fin.setMinutes(
+            fin.getMinutes() + 30
+        )
+
+        return {
+            id: turno.id,
+
+            paciente:
+                'Turno Disponible',
+
+            medico:
+                turno.medico,
+
+            sede:
+                turno.sede,
+
+            servicio:
+                turno.servicio,
+
+            costo:
+                turno.costo,
+
+            estado:
+                'RESERVADO',
+
+            fechaHora: 
+                turno.fechaHora,
+
+            start: fecha,
+            end: fin
+        }
+    })
+}
+
+const turnosMappeados = convertirTurnosAgenda(turnosAgenda)
+
+
 const localizer =
     dayjsLocalizer(dayjs)
 
 export default function AgendaCalendar({
-    turnos
+    turnos = turnosMappeados
 }) {
 
     const [
@@ -29,95 +84,51 @@ export default function AgendaCalendar({
         setTurnoSeleccionado
     ] = useState(null)
 
+    const [
+        fechaActual,
+        setFechaActual
+    ] = useState(
+        turnos[0]?.start
+        ?? new Date()
+    )
+
+
     return (
-        <>
-            <Paper
-                elevation={3}
-                sx={{
-                    p: 2,
-                    borderRadius: 4
-                }}
-            >
-                <div
-                    style={{
-                        height: '75vh'
-                    }}
-                >
-                    <Calendar
-                        localizer={localizer}
-                        events={turnos}
-                        startAccessor="start"
-                        endAccessor="end"
+        <div
+            style={{
+                height: '75vh',
+                padding: '20px'
+            }}
+        >
+            <Calendar
+                localizer={localizer}
 
-                        titleAccessor={
-                            (evento) =>
-                                `${evento.paciente}`
-                        }
+                events={turnosMappeados}
 
-                        views={[
-                            'day',
-                            'week',
-                            'month'
-                        ]}
+                startAccessor="start"
+                endAccessor="end"
 
-                        defaultView="day"
+                defaultView="month"
 
-                        messages={{
-                            today: 'Hoy',
-                            previous: 'Anterior',
-                            next: 'Siguiente',
-                            month: 'Mes',
-                            week: 'Semana',
-                            day: 'Día'
-                        }}
+                views={[
+                    'month',
+                    'week',
+                    'day'
+                ]}
 
-                        onSelectEvent={
-                            (turno) =>
-                                setTurnoSeleccionado(
-                                    turno
-                                )
-                        }
-
-                        eventPropGetter={
-                            (evento) => {
-
-                                let style = {}
-
-                                if (
-                                    evento.estado ===
-                                    'REALIZADO'
-                                ) {
-                                    style = {
-                                        backgroundColor:
-                                            '#4caf50'
-                                    }
-                                }
-
-                                if (
-                                    evento.estado ===
-                                    'RESERVADO'
-                                ) {
-                                    style = {
-                                        backgroundColor:
-                                            '#1976d2'
-                                    }
-                                }
-
-                                return {
-                                    style
-                                }
-                            }
-                        }
-                    />
-                </div>
-            </Paper>
-
-            <TurnoDialog
-                open={
-                    Boolean(
-                        turnoSeleccionado
+                onSelectEvent={(
+                    turno
+                ) =>
+                    setTurnoSeleccionado(
+                        turno
                     )
                 }
+            />
+
+            <TurnoDialog
+                open={Boolean(
+                    turnoSeleccionado
+                )}
                 turno={
                     turnoSeleccionado
                 }
@@ -127,6 +138,6 @@ export default function AgendaCalendar({
                     )
                 }
             />
-        </>
+        </div>
     )
 }

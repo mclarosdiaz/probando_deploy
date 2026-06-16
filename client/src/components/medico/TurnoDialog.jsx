@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import {
     Dialog,
@@ -30,6 +30,15 @@ export default function TurnoDialog({
     const [errorFecha,
         setErrorFecha] =
         useState(false)
+
+    useEffect(() => {
+
+        setMotivo('')
+        setNuevaFecha('')
+        setErrorMotivo(false)
+        setErrorFecha(false)
+
+    }, [turno])
 
     if (!turno) return null
 
@@ -90,6 +99,8 @@ export default function TurnoDialog({
 
         onClose()
     }
+
+    console.log(turno)
 
     return (
         <Dialog
