@@ -26,8 +26,8 @@ const Navbar = () => {
                         <Link to={'/'}> <img src={logo} className="logoHeader" alt="Logo OSECROACK"></img> </Link>
                     </div>
 
-                    <Link to="/especialidades" className='nav-link'>
-                        Especialidades
+                    <Link to="/servicios" className='nav-link'>
+                        Servicios
                     </Link>
 
                     <Link to="/medicos" className='nav-link'>

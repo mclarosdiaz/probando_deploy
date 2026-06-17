@@ -1,14 +1,6 @@
 import { useState } from "react";
 import "./GestionServicios.css";
-
-const serviciosIniciales = {
-  especialidad: [
-    { id: 1, nombre: "Cardiología", duracionTurnoEnMins: 30, costo: 5000 },
-  ],
-  practica: [
-    { id: 2, nombre: "Electrocardiograma", duracionTurnoEnMins: 20, costo: 3500 },
-  ],
-};
+import {serviciosIniciales} from "../../mockdata/Servicios"
 
 const formVacio = { tipo: "", nombre: "", duracionTurnoEnMins: "", costo: "" };
 
