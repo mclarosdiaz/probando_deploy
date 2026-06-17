@@ -1,22 +1,92 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { jwtDecode } from 'jwt-decode'
 
 import {
-    Box,
     Card,
+    Box,
     Typography,
+    IconButton,
+    Stack,
     TextField,
     Button,
-    IconButton,
-    Stack
+    Alert
 } from '@mui/material'
+
+import { login } from '../../services/authService'
+
+
 
 const LoginCard = ({ onClose }) => {
 
-    const handleSubmit = (e) => {
+    const [username, setUsername] = useState('')
+    
+    const [password, setPassword] = useState('')
+
+    const [loading, setLoading] = useState(false)
+
+    const [error,
+        setError] =
+        useState('')
+
+    const handleSubmit = async(e) => {
         e.preventDefault()
 
-        // TODO:
-        // login backend
+        setError('')
+        setLoading(true)
+
+        try{
+
+            const auth = await login(username, password)
+
+            localStorage.setItem(
+                'token',
+                auth.access_token
+            )
+
+            localStorage.setItem(
+                'refreshToken',
+                auth.refresh_token
+            )
+
+            const decoded = jwtDecode(auth.access_token)
+
+            const roles = decoded.realm_access?.roles || []
+
+            
+            localStorage.setItem(
+                'user',
+                JSON.stringify({
+                    username:
+                        decoded
+                        .preferred_username,
+                    
+                        name: 
+                            decoded.name,
+
+                        email: 
+                            decoded.email,
+
+                        roles
+                })
+            )
+            
+
+            console.log('LOGIN OK', decoded)
+            
+            onClose()
+
+            window.location.reload()
+        } catch(err){
+            setError(
+                'Usuario o contraseña incorrectos'
+            )
+
+            console.error(err)
+        }finally{
+
+            setLoading(false)
+        }
     }
 
     return (
@@ -57,10 +127,18 @@ const LoginCard = ({ onClose }) => {
                 </IconButton>
             </Box>
 
+            {
+                error &&
+                <Alert severity="error">
+                    {error}
+                </Alert>
+            }
+
             {/* Form */}
             <Box
                 component="form"
                 onSubmit={handleSubmit}
+                mt={2}
             >
                 <Stack spacing={2}>
 
@@ -69,6 +147,12 @@ const LoginCard = ({ onClose }) => {
                         type="text"
                         fullWidth
                         required
+                        value={username}
+                        onChange={(e) => {
+                            setUsername(
+                                e.target.value
+                            )
+                        }}
                     />
 
                     <TextField
@@ -76,6 +160,12 @@ const LoginCard = ({ onClose }) => {
                         type="password"
                         fullWidth
                         required
+                        value={password}
+                        onChange={(e) =>
+                            setPassword(
+                                e.target.value
+                            )
+                        }
                     />
 
                     <Button
@@ -88,7 +178,11 @@ const LoginCard = ({ onClose }) => {
                             textTransform: 'none'
                         }}
                     >
-                        Iniciar sesión
+                        {
+                            loading
+                                ? 'Ingresando...'
+                                : 'Iniciar sesión'
+                        }
                     </Button>
 
                 </Stack>
@@ -118,5 +212,6 @@ const LoginCard = ({ onClose }) => {
         </Card>
     )
 }
+
 
 export default LoginCard

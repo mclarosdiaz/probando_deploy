@@ -99,7 +99,7 @@ const Navbar = () => {
 
                         {mostrarLogin && (
                             <LoginCard
-                                onClick={() =>
+                                onClose={() =>
                                     setMostrarLogin(false)
                                 }
                             />

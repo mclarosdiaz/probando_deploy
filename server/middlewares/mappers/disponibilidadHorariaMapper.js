@@ -1,6 +1,6 @@
-import { DisponibilidadHoraria } from "./disponibilidadHorariaMapper"
+import { DisponibilidadHoraria } from "./disponibilidadHorariaMapper.js"
 
-export { DisponibilidadHoraria } from "../../domain/disponibilidadHoraria"
+export { DisponibilidadHoraria } from "../../domain/disponibilidadHoraria.js"
 
 class DisponibilidadHorariaMapper{
 
