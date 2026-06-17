@@ -25,7 +25,7 @@ class TurnoMapper{
 
     async mongoTurnoToDomain(mongoTurno) {
 
-        const data = mongoTurno.toObject()
+        const data = typeof mongoTurno.toObject === 'function' ? mongoTurno.toObject() : mongoTurno
 
         const medico = await this.medicoRepository.findById(data.medico)
         
@@ -48,21 +48,18 @@ class TurnoMapper{
         turno.paciente = paciente
         
         const historialEstados = data.historialEstados ?
-             await Promise.all (data.historialEstados.map(mongoCambioEstadoTurno =>
+            await Promise.all (data.historialEstados.map(mongoCambioEstadoTurno =>
                 this.cambioEstadoTurnoMapper.mongoCambioEstadoTurnoToDomain(mongoCambioEstadoTurno, turno))
             ) 
             : [] 
 
         turno.historialEstados = historialEstados
 
-        const esPractica = data.servicio?.tipo === "PRACTICA" || 
-                            !!data.servicio?.practica 
+        const esPractica = data.servicio?.tipo === "PRACTICA" || !!data.servicio?.practica;
 
         turno.servicio = esPractica ?
             this.practicaMapper.mongoPracticaToDomain(data.servicio.practica)
             : this.especialidadMapper.mongoEspecialidadToDomain(data.servicio.especialidad)
-
-
 
         return turno
     }

@@ -24,9 +24,10 @@ const TablaBusquedaDeTurnos = () => {
             setError(null);
             try {
                 const filtros = {
-                    especialidad: filtroServicio,
-                    sede: filtroSede,
-                    medico: filtroMedico,
+                    nombreEspecialidad: filtroServicio,
+                    nombrePractica: filtroServicio,
+                    nombreSede: filtroSede,
+                    nombreMedico: filtroMedico,
                     fechaDesde: fechaDesde ? new Date(fechaDesde).toISOString() : undefined,
                     fechaHasta: fechaHasta ? new Date(fechaHasta).toISOString() : undefined
                 };
