@@ -2,6 +2,7 @@ import './Navbar.css'
 import { Link } from 'react-router-dom';
 import CarritoIndicador from './CarritoIndicador.jsx';
 import NotificacionesIndicador from './NotificacionesIndicador';
+import { MdAccountCircle } from "react-icons/md";
 import logo from '../../assets/osecroacklogo.png'
 import { useState } from 'react'
 import LoginCard from '../loginCard/LoginCard.jsx'
@@ -99,7 +100,7 @@ const Navbar = () => {
                             aria-label="Abrir menú de usuario"
                             title="Abrir menú de usuario"
                         >
-                            👤
+                           <MdAccountCircle />
                         </button>
 
                         {mostrarLogin && (
