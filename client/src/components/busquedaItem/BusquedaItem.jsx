@@ -7,9 +7,10 @@ const BusquedaItem = ({ turno: itemConCobertura }) => {
     if (!itemConCobertura) return null;
 
     const { turno, costo, cobertura } = itemConCobertura
-    
+
     // 💡 CORRECCIÓN ULTRA-SEGURA DEL SERVICIO: Busca en todas las variantes posibles del objeto NoSQL
     const servicioNombre = 
+        turno?.servicio?.nombre ||
         turno?.servicio?.especialidad?.nombre || 
         turno?.servicio?.practica?.nombre || 
         turno?.servicio?.nombre || 

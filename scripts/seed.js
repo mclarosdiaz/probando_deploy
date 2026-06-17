@@ -8,12 +8,13 @@ import { PlanModel } from "../server/schemas/DBSchemas/planSchema.js";
 import { ObraSocialModel } from "../server/schemas/DBSchemas/obraSocialSchema.js";
 import { NotificacionModel } from "../server/schemas/DBSchemas/notificacionSchema.js";
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/GD1C2026';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017';
+const DB_NAME = process.env.MONGODB_NAME || 'GD1C2026';
 
 async function ejecutarSeed() {
     try {
-        console.log('🔄 Conectando a MongoDB en:', MONGO_URI);
-        await mongoose.connect(MONGO_URI);
+        console.log(`🔄 Conectando a MongoDB en: ${MONGO_URI} (Base de datos: ${DB_NAME})`);
+        await mongoose.connect(MONGO_URI, { dbName: DB_NAME });
 
         console.log('🗑️ Vaciando colecciones...');
         await Promise.all([
