@@ -76,18 +76,35 @@ const TablaBusquedaDeTurnos = () => {
                     />
                     <input
                         type="text"
-                        placeholder="Sede"
+                        placeholder="Elegir Sede"
                         value={filtroSede}
                         onChange={(e) => setFiltroSede(e.target.value)}
                     />
-                    <input
-                        type="date"
+                   <input
+                        type={fechaDesde ? "date" : "text"}
+                        placeholder="Fecha Desde"
                         value={fechaDesde}
+                        onClick={(e) => {
+                            e.currentTarget.type = "date";
+                            if (e.currentTarget.showPicker) e.currentTarget.showPicker();
+                        }}
+                        onBlur={(e) => {
+                            if (!fechaDesde) e.currentTarget.type = "text";
+                        }}
                         onChange={(e) => setFechaDesde(e.target.value)}
                     />
+
                     <input
-                        type="date"
+                        type={fechaHasta ? "date" : "text"}
+                        placeholder="Fecha Hasta"
                         value={fechaHasta}
+                        onClick={(e) => {
+                            e.currentTarget.type = "date";
+                            if (e.currentTarget.showPicker) e.currentTarget.showPicker();
+                        }}
+                        onBlur={(e) => {
+                            if (!fechaHasta) e.currentTarget.type = "text";
+                        }}
                         onChange={(e) => setFechaHasta(e.target.value)}
                     />
                 </div>
