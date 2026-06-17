@@ -2,6 +2,7 @@ import './Navbar.css'
 import { Link } from 'react-router-dom';
 import CarritoIndicador from './CarritoIndicador.jsx';
 import NotificacionesIndicador from './NotificacionesIndicador';
+import { MdAccountCircle } from "react-icons/md";
 import logo from '../../assets/osecroacklogo.png'
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -32,11 +33,14 @@ const Navbar = () => {
                 <div className="navbar-seccion left">
 
                     <div className="logo">
-                        <Link to={'/'}> <img src={logo} className="logoHeader" alt="Logo OSECROACK"></img> </Link>
+                        <Link to={'/'}
+                        aria-label="Inicio"
+                        title="Inicio"
+                        > <img src={logo} className="logoHeader" alt="Logo OSECROACK"></img> </Link>
                     </div>
 
-                    <Link to="/especialidades" className='nav-link'>
-                        Especialidades
+                    <Link to="/servicios" className='nav-link'>
+                        Servicios
                     </Link>
 
                     <Link to="/medicos" className='nav-link'>
@@ -118,8 +122,11 @@ const Navbar = () => {
                                     onClick={() =>
                                         setMostrarLogin(prev => !prev)
                                     }
-                                >
-                                        👤
+                                        aria-label="Abrir menú de usuario"
+                                        title="Abrir menú de usuario"
+                                    >
+                                        
+                                        <MdAccountCircle />
                                 </button>
                             )
                             

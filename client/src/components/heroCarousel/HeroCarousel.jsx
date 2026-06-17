@@ -1,4 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { Link } from 'react-router-dom';
 import {
     Navigation,
     Pagination,
@@ -42,9 +43,9 @@ export default function HeroCarousel() {
                         reservá en minutos
                     </p>
 
-                    <button>
+                     <Link to="/busquedaDeTurnos" className="boton-verMas">
                         Reservar ahora
-                    </button>
+                    </Link>
 
                 </div>
 
@@ -62,11 +63,10 @@ export default function HeroCarousel() {
                         Consultá centros y
                         disponibilidad
                     </p>
-
-                    <button>
+                     {/* le meti /servicios para que haga algo */}
+                    <Link to="/servicios" className="boton-verMas">
                         Ver más
-                    </button>
-
+                    </Link>
                 </div>
 
             </SwiperSlide>

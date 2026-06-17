@@ -14,6 +14,9 @@ import MedicoAgendaPage from './features/pages/medico/MedicoAgendaPage.jsx';
 import GestionServicios from './components/gestionServicios/GestionServicios.jsx'
 import Disponibilidad from './components/disponibilidad/Disponibilidad.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import ServiciosPage from './features/serviciosPage/ServiciosPage.jsx';
+import MedicosPage from './features/medicosPage/MedicosPage.jsx';
+import ComoFuncionaPage from './features/comoFuncionaPage/ComoFuncionaPage.jsx';
 function App() {
   return (
 
@@ -29,8 +32,11 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePacientePage />} />
           <Route path="/historialDeTurnos" element={<HistorialTurnosPage />} />
+          <Route path="/servicios" element={<ServiciosPage />} />
+          <Route path="/medicos" element={<MedicosPage />} />
           <Route path="/busquedaDeTurnos" element={<BusquedaDeTurnosPage />} />
           <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />} />
+          <Route path="/como-funciona" element={<ComoFuncionaPage />} />
           <Route path="/notificaciones" element={<NotificacionesPage/>}/>
           <Route path="/registrar" element={<Registrar />} />
           <Route path="/medico" element={
