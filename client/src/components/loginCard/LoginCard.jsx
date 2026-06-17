@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { jwtDecode } from 'jwt-decode'
 
 import {
@@ -14,7 +13,8 @@ import {
 } from '@mui/material'
 
 import { login } from '../../services/authService'
-
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext'
 
 
 const LoginCard = ({ onClose }) => {
@@ -25,9 +25,11 @@ const LoginCard = ({ onClose }) => {
 
     const [loading, setLoading] = useState(false)
 
-    const [error,
-        setError] =
-        useState('')
+    const [error, setError] = useState('')
+
+    const navigate = useNavigate()
+
+    const { login: authLogin } = useAuth()
 
     const handleSubmit = async(e) => {
         e.preventDefault()
@@ -53,36 +55,33 @@ const LoginCard = ({ onClose }) => {
 
             const roles = decoded.realm_access?.roles || []
 
+        
             
-            localStorage.setItem(
-                'user',
-                JSON.stringify({
-                    username:
-                        decoded
-                        .preferred_username,
-                    
-                        name: 
-                            decoded.name,
-
-                        email: 
-                            decoded.email,
-
-                        roles
-                })
-            )
-            
-
-            console.log('LOGIN OK', decoded)
+            authLogin({
+                username: decoded.preferred_username,
+                name: decoded.name,
+                email: decoded.email,
+                roles
+            })
             
             onClose()
 
-            window.location.reload()
+            if(roles.includes('MEDICO')){
+                console.log('REDIRIGIENDO A MEDICO')
+                navigate('/medico')
+            }else if(roles.includes('ADMIN')){
+                navigate('/admin')
+            }else{
+                navigate('/')
+            }
+            
+            
+
         } catch(err){
             setError(
                 'Usuario o contraseña incorrectos'
             )
-
-            console.error(err)
+            
         }finally{
 
             setLoading(false)
@@ -105,7 +104,7 @@ const LoginCard = ({ onClose }) => {
                 zIndex: 1000
             }}
         >
-            {/* Header */}
+            {}
             <Box
                 display="flex"
                 justifyContent="space-between"
@@ -134,7 +133,7 @@ const LoginCard = ({ onClose }) => {
                 </Alert>
             }
 
-            {/* Form */}
+            {}
             <Box
                 component="form"
                 onSubmit={handleSubmit}
@@ -188,7 +187,7 @@ const LoginCard = ({ onClose }) => {
                 </Stack>
             </Box>
 
-            {/* Footer */}
+            {}
             <Box
                 mt={3}
                 display="flex"
@@ -212,6 +211,5 @@ const LoginCard = ({ onClose }) => {
         </Card>
     )
 }
-
 
 export default LoginCard

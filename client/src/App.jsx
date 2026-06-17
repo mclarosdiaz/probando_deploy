@@ -13,6 +13,7 @@ import Registrar from './components/registrar/Registrar.jsx';
 import MedicoAgendaPage from './features/pages/medico/MedicoAgendaPage.jsx';
 import GestionServicios from './components/gestionServicios/GestionServicios.jsx'
 import Disponibilidad from './components/disponibilidad/Disponibilidad.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 function App() {
   return (
 
@@ -32,7 +33,14 @@ function App() {
           <Route path="/turnos/preseleccion" element={<PreseleccionTurnosPage />} />
           <Route path="/notificaciones" element={<NotificacionesPage/>}/>
           <Route path="/registrar" element={<Registrar />} />
-          <Route path="/medico" element={<MedicoAgendaPage />} />
+          <Route path="/medico" element={
+              <ProtectedRoute
+                allowedRoles={['MEDICO']}
+              >
+                <MedicoAgendaPage />
+              </ProtectedRoute>
+
+            } />
           <Route path="/gs" element={<GestionServicios />} />
           <Route path="/dh" element={<Disponibilidad />} />
         </Route>

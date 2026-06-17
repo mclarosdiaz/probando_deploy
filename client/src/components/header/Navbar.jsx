@@ -4,16 +4,25 @@ import CarritoIndicador from './CarritoIndicador.jsx';
 import NotificacionesIndicador from './NotificacionesIndicador';
 import logo from '../../assets/osecroacklogo.png'
 import { useState } from 'react'
+import { useAuth } from '../../context/AuthContext.jsx';
 import LoginCard from '../loginCard/LoginCard.jsx'
 import SearchIcon from '@mui/icons-material/Search';
-
 import HistoryIcon from '@mui/icons-material/History';
+
+
 
 const Navbar = () => {
 
+
     const [mostrarLogin, setMostrarLogin] = useState(false)
 
+    const {
+        user,
+        isAuthenticated,
+        logout
+    } = useAuth()
  
+    
     return (
         <header className="navbar-bg">
             <nav className="navbar">
@@ -88,20 +97,37 @@ const Navbar = () => {
 
                     <div className="user-container">
 
-                    <button className="user-icon" onClick={() =>{ 
-                            console.log('click');
-                            console.log(mostrarLogin)
-                            setMostrarLogin(prev => !prev)}
-                    }
-                        >
-                            👤
-                        </button>
+                    
 
+                        {
+                            isAuthenticated
+                            ?(
+                                <>
+                                    Hola {user.username}
+
+                                    <button
+                                        onClick={logout}
+                                    >
+                                        Cerrar sesión
+                                    </button>
+                                </>
+                            )
+                            :(
+                                <button
+                                    className='user-icon'
+                                    onClick={() =>
+                                        setMostrarLogin(prev => !prev)
+                                    }
+                                >
+                                        👤
+                                </button>
+                            )
+                            
+                        }
+                        
                         {mostrarLogin && (
                             <LoginCard
-                                onClose={() =>
-                                    setMostrarLogin(false)
-                                }
+                                onClose={() => setMostrarLogin(false)}
                             />
                         )}
 
@@ -113,4 +139,5 @@ const Navbar = () => {
         </header>
     );
 };
+
 export default Navbar;

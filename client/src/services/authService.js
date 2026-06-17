@@ -10,6 +10,12 @@ const CLIENT_ID =
     process.env
         .REACT_APP_KEYCLOAK_CLIENT_ID
 
+console.log({
+    KEYCLOAK_URL,
+    REALM,
+    CLIENT_ID
+})
+
 export async function login(
     username,
     password
@@ -43,6 +49,8 @@ export async function login(
     const data = await response.json()
 
     if(!response.ok){
+        console.log(data)
+
         throw new Error(
             data.error_description
         )
