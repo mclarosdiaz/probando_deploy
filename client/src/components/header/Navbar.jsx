@@ -23,7 +23,10 @@ const Navbar = () => {
                 <div className="navbar-seccion left">
 
                     <div className="logo">
-                        <Link to={'/'}> <img src={logo} className="logoHeader" alt="Logo OSECROACK"></img> </Link>
+                        <Link to={'/'}
+                        aria-label="Inicio"
+                        title="Inicio"
+                        > <img src={logo} className="logoHeader" alt="Logo OSECROACK"></img> </Link>
                     </div>
 
                     <Link to="/servicios" className='nav-link'>
@@ -93,6 +96,8 @@ const Navbar = () => {
                             console.log(mostrarLogin)
                             setMostrarLogin(prev => !prev)}
                     }
+                            aria-label="Abrir menú de usuario"
+                            title="Abrir menú de usuario"
                         >
                             👤
                         </button>

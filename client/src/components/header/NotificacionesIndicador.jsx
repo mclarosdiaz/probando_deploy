@@ -13,20 +13,24 @@ const NotificacionesIndicador = () => {
         <Link 
             to={'/notificaciones'} 
             className="notificaciones-link"
+            aria-label={`${cantidadSinLeer} notificaciones`}
+            title={`${cantidadSinLeer} notificaciones`}
         >
-            <div className="notificaciones-contenedor">
+        <div className="notificaciones-contenedor"> 
                 <div className="icono-wrapper">
                     
                     <FaBell className="notificaciones-icono" size={24} color= "rgba(65,139,24,1.000)" />
                     
                     {cantidadSinLeer > 0 && (
-                        <span className="notificaciones-badge">
+                        <span className="notificaciones-badge"
+                        
+                         >
                             {cantidadSinLeer}
                         </span>
                     )}
                     
                 </div>
-            </div>
+            </div> 
         </Link>
     );
 };
