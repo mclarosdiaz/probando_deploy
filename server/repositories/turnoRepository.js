@@ -95,7 +95,7 @@ export class MongoTurnoRepository {
     }
 
     async buscarTurnosDisponibles( filtros = {} ){
-        
+
         const {
             nombreMedico,
             nombreEspecialidad,
@@ -121,75 +121,63 @@ export class MongoTurnoRepository {
             }
         }
 
-        if(nombrePractica){
-            matchTurno["servicio.practica.nombre"] = {
-                $regex: nombrePractica,
-                $options: "i"
-            }
-        }
-
-        if(nombreEspecialidad){
-            matchTurno["servicio.especialidad.nombre"] = {
-                $regex: nombreEspecialidad,
-                $options: "i"
-            }
+        if (nombreEspecialidad || nombrePractica) {
+            matchTurno.$or = [
+                { "servicio.especialidad.nombre": { $regex: nombreEspecialidad || nombrePractica, $options: "i" } },
+                { "servicio.practica.nombre": { $regex: nombrePractica || nombreEspecialidad, $options: "i" } }
+            ];
         }
 
         const pipeline = [
-
-            {
-                $match: matchTurno
-            },
-
-            {
-                $lookup: {
-                    from: "medicos",
-                    localField: "medico",
-                    foreignField: "_id",
-                    as: "medico"
-                }
-            },
-            {
-                $unwind: "$medico"
-            },
-
-            {
-                $lookup: {
-                    from: "sedes",
-                    localField: "sede",
-                    foreignField: "_id",
-                    as: "sede"
-                }
-            }, 
-            {
-                $unwind: "$sede"
+        { $match: matchTurno },
+        
+        {
+            $lookup: {
+                from: "medicos",
+                localField: "medico",
+                foreignField: "_id",
+                as: "medicoResult"
             }
+        },
+        { $unwind: "$medicoResult" },
 
-        ]
+        {
+            $lookup: {
+                from: "sedes",
+                localField: "sede",
+                foreignField: "_id",
+                as: "sedeResult"
+            }
+        }, 
+        { $unwind: "$sedeResult" }
+    ]
 
-        if(nombreMedico){
-            pipeline.push({
-                $match: {
-                    "medico.nombre": {
-                        $regex: nombreMedico,
-                        $options: "i"
-                    }
-                }
-            })
+    if(nombreMedico){
+        pipeline.push({ $match: { "medicoResult.nombre": { $regex: nombreMedico, $options: "i" } } })
+    }
+    if(nombreSede){
+        pipeline.push({ $match: { "sedeResult.nombre": { $regex: nombreSede, $options: "i" } } })
+    }
+
+    pipeline.push({
+        $project: {
+            _id: { $toString: "$_id" },
+            fechaHora: 1,
+            estado: 1,
+            costo: 1,
+            paciente: 1,
+            historialEstados: 1,
+            medico: { $toString: "$medicoResult._id" }, 
+            sede: { $toString: "$sedeResult._id" },
+            servicio: 1 
         }
+    });
 
-        if(nombreSede){
-            pipeline.push({
-                $match: {
-                    "sede.nombre": {
-                        $regex: nombreSede,
-                        $options: "i"
-                    }
-                }
-            })
-        }
+        const documentosPlanos = await this.model.aggregate(pipeline);
 
-        return await this.model.aggregate(pipeline)
+        return await Promise.all(
+            documentosPlanos.map(mongoTurno => turnoMapper.mongoTurnoToDomain(mongoTurno))
+        );
 
     }
 

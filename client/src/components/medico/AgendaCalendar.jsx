@@ -1,22 +1,14 @@
 import { useState } from 'react'
-
 import {
     Calendar,
     dayjsLocalizer
 } from 'react-big-calendar'
-
 import dayjs from 'dayjs'
-
 import {
     Paper
 } from '@mui/material'
-
-import TurnoDialog
-from './TurnoDialog'
-
-import
-'react-big-calendar/lib/css/react-big-calendar.css'
-
+import TurnoDialog from './TurnoDialog'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { turnosAgenda } from '../../mockdata/Turnos'
 
 function convertirTurnosAgenda(turnosDisponibles) {

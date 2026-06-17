@@ -17,6 +17,8 @@ export default function TurnoDialog({
     onClose
 }) {
 
+    const [accionActiva, setAccionActiva] = useState(null)
+
     const [motivo, setMotivo] =
         useState('')
 
@@ -33,6 +35,7 @@ export default function TurnoDialog({
 
     useEffect(() => {
 
+        setAccionActiva(null)
         setMotivo('')
         setNuevaFecha('')
         setErrorMotivo(false)
@@ -109,9 +112,8 @@ export default function TurnoDialog({
             fullWidth
             maxWidth="sm"
         >
-
             <DialogTitle>
-                {turno.paciente}
+                Paciente: {turno.paciente}
             </DialogTitle>
 
             <DialogContent>
@@ -166,10 +168,8 @@ export default function TurnoDialog({
                                         ? 'El motivo es obligatorio'
                                         : ''
                                 }
-
                                 fullWidth
                             />
-
                             <TextField
                                 label="Proponer nueva fecha"
                                 type="datetime-local"
