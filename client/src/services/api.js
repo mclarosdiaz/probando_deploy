@@ -12,12 +12,7 @@ export const turnosService = {
         try {
             const body = {
                 idPaciente: "654321abcdef1234567890ab",
-                nombreMedico: filtrosFormulario.medico || undefined,
-                nombreEspecialidad: filtrosFormulario.especialidad || undefined,
-                nombrePractica: filtrosFormulario.practica || undefined,
-                nombreSede: filtrosFormulario.sede || undefined,
-                fechaDesde: filtrosFormulario.fechaDesde || undefined,
-                fechaHasta: filtrosFormulario.fechaHasta || undefined,
+                ...filtrosFormulario 
             };
 
             const response = await api.post('/turnos/disponibles/busqueda', body, {
