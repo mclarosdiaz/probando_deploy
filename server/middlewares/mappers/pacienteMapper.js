@@ -1,4 +1,4 @@
-import { Paciente } from "../../domain/paciente"
+import { Paciente } from "../../domain/paciente.js"
 import { ObraSocial } from "../../domain/obraSocial.js"
 import { MongoUsuarioRepository } from "../../repositories/usuarioRepository.js"
 import { MongoPlanRepository } from "../../repositories/planRepository.js"
