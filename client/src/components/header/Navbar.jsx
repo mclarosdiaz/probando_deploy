@@ -9,6 +9,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import LoginCard from '../loginCard/LoginCard.jsx'
 import SearchIcon from '@mui/icons-material/Search';
 import HistoryIcon from '@mui/icons-material/History';
+import Searchbar from './Searchbar.jsx'
 
 
 
@@ -91,13 +92,7 @@ const Navbar = () => {
 
                     <CarritoIndicador />
                     
-                    <div className='search-container'>
-                        <input 
-                            type="text"
-                            placeholder='Buscar médico o especialidad...'
-                            className='search-input'
-                        />
-                    </div>
+                    <Searchbar />
 
                     <div className="user-container">
 
