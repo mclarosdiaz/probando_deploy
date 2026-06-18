@@ -67,7 +67,6 @@ const LoginCard = ({ onClose }) => {
             onClose()
 
             if(roles.includes('MEDICO')){
-                console.log('REDIRIGIENDO A MEDICO')
                 navigate('/medico')
             }else if(roles.includes('ADMIN')){
                 navigate('/admin')

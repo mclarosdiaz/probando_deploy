@@ -89,6 +89,7 @@ const Navbar = () => {
                 
                 <div className="navbar-seccion right">
 
+                    
                     <CarritoIndicador />
                     
                     <div className='search-container'>
@@ -107,8 +108,6 @@ const Navbar = () => {
                             isAuthenticated
                             ?(
                                 <>
-                                    Hola {user.username}
-
                                     <button
                                         onClick={logout}
                                     >
@@ -140,7 +139,10 @@ const Navbar = () => {
 
                     </div>
 
-                    <NotificacionesIndicador />
+                    <div class="notificaciones-container">
+                        <NotificacionesIndicador />
+                    </div>
+                    
                 </div>
             </nav>
         </header>
