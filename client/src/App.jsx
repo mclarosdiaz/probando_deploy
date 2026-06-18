@@ -17,6 +17,8 @@ import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ServiciosPage from './features/serviciosPage/ServiciosPage.jsx';
 import MedicosPage from './features/medicosPage/MedicosPage.jsx';
 import ComoFuncionaPage from './features/comoFuncionaPage/ComoFuncionaPage.jsx';
+import MedicoHomePage from './features/medicoHomePage/medicoHomePage.jsx';
+import MedicoDashboard from './features/medicoHomePage/medicoHomePage.jsx';
 function App() {
   return (
 
@@ -43,12 +45,27 @@ function App() {
               <ProtectedRoute
                 allowedRoles={['MEDICO']}
               >
-                <MedicoAgendaPage />
+                <MedicoDashboard />
               </ProtectedRoute>
 
             } />
-          <Route path="/gs" element={<GestionServicios />} />
-          <Route path="/dh" element={<Disponibilidad />} />
+          <Route 
+            path="/gs" 
+            element={
+            <ProtectedRoute
+              allowedRoles={['MEDICO']}
+            >
+              <GestionServicios />
+            </ProtectedRoute>} />
+          <Route 
+            path="/dh" 
+            element={
+            <ProtectedRoute
+              allowedRoles={['MEDICO']}
+            >
+              <Disponibilidad />
+            </ProtectedRoute>} 
+          />
         </Route>
       </Routes>
 

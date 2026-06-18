@@ -1,0 +1,77 @@
+.medico-navbar {
+    background-color: aliceblue;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0.75rem 2rem;
+
+    font-family: "Sour Gummy", sans-serif;
+}
+
+.medico-navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.medico-navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.medico-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    text-decoration: none;
+
+    color: #2c3e50;
+
+    font-size: 1.1rem;
+    font-weight: 500;
+
+    transition: 0.2s ease;
+}
+
+.medico-link:hover {
+    color: #3e8f14;
+}
+
+.medico-link svg {
+    font-size: 1.3rem;
+}
+
+.logoHeader {
+    max-height: 2.2rem;
+    width: auto;
+    display: block;
+}
+
+.medico-navbar button {
+    background: #3e8f14;
+
+    color: white;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 0.6rem 1rem;
+
+    font-family: "Sour Gummy", sans-serif;
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+
+    white-space: nowrap;
+}
+
+.medico-navbar button:hover {
+    background: #34780f;
+    transform: translateY(-1px);
+}
