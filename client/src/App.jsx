@@ -18,6 +18,7 @@ import ServiciosPage from './features/serviciosPage/ServiciosPage.jsx';
 import MedicosPage from './features/medicosPage/MedicosPage.jsx';
 import ComoFuncionaPage from './features/comoFuncionaPage/ComoFuncionaPage.jsx';
 import MedicoHomePage from './features/medicoHomePage/medicoHomePage.jsx';
+import MedicoDashboard from './features/medicoHomePage/medicoHomePage.jsx';
 function App() {
   return (
 
@@ -44,7 +45,7 @@ function App() {
               <ProtectedRoute
                 allowedRoles={['MEDICO']}
               >
-                <MedicoHomePage />
+                <MedicoDashboard />
               </ProtectedRoute>
 
             } />

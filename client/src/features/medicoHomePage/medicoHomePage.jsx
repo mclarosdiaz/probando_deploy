@@ -13,67 +13,7 @@ export default function MedicoDashboard() {
     const navigate = useNavigate()
 
     return (
-        <div
-            style={{
-                padding: '30px'
-            }}
-        >
-            <Paper
-                sx={{
-                    p: 3,
-                    mb: 3,
-                    borderRadius: '24px',
-                    backgroundColor: '#dfead9',
-                }}
-            >
-                <Typography
-                    variant="h4"
-                    sx={{
-                        fontFamily: '"Sour Gummy", sans-serif',
-                        borderRadius: '18px',
-                        textTransform: 'none',
-                        mb: 2
-                    }}
-                >
-                    Panel del Médico
-                </Typography>
-
-                <Stack
-                    direction="row"
-                    spacing={2}
-                >
-                    <Button
-                        variant="contained"
-                        onClick={() =>
-                            navigate('/gs')
-                        }
-
-                        sx={{
-                            fontFamily: '"Sour Gummy", sans-serif',
-                            borderRadius: '18px',
-                            textTransform: 'none'
-                        }}
-                    >
-                        Gestionar Servicios
-                    </Button>
-
-                    <Button
-                        variant="contained"
-                        onClick={() =>
-                            navigate('/dh')
-                        }
-
-                        sx={{
-                            fontFamily: '"Sour Gummy", sans-serif',
-                            borderRadius: '18px',
-                            textTransform: 'none'
-                        }}
-                    >
-                        Disponibilidad
-                    </Button>
-                </Stack>
-            </Paper>
-
+        
             <Paper
                 sx={{
                     p: 4,
@@ -103,6 +43,6 @@ export default function MedicoDashboard() {
 
                 <AgendaCalendar />
             </Paper>
-        </div>
+        
     )
 }

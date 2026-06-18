@@ -34,7 +34,11 @@ const Header = ({ username }) => {
       <div className="top-header-right">
 
         <span className="header-user">
-          {username}, wachin!
+          {
+            username
+              ? `Hola ${username}!`
+              : 'Grog grog!'
+          }
         </span>
 
       </div>
