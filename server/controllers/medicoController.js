@@ -1,5 +1,5 @@
-import { disponibilidadHorariaMapper } from "../middlewares/mappers/disponibilidadHorariaMapper";
-import { medicoMapper } from "../middlewares/mappers/medicoMapper";
+import { disponibilidadHorariaMapper } from "../middlewares/mappers/disponibilidadHorariaMapper.js";
+import { medicoMapper } from "../middlewares/mappers/medicoMapper.js";
 import { Practica } from "../domain/practica.js";
 import { Especialidad } from "../domain/especialidad.js";
 

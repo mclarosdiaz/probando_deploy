@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+.preseleccion-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: "Sour Gummy", sans-serif;
+}
+
+.preseleccion-container h1 {
+    color: #418B18;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.turnos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.turno-card {
+    border: 2px solid #418B18;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease;
+}
+
+.turno-card:hover {
+    transform: translateY(-2px);
+}
+
+.turno-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.turno-info h4 {
+    margin: 0 0 4px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.turno-detalle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.turno-costo {
+    margin: 4px 0 0 0;
+    font-weight: bold;
+    color: #418B18;
+}
+
+.btn-eliminar {
+    background-color: #fce8e8;
+    color: #a32d2d;
+    border: 2px solid #a32d2d;
+    padding: 8px 16px;
+    font-family: "Sour Gummy", sans-serif;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-eliminar:hover {
+    background-color: #a32d2d;
+    color: white;
+}
+
+.resumen-box {
+    margin-top: 2.5rem;
+    background-color: #fcfdfe;
+    border: 2px solid #418B18;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(65, 139, 24, 0.15); /* Sombra sutil con tono verde */
+}
+
+.resumen-cantidad {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+/* Contenedor flexible para alinear los dos botones en PC */
+.resumen-acciones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* 🟩 NUEVO BOTÓN CONFIRMAR (Acción Principal) */
+.btn-confirmar {
+    background-color: #418B18;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-family: "Sour Gummy", sans-serif;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-confirmar:hover {
+    background-color: #2e6112;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.btn-confirmar:active {
+    transform: scale(0.97);
+}
+
+/* ⚪ BOTÓN VACIAR (Acción Secundaria corregida) */
+.btn-vaciar {
+    background-color: transparent;
+    color: #666;
+    border: 2px solid #ccc;
+    padding: 10px 20px;
+    font-family: "Sour Gummy", sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-vaciar:hover {
+    background-color: #fce8e8;
+    color: #a32d2d;
+    border-color: #a32d2d;
+}
+
+
+/* 📱 ADAPTACIÓN RESPONSIVA PARA EL CELULAR */
+@media (max-width: 600px) {
+    /* Los botones en el celu se apilan, dándole prioridad absoluta al confirmar */
+    .resumen-acciones {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .btn-confirmar, .btn-vaciar {
+        width: 100%; /* Ocupan todo el ancho de la tarjeta */
+        box-sizing: border-box;
+    }
+    
+    .btn-confirmar {
+        order: 1; /* Confirmar va primero arriba */
+        padding: 14px; /* Más robusto para pulsar con el pulgar */
+    }
+
+    .btn-vaciar {
+        order: 2; /* Vaciar va abajo secundario */
+        border: none; /* Más discreto todavía en mobile */
+        font-size: 0.95rem;
+    }
+}

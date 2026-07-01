@@ -6,7 +6,7 @@ import { pacienteMapper } from "../middlewares/mappers/pacienteMapper.js";
 
 
 export class MongoPacienteRepository{
-   
+
     constructor(){
         this.model= PacienteModel
     }
@@ -20,9 +20,7 @@ export class MongoPacienteRepository{
     async findById(id){
         const mongoPaciente = await this.model
             .findById(id)
-           
-            
-    
+                
         if (!mongoPaciente) {
             throw new PacienteNotFoundError(`El paciente ${id} no fue encontrado`)
         }

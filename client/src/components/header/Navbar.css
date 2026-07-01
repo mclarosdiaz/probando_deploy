@@ -1,0 +1,302 @@
+.navbar-bg {
+    background-color: aliceblue;
+    font-size: 1.2rem;
+    height: 5.5rem;
+    padding: 0.5rem 1rem;
+}
+
+.navbar { 
+    color: rgba(65,139,24,1.000);
+    margin: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%; 
+    height: 100%;
+    overflow: visible;
+    font-family: "Sour Gummy", sans-serif;
+}
+
+.navbar-seccion {
+    display: flex;
+    align-items: center;
+    flex: 1; /* Ocupan 1/3 del total cada una */
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    font-size: 1.1rem;
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+}
+
+.nav-link:hover{
+     color: #1976d2;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    border: 1px solid #ddd;
+    border-radius: 25px;
+
+    padding: 8px 16px;
+
+    width: 250px;
+
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.notificaciones-container{
+     position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input:focus {
+    border-color: #1976d2;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.centro {
+    display: flex;
+    justify-content: center;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.menu-icon {
+    color: rgba(65,139,24,1.000);
+    font-size: 1.5rem;
+    border: none;           
+    outline: none;
+    background: none;
+    cursor: pointer;
+}
+
+.logoHeader {
+    max-height: 2.2rem;
+    width: auto;
+    display: block;
+}
+
+
+
+.user-icon {
+    color: rgba(65,139,24,1.000);
+    font-size: 1.5rem;
+    border: none;           
+    outline: none;
+    background: none;
+    cursor: pointer;
+}
+
+.user-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-button {
+    background: #3e8f14;
+    color: white;
+    text-decoration: none;
+
+    padding: 0.55rem 0.8rem;
+    font-size: 0.9rem;
+    border-radius: 12px;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+}
+
+.secondary {
+    background: #5ca32b;
+}
+
+.nav-link,
+.action-button {
+    white-space: nowrap;
+}
+
+.left {
+    min-width: 0;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.preseleccion-container {
+    position: static;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: 0.55rem 0.8rem;
+    font-size: 0.9rem;
+
+    border-radius: 12px;
+    text-decoration: none;
+}
+
+@media (max-width: 1400px) {
+
+    .search-input {
+        width: 180px;
+    }
+
+    .logoHeader {
+        max-height: 3rem;
+    }
+
+    .navbar-links {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 1200px) {
+
+    /* menos espacio general */
+    .navbar {
+        margin: 0 1rem;
+    }
+
+    /* links más compactos */
+    .nav-link {
+        font-size: 0.95rem;
+    }
+
+    /* ocultamos lo menos importante */
+    .optional-link {
+        display: none;
+    }
+
+    /* search afuera */
+    .search-container {
+        display: none;
+    }
+
+    /* botones más chicos */
+    .action-button {
+        padding: 0.45rem 0.65rem;
+        font-size: 0.8rem;
+    }
+
+    /* logo más chico */
+    .logoHeader {
+        max-height: 2rem;
+    }
+}
+
+
+@media (max-width: 1050px) {
+
+    .search-container {
+        display: none;
+    }
+
+    .logoHeader {
+        max-height: 2rem;
+    }
+
+    .navbar-links {
+        gap: 0.8rem;
+    }
+
+    .nav-link {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 950px) {
+
+    .preseleccion-container {
+        display: none;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+    }
+
+    .navbar-links {
+        gap: 0.6rem;
+    }
+
+    .right {
+        gap: 0.5rem;
+    }
+
+    .action-text {
+        display: none;
+    }
+
+    .action-icon {
+        display: block;
+    }
+
+    .action-button {
+        padding: 0.5rem;
+        min-width: 42px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .quick-actions {
+        display: none;
+    }
+
+    .optional-link {
+        display: none;
+    }
+
+    .logoHeader {
+        max-height: 1.7rem;
+    }
+
+    .nav-link {
+        font-size: 0.85rem;
+    }
+}

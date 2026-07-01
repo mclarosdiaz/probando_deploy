@@ -1,0 +1,66 @@
+.notificaciones-page-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+      font-family: "Sour Gummy", sans-serif;
+    min-height: 70vh; 
+}
+
+.notificaciones-seccion {
+    margin-bottom: 2rem;
+      font-family: "Sour Gummy", sans-serif;
+}
+
+.notificaciones-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.notificacion-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 5px solid #ccc; /* Color por defecto para leídas */
+}
+
+.notificacion-card.no-leida {
+    border-left-color: #ff3b30; /* Rojo para destacar las nuevas */
+    background-color: #fffaf9;
+}
+
+.notificacion-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.notificacion-card p {
+    margin: 0.5rem 0 1rem 0;
+    font-size: 1.1rem;
+}
+
+.btn-marcar-leida {
+    background-color: #418B18; /* Usando el verde de tus botones del home */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.btn-marcar-leida:hover {
+    background-color: #2e6112;
+}
+
+.separador-seccion {
+    border: 0;
+    height: 1px;
+    background-color: #ddd;
+    margin: 2rem 0;
+}

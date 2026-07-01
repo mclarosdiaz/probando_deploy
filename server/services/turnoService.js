@@ -132,9 +132,15 @@ export class TurnoService{
         const turnosConCobertura = turnos.map( turno => 
             {
                 const servicio = turno.servicio
-                const cobertura = 
-                     plan.obtenerCoberturaPractica(servicio.practica) ?? 
-                        plan.obtenerCoberturaEspecialidad(servicio.servicio)
+                
+                let cobertura = null;
+
+
+                if (servicio.practica) {
+                    cobertura = plan.obtenerCoberturaPractica(servicio.practica);
+                } else if (servicio.especialidad) {
+                    cobertura = plan.obtenerCoberturaEspecialidad(servicio.especialidad);
+                }
                     
                 let costoFinal = turno.costo || 0
 
@@ -147,7 +153,7 @@ export class TurnoService{
 
                 return {
                     turno: turno,
-                    cobertura: cobertura?.nivel,
+                    cobertura: cobertura?.nivel || "SIN COBERTURA",
                     costo: costoFinal
                 }
             }

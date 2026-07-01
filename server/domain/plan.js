@@ -1,9 +1,8 @@
-export class Plan{
+export class Plan {
     id
     nombre
     coberturasEspecialidad
     coberturasPractica
-    
     
     constructor(nombre, coberturasEspecialidad, coberturasPractica){
         this.nombre = nombre;
@@ -12,20 +11,20 @@ export class Plan{
     }
 
     obtenerCoberturaEspecialidad(especialidad){
-        const cobertura = this.coberturasEspecialidad
-            .find(c => c.especialidad.id === especialidad.id)
+        if (!especialidad) return null;
 
-        return cobertura
+        const cobertura = this.coberturasEspecialidad
+            .find(c => c?.especialidad?.id === especialidad.id)
+
+        return cobertura ?? null;
     }
 
     obtenerCoberturaPractica(practica){
-    
+        if (!practica) return null;
+
         const cobertura = this.coberturasPractica
-            .find(c => c.practica.id === practica.id)
+            .find(c => c?.practica?.id === practica.id)
 
-        return cobertura
+        return cobertura ?? null;
     }
-
-
-
 }

@@ -1,0 +1,36 @@
+.registro-page {
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 2rem;
+
+    background-color:#f5f7fa;
+}
+
+.registro-card{
+    width: 100%;
+    max-width: 550px;
+
+    background: white;
+    border-radius: 20px;
+
+    padding: 2rem;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+.registro-card h1 {
+    margin-bottom: 0.5rem;
+}
+
+.registro-subtitle {
+    margin-bottom: 2rem;
+    color: #666;
+}
+
+.registro-form{
+    display: flex;
+}

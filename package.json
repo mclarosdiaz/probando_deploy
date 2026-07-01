@@ -8,17 +8,30 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "seed:test": "node ./scripts/seedTestData.js",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "dev": "npx nodemon --exec npx tsx --env-file=.env server/server.js",
+    "seed": "npx tsx --env-file=.env scripts/seed.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.1.1",
+    "@mui/material": "^9.1.1",
+    "axios": "^1.18.0",
     "cors": "^2.8.6",
+    "dayjs": "^1.11.21",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.6.2",
+    "react": "^18.3.1",
+    "react-big-calendar": "^1.20.0",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.16.0",
+    "swiper": "^12.2.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -28,6 +41,7 @@
     "globals": "^17.6.0",
     "jest": "^30.4.2",
     "mongodb-memory-server": "^11.2.0",
-    "supertest": "^7.2.2"
+    "supertest": "^7.2.2",
+    "tsx": "^4.22.4"
   }
 }

@@ -2,7 +2,7 @@ import {PlanModel} from "../schemas/DBSchemas/planSchema.js"
 import { planMapper } from "../middlewares/mappers/planMapper.js"
 
 export class MongoPlanRepository{
-  
+
     constructor(){
         this.model=PlanModel
     }
@@ -16,6 +16,7 @@ export class MongoPlanRepository{
 
     async findById(id){
         const mongoPlan =  await this.model.findById(id)
+
         return planMapper.mongoPlanToDomain(mongoPlan)
     }
 }
