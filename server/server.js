@@ -4,7 +4,7 @@ dotenv.config()
 import app from "./app.js"
 import { MongoDBClient } from "./config/database.js"
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 const host = '0.0.0.0'
 
 const start = async() =>{
